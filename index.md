@@ -39,7 +39,7 @@ Sign up for the IAP 2020 class by filling out this [registration form](https://f
         <li>
         <strong>{{ lecture.date | date: '%-m/%d/%y' }}</strong>:
         {% if lecture.ready %}
-            <a href="{{ lecture.url }}">{{ lecture.title }}</a>
+            <a href="{{ lecture.url | relative_url }}">{{ lecture.title }}</a>
         {% else %}
             {{ lecture.title }} {% if lecture.noclass %}[no class]{% endif %}
         {% endif %}
@@ -117,5 +117,5 @@ AeroAstro](https://aeroastro.mit.edu/) for A/V equipment; and Brandi Adams and
 <div class="small center">
 <p><a href="https://github.com/missing-semester/missing-semester">Source code</a>.</p>
 <p>Licensed under CC BY-NC-SA.</p>
-<p>See <a href="/license/">here</a> for contribution &amp; translation guidelines.</p>
+<p>See <a href="{{'/license/' | relative_url}}">here</a> for contribution &amp; translation guidelines.</p>
 </div>
