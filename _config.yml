@@ -1,6 +1,8 @@
 # Setup
 title: 'Missing Semester'
-url: https://missing.csail.mit.edu
+url: https://afnom.github.io
+domain: afnom.github.io
+baseurl: /missing-semester/
 
 # Settings
 markdown: kramdown
