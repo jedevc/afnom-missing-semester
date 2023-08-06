@@ -41,7 +41,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 {% endcomment %}
 
 <ul>
-{% assign lectures = site['2020'] | sort: 'date' %}
+{% assign lectures = site['2023'] | sort: 'date' %}
 {% for lecture in lectures %}
     {% if lecture.phony != true %}
         <li>

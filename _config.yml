@@ -17,8 +17,10 @@ timezone: America/New_York
 
 collections:
   '2019':
-    output: true
+    output: false
   '2020':
+    output: true
+  '2023':
     output: true
 
 # Excludes
