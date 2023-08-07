@@ -123,7 +123,7 @@ AeroAstro](https://aeroastro.mit.edu/) for A/V equipment; and Brandi Adams and
 ---
 
 <div class="small center">
-<p><a href="https://github.com/missing-semester/missing-semester">Source code</a>.</p>
+<p><a href="https://github.com/afnom/missing-semester">Source code</a>.</p>
 <p>Licensed under CC BY-NC-SA.</p>
 <p>See <a href="{{'/license/' | relative_url}}">here</a> for contribution &amp; translation guidelines.</p>
 </div>
