@@ -2,7 +2,6 @@
 title: 'Missing Semester'
 url: https://afnom.github.io
 domain: afnom.github.io
-baseurl: /missing-semester/
 
 # Settings
 markdown: kramdown
