@@ -27,10 +27,13 @@ impossibly complex.
 
 Read about the [motivation behind this class](/about/).
 
-# Schedule
+# Practicalities
 
-**Lecture**: ROOM TBD, TIME TBD <br>
-**Office hours**: TBD
+* **Staff**: This class is co-taught by Jesse, Freddie, Oliver, TBD
+* **Lecture**: ROOM TBD, TIME TBD
+* **Questions / Discussions**: Please join the [Missing Semester Discord](http://www.google.com)!
+
+# Schedule
 
 <ul>
 {% assign lectures = site['2023'] | sort: 'date' %}
@@ -49,11 +52,6 @@ Read about the [motivation behind this class](/about/).
 </ul>
 
 Video recordings of the original MIT lectures are available [on YouTube](https://www.youtube.com/playlist?list=PLyzOVJj3bHQuloKGG59rS43e29ro7I57J).
-
-# About the class
-
-**Staff**: This class is co-taught by TBD <br />
-**Questions**: Email us at TBD
 
 # Beyond MIT
 
