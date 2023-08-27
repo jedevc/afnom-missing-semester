@@ -4,6 +4,14 @@ title: The Missing Semester of Your CS Education
 nositetitle: true
 ---
 
+<div class="note">
+This document has been modified from the original site developed by MIT to be
+more relevant to UoB's CS department.  Boxes like this will indicate notes or
+departures from the original content.
+<br /><br />
+In this process, we've removed some MIT specific stuff but only to minimize confusion among UoB students.  The full history including all our modifications can be viewed <a href="https://github.com/afnom/missing-semester">here</a>.
+</div>
+
 Classes teach you all about advanced topics within CS, from operating systems
 to machine learning, but there’s one critical subject that’s rarely covered,
 and is instead left to students to figure out on their own: proficiency with
@@ -19,26 +27,10 @@ impossibly complex.
 
 Read about the [motivation behind this class](/about/).
 
-{% comment %}
-# Registration
-
-Sign up for the IAP 2020 class by filling out this [registration form](https://forms.gle/TD1KnwCSV52qexVt9).
-{% endcomment %}
-
-<p class="note">
-This is a paragraph test!
-</p>
-
-<div class="note">
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-</div>
-
 # Schedule
 
-{% comment %}
-**Lecture**: 35-225, 2pm--3pm<br>
-**Office hours**: 32-G9 lounge, 3pm--4pm (every day, right after lecture)
-{% endcomment %}
+**Lecture**: ROOM TBD, TIME TBD <br>
+**Office hours**: TBD
 
 <ul>
 {% assign lectures = site['2023'] | sort: 'date' %}
@@ -56,15 +48,19 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 {% endfor %}
 </ul>
 
-Video recordings of the lectures are available [on
-YouTube](https://www.youtube.com/playlist?list=PLyzOVJj3bHQuloKGG59rS43e29ro7I57J).
+Video recordings of the original MIT lectures are available [on YouTube](https://www.youtube.com/playlist?list=PLyzOVJj3bHQuloKGG59rS43e29ro7I57J).
 
 # About the class
 
-**Staff**: This class is co-taught by [Anish](https://www.anishathalye.com/), [Jon](https://thesquareplanet.com/), and [Jose](http://josejg.com/).<br>
-**Questions**: Email us at [missing-semester@mit.edu](mailto:missing-semester@mit.edu).
+**Staff**: This class is co-taught by TBD <br />
+**Questions**: Email us at TBD
 
 # Beyond MIT
+
+<div class="note">
+Please note -- these links pertain only to the original MIT content which may have been altered.
+</div>
+
 
 We've also shared this class beyond MIT in the hopes that others may
 benefit from these resources. You can find posts and discussion on
@@ -75,19 +71,6 @@ benefit from these resources. You can find posts and discussion on
  - [/r/programming](https://www.reddit.com/r/programming/comments/eyagcd/the_missing_semester_of_your_cs_education_mit/)
  - [Twitter](https://twitter.com/jonhoo/status/1224383452591509507)
  - [YouTube](https://www.youtube.com/playlist?list=PLyzOVJj3bHQuloKGG59rS43e29ro7I57J)
-
-{% comment %}
-Some more URLs:
-
-- https://news.ycombinator.com/item?id=27154577
-- https://news.ycombinator.com/item?id=34934216
-- https://www.reddit.com/r/learnprogramming/comments/nca1v3/mit_the_missing_semester_of_your_cs_education/
-- https://www.reddit.com/r/compsci/comments/eyywv8/the_missing_semester_of_your_cs_education_from_mit/
-- https://www.reddit.com/r/programming/comments/io7nq3/the_missing_semester_of_your_cs_education_mit/
-- https://twitter.com/MIT_CSAIL/status/1349766980413263873
-- https://twitter.com/MIT_CSAIL/status/1481676163491659780
-- https://twitter.com/MIT_CSAIL/status/1581313961093484545
-{% endcomment %}
 
 # Translations
 
@@ -105,20 +88,15 @@ Some more URLs:
 - [Italian](https://missing-semester-it.github.io/)
 - [Persian](https://missing-semester-fa.github.io/)
 
-Note: these are external links to community translations. We have not vetted
-them.
+Note: these are external links to community translations. We have not vetted them.
 
 Have you created a translation of the course notes from this class? Submit a
 [pull request](https://github.com/missing-semester/missing-semester/pulls) so
 we can add it to the list!
 
-## Acknowledgements
+## MIT Acknowledgements
 
-We thank Elaine Mello, Jim Cain, and [MIT Open
-Learning](https://openlearning.mit.edu/) for making it possible for us to
-record lecture videos; Anthony Zolnik and [MIT
-AeroAstro](https://aeroastro.mit.edu/) for A/V equipment; and Brandi Adams and
-[MIT EECS](https://www.eecs.mit.edu/) for supporting this class.
+We thank Elaine Mello, Jim Cain, and [MIT Open Learning](https://openlearning.mit.edu/) for making it possible for us to record lecture videos; Anthony Zolnik and [MIT AeroAstro](https://aeroastro.mit.edu/) for A/V equipment; and Brandi Adams and [MIT EECS](https://www.eecs.mit.edu/) for supporting this class.
 
 ---
 
