@@ -309,6 +309,8 @@ fi
 
 # Remote Machines
 
+![The image is from page 248 of The internet guide for new users. 1993 by Daniel P. Dern.](../files/astral_ssh.jpg "Remote Login is a lot like Astral Projection")
+
 It has become more and more common for programmers to use remote servers in their everyday work. If you need to use remote servers in order to deploy backend software or you need a server with higher computational capabilities, you will end up using a Secure Shell (SSH). As with most tools covered, SSH is highly configurable so it is worth learning about it.
 
 To `ssh` into a server you execute a command as follows
