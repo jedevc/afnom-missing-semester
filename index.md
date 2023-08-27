@@ -99,7 +99,7 @@ We thank Elaine Mello, Jim Cain, and [MIT Open Learning](https://openlearning.mi
 ---
 
 <div class="small center">
-<p><a href="https://github.com/afnom/missing-semester">Source code</a>.</p>
+<p><a href="https://github.com/afnom/missing-semester">Source code</a></p>
 <p>Licensed under CC BY-NC-SA.</p>
 <p>See <a href="{{'/license/' | relative_url}}">here</a> for contribution &amp; translation guidelines.</p>
 </div>
