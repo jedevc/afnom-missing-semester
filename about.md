@@ -3,6 +3,13 @@ layout: lecture
 title: "Why we are teaching this class"
 ---
 
+
+<div class="note">
+We have left this largely unchanged; it was written for MIT but seems relevant for the UoB audience
+as well!
+</div>
+
+
 During a traditional Computer Science education, chances are you will take
 plenty of classes that teach you advanced topics within CS, everything from
 Operating Systems to Programming Languages to Machine Learning. But at many
