@@ -34,7 +34,7 @@ Read about the [motivation behind this class](/about/).
 
 * **Staff**: This class is co-taught by Jesse, Freddie, Oliver, TBD
 * **Lecture**: ROOM TBD, TIME TBD
-* **Questions / Discussions**: Please join the [Missing Semester Discord](http://www.google.com)!
+* **Questions / Discussions**: Please join the [Missing Semester Discord](https://discord.gg/jCWRjjA9gw)!
 
 # Schedule
 
