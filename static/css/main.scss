@@ -1,6 +1,12 @@
+---
+---
+
 /* Copyright (c) 2017 Anish Athalye */
 @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro);
 @import url(https://fonts.googleapis.com/css?family=Source+Code+Pro);
+
+$css-color: #2f3c63;
+$afnom-color: #0CE3AC;
 
 /* Basic styling */
 
@@ -318,6 +324,7 @@ input[type=checkbox]:checked ~ .menu-label:after {
 
   .nav-link {
     display: initial;
+    color: #eee;
   }
 
   .nav-link:before {
@@ -348,9 +355,22 @@ input[type=checkbox]:checked ~ .menu-label:after {
         color: #eee;
       }
 
-    #nav-bg, a#logo, #top-nav a {
-      background-color: #A6E22E;
+    #nav-bg, a#logo {
       color: #202020;
+      background: repeating-linear-gradient(
+          -45deg,
+          $css-color,
+          $css-color 100px,
+          $afnom-color 100px,
+          $afnom-color 200px
+        );
+    }
+
+    #top-nav a {
+        /*background: #00000099;*/
+        background: #303030;
+        color: #eee;
+        padding: 5px;
     }
 
     a:hover > code  {
