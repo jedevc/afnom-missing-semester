@@ -1,15 +1,18 @@
 ---
 layout: page
-title: The Missing Semester of Your CS Education
+title: "Missing Semester: UoB Remix"
 nositetitle: true
 ---
 
 <div class="note">
-This document has been modified from the original site developed by MIT to be
-more relevant to UoB's CS department.  Boxes like this will indicate notes or
-departures from the original content.
+This document has been modified from the <a
+href="https://missing.csail.mit.edu/"> original site</a> developed by MIT to be more relevant to UoB's CS department.  
 <br /><br />
-In this process, we've removed some MIT specific stuff but only to minimize confusion among UoB students.  The full history including all our modifications can be viewed <a href="https://github.com/afnom/missing-semester">here</a>.
+The full history of our changes can be viewed <a href="https://github.com/afnom/missing-semester">here</a>.
+<br /><br />
+<em>This</em> Missing Semester is brought to you by <a href="https://cssbham.com/">CSS</a> and <a href="https://www.afnom.net">AFNOM</a>.
+<br /><br />
+Boxes like this will indicate notes added by us.
 </div>
 
 Classes teach you all about advanced topics within CS, from operating systems
