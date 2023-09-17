@@ -2,7 +2,7 @@
 layout: lecture
 title: "#3: Editors (Vim)"
 date: 2023-10-17
-ready: true
+ready: false
 video:
   aspect: 56.25
   id: a6Q8Na575qc
