@@ -1,7 +1,7 @@
 ---
 layout: lecture
-title: "Command-line Environment"
-date: 2023-01-21
+title: "#4: Shell Advanced"
+date: 2023-10-24
 ready: true
 video:
   aspect: 56.25

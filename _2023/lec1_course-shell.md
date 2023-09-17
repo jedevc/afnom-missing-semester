@@ -1,7 +1,7 @@
 ---
 layout: lecture
-title: "Course overview + the shell"
-date: 2023-01-13
+title: "#1: Course overview + the shell"
+date: 2023-10-03
 ready: true
 video:
   aspect: 56.25

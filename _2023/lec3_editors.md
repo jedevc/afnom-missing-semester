@@ -1,7 +1,7 @@
 ---
 layout: lecture
-title: "Editors (Vim)"
-date: 2023-01-15
+title: "#3: Editors (Vim)"
+date: 2023-10-17
 ready: true
 video:
   aspect: 56.25

@@ -1,7 +1,7 @@
 ---
 layout: lecture
-title: "Version Control (Git)"
-date: 2023-01-22
+title: "#5: Version Control (Git)"
+date: 2023-10-31
 ready: true
 video:
   aspect: 56.25

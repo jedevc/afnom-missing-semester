@@ -1,7 +1,7 @@
 ---
 layout: lecture
-title: "Shell Tools and Scripting"
-date: 2023-01-14
+title: "#2 Intermediate Shell + Git Basics"
+date: 2023-10-10
 ready: true
 video:
   aspect: 56.25
