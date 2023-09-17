@@ -31,7 +31,7 @@ All the contents in this course, including the website source code, lecture note
 This is a statement of intent / purpose for UoB's Missing Semester series.  This may be updated over time.
 
 ### What is this?
-Missing semester (MS) is series of interactive lectures that will help you learn skills that will make you a more effective computer user.  Rather than focus on using computers to accelerate the processing of data or to solve specific problems, MS is about learning how to become more proficient with computers themselves, specifically on the Linux operating system.
+Missing semester (MS) is a series of interactive lectures that will help you learn skills that will make you a more effective computer user.  Rather than focus on using computers to accelerate the processing of data or to solve specific problems, MS is about learning how to become more proficient with computers themselves, specifically on the Linux operating system.
 
 MS is a Companion to your UoB school of Computer Science (SoCS) coursework and will help prepare you so when you take more advanced classes, you're not learning Linux at the same time as you're learning the module's materials.
 
@@ -43,10 +43,10 @@ MS is run by students for students.
 MS is a fork or modified version of MIT's Missing Semester.  We've taken MIT's materials as a starting point and have reorganized them to serve the UoB SoCS's needs / better integrate with our context.
 
 ### Assumptions / Requirements
-We assume students have access to a Linux computer for MS.  Please drop by the [Linux Installfest](https://linux.afnom.net) on September 27th, 2023 if you're interesting in getting help installing Linux onto your personal computer.  Alternatively, you may use the SoCS's lab machines or a remote linux system if you have access to one.
+We assume students have access to a Linux computer for MS.  Please drop by the [Linux Installfest](https://linux.afnom.net) on September 27th, 2023 if you're interested in getting help installing Linux onto your personal computer.  Alternatively, you may use the SoCS's lab machines or a remote linux system if you have access to one.
 
 ### Who is this for?
-We are targeting all computer science students who would like to gain more familiarity with Linux.  While these skills are not explicitly required in first year modules (with the exception of version control), you may find they help you work more efficiently and effectively.  Second Year students will need some of the tools described herein for their coursework and so it is recommended to start in your first year to get a head start.  We also welcome third and forth year undergrads, masters students (specifically conversion masters) and PhDs -- everyone is welcome.
+We are targeting all computer science students who would like to gain more familiarity with Linux.  While these skills are not explicitly required in first year modules (with the exception of version control), you may find they help you work more efficiently and effectively.  Second Year students will need some of the tools described herein for their coursework and so it is recommended to start in your first year to get a head start.  We also welcome third year undergraduates, masters students (specifically conversion masters) and PhDs -- everyone is welcome.
 
 ### Format and Content
 Everything about MS will be organized through the [Missing Semester Discord Server](https://discord.gg/jCWRjjA9gw).  If you have any questions about either the structure or content of MS, please ask there.
@@ -57,7 +57,7 @@ Each lecture is being run by one or more CS students.  The contents of the lectu
 
 The structure of the sessions will be highly interactive; we like to think of them as "hack and tell" sessions.  Participants are encouraged to follow along with the instructors and explore the commands / tools being described.  Each lecture also includes some additional exercises for more exploration.
 
-MS is a not a class; there are no grades and no checking of assignments.  The contents and exercises are purely designed to give curious computer scientists a means to explore and improve at their own speed.  We welcome participants to invest as much time as they like but it should be possible to engage with MS alongside your normal coursework.
+MS is not a class; there are no grades and no checking of assignments.  The contents and exercises are purely designed to give curious computer scientists a means to explore and improve at their own speed.  We welcome participants to invest as much time as they like but it should be possible to engage with MS alongside your normal coursework.
 
 ### Who is running this?
 Volunteers from [AFNOM](https://afnom.net) and [CSS](https://https://cssbham.com/) are running MS.  This includes managing / supporting students on the discord as well as planning and executing the lectures.
