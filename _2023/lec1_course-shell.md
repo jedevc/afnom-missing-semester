@@ -1,6 +1,6 @@
 ---
 layout: lecture
-title: "#1: Course overview + the shell"
+title: "#1: Course overview + the shell + 🍕"
 date: 2023-10-03
 ready: false
 video:
