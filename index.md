@@ -32,7 +32,7 @@ Read about the [motivation behind this class](/about/).
 
 # Practicalities
 
-* **Staff**: This class is co-taught by Members of AFNOM and CSS: Abi, Freddie, Jesse, Oliver, Vishwas
+* **Staff**: This class is co-taught by Members of AFNOM and CSS: Abi, Freddie, Jesse, Marius, Oliver, Vishwas
 * **Lecture**: UG04 lab from 7:15-8:15pm on Tuesdays
 * **Questions / Discussions**: Please join the [Missing Semester Discord](https://discord.gg/jCWRjjA9gw)!
 
