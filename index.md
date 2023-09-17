@@ -43,7 +43,7 @@ Read about the [motivation behind this class](/about/).
 {% for lecture in lectures %}
     {% if lecture.phony != true %}
         <li>
-        <strong>{{ lecture.date | date: '%-m/%d/%y' }}</strong>:
+        <strong>{{ lecture.date | date: '%d/%-m/%y' }}</strong>:
         {% if lecture.ready %}
             <a href="{{ lecture.url | relative_url }}">{{ lecture.title }}</a>
         {% else %}
