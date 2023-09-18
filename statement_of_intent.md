@@ -35,7 +35,10 @@ The structure of the sessions will be highly interactive; we like to think of th
 MS is not a class; there are no grades and no checking of assignments.  The contents and exercises are purely designed to give curious computer scientists a means to explore and improve at their own speed.  We welcome participants to invest as much time as they like but it should be possible to engage with MS alongside your normal coursework.
 
 ### Who is running this?
-Volunteers from [AFNOM](https://afnom.net) and [CSS](https://https://cssbham.com/) are running MS.  This includes managing / supporting students on the discord as well as planning and executing the lectures.
+Volunteers from [AFNOM](https://afnom.net) and [CSS](https://https://cssbham.com/) are running MS.  This includes managing / supporting students on the discord as well as planning and executing the lectures.  Though we are being encouraged and supported by the SoCS, this is an extracuricular activity.
+
+### Statement of Diversity and Inclusivity
+The folks behind MS value strongly diversity and inclusively and are explicitly against toxic or discriminatory behavior.  Everyone is welcome, regardless of race, ethnicity, gender, gender identity, sexual orientation, age, class, physical ability, nationality, and text-editor preference.  Please remember that this is a supportive environment; we're not here to compete with each other and we've all got things to learn and teach.  Please be respectful, kind and humble.  And don't forget or be afraid to ask a lot of questions!
 
 ### The Future
 Depending on the success of the first 5 lectures, we may run more later in the semester.
