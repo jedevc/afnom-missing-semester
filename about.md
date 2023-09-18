@@ -5,8 +5,8 @@ title: "Why we are teaching this class"
 
 
 <div class="note">
-We have left this largely unchanged; it was written for MIT but seems relevant for the UoB audience
-as well!
+We have left this largely unchanged; it was written for MIT.  For more from a UoB context, check out our <a
+href="/statement_of_intent">Statement of Intent</a>.
 </div>
 
 
