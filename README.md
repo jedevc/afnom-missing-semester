@@ -1,5 +1,7 @@
 # The Missing Semester of Your CS Education (UoB Edition)
 
+[![pages-build-deployment](https://github.com/afnom/missing-semester/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/afnom/missing-semester/actions/workflows/pages/pages-build-deployment)
+
 A fork of [MIT's Missing Semester](https://github.com/missing-semester/missing-semester) Coursework.
 
 As with the original, contributions are most welcome though might be more useful if submitted against MIT's repository.  If you have edits or new content to add, please open an issue or submit a pull request.
