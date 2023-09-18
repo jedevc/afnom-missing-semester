@@ -40,6 +40,8 @@ Volunteers from [AFNOM](https://afnom.net) and [CSS](https://https://cssbham.com
 ### Statement of Diversity and Inclusivity
 The folks behind MS value strongly diversity and inclusively and are explicitly against toxic or discriminatory behavior.  Everyone is welcome, regardless of race, ethnicity, gender, gender identity, sexual orientation, age, class, physical ability, nationality, and text-editor preference.  Please remember that this is a supportive environment; we're not here to compete with each other and we've all got things to learn and teach.  Please be respectful, kind and humble.  And don't forget or be afraid to ask a lot of questions!
 
+If you experience any behavior that makes you uncomfortable, please contact the organizers (on discord or before/after a session) so we can deal with it appropriately.  We are here to support everyone!
+
 ### The Future
 Depending on the success of the first 5 lectures, we may run more later in the semester.
 
