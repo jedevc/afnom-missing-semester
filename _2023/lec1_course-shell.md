@@ -7,6 +7,11 @@ video:
   aspect: 56.25
   id: Z56Jmr9Z34Q
 ---
+<div class="note">
+The video above is part of the original MIT Missing Semester recordings. <br>
+While the UoB version of this session will cover the same base material, please expect some differences during the live session.
+</div>
+
 
 # Motivation
 
