@@ -32,12 +32,13 @@ Read about the [motivation behind this class](/about/).
 
 # Practicalities
 
+**Please register and join the discord!**
+
 * **Registration**: [Registration form](https://forms.gle/AEEoGFv3dWq12YC59)
 * **Questions / Discussions**: Please join the [Missing Semester Discord](https://discord.gg/jCWRjjA9gw)!
 * **Lecture**: UG04 lab from 7:15-8:15pm on Tuesdays
 * **Staff**: This class is co-taught by Members of AFNOM and CSS: Abi, Freddie, Jesse, Marius, Oliver, Vishwas
 
-Please register and join the discord!
 
 # Schedule
 
