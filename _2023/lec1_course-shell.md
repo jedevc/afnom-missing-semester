@@ -10,6 +10,9 @@ video:
 <div class="note">
 The video above is part of the original MIT Missing Semester recordings. <br>
 While the UoB version of this session will cover the same base material, please expect some differences during the live session.
+<br>
+
+<b> Update 02/10/23: </br> The contents below have been adjusted to reflect the Missing Semester content covered at UoB. Check our <a href=https://github.com/afnom/missing-semester/commits/master>git history</a> for a full list of changes.
 </div>
 
 
@@ -35,22 +38,20 @@ Science curricula.
 
 # Class structure
 
-The class consists of 11 1-hour lectures, each one centering on a
-[particular topic]({{'/2023/' | relative_url}}). The lectures are largely independent,
-though as the semester goes on we will presume that you are familiar
-with the content from the earlier lectures. We have lecture notes
-online, but there will be a lot of content covered in class (e.g. in the
-form of demos) that may not be in the notes. We will be recording
-lectures and posting the recordings online.
+The class consists of multiple 1-hour lectures/hack'n'tell sessions split in 3 phases.
+The first phase, consisting of 5 lectures introducing you the shell, editors, and version control - all you need to get started as computer scientist frequently working on the command line!
 
-We are trying to cover a lot of ground over the course of just 11 1-hour
-lectures, so the lectures are fairly dense. To allow you some time to
-get familiar with the content at your own pace, each lecture includes a
-set of exercises that guide you through the lecture's key points. After
-each lecture, we are hosting office hours where we will be present to
-help answer any questions you might have. If you are attending the class
-online, you can send us questions at
-[missing-semester@mit.edu](mailto:missing-semester@mit.edu).
+The second and third phase lectures are currently still under construction but will be based on your feedback, our interests, and suggestions from the School of Computer Science. Stay tuned for updates on the next phases!
+
+The lectures itself are focused on a
+[particular topic]({{'/2023/' | relative_url}}), and most of them are largely independent (with the exception of the different levels of working with the shell). Nonetheless, as the semester goes on we will presume that you are familiar with the content from the earlier lectures. We have lecture notes online, but there will be a lot of content covered in class (e.g. in the form of demos) that may not be in the notes.
+
+The original MIT lectures recorded the lectures and posted the recording onlines; while our version will be different, they can still provide a good overview of covered topics.
+
+We are trying to cover a lot of ground over the course, so the lectures may be fairly dense. To allow you some time to
+get familiar with the content at your own pace, lectures may include a
+set of exercises that guide you through the lecture's key points.
+If you have questions after the lecture, feel free to reach out to us on our [Missing Semester Discord Server](https://discord.gg/gwgyZQRGhV), or email us at [ms@afnom.net](mailto:ms@afnom.net).
 
 Due to the limited time we have, we won't be able to cover all the tools
 in the same level of detail a full-scale class might. Where possible, we
@@ -127,8 +128,8 @@ or `"` (`"My Photos"`), or escape just the relevant characters with `\`
 
 But how does the shell know how to find the `date` or `echo` programs?
 Well, the shell is a programming environment, just like Python or Ruby,
-and so it has variables, conditionals, loops, and functions (next
-lecture!). When you run commands in your shell, you are really writing a
+and so it has variables, conditionals, loops, and functions.
+When you run commands in your shell, you are really writing a
 small bit of code that your shell interprets. If the shell is asked to
 execute a command that doesn't match one of its programming keywords, it
 consults an _environment variable_ called `$PATH` that lists which
@@ -296,7 +297,7 @@ missing:~$ curl --head --silent google.com | grep --ignore-case content-length |
 ```
 
 We will go into a lot more detail about how to take advantage of pipes
-in the lecture on data wrangling.
+in later lectures on the shell.
 
 ## A versatile and powerful tool
 
@@ -324,7 +325,7 @@ called `brightness` under
 ```
 
 By writing a value into that file, we can change the screen brightness.
-Your first instinct might be to do something like:
+An experienced shell user's first instinct might be to do something like:
 
 ```console
 $ sudo find -L /sys/class/backlight -maxdepth 2 -name '*brightness*'
@@ -355,7 +356,7 @@ control all sorts of fun and useful things through `/sys`, such as the
 state of various system LEDs (your path might be different):
 
 ```console
-$ echo 1 | sudo tee /sys/class/leds/input6::scrolllock/brightness
+$ echo 0 | sudo tee /sys/class/leds/tpacpi::lid_logo_dot/brightness
 ```
 
 # Next steps
@@ -369,7 +370,7 @@ there.
 
 # Exercises
 
-All classes in this course are accompanied by a series of exercises. Some give
+Most classes in this course are accompanied by a series of exercises. Some give
 you a specific task to do, while others are open-ended, like "try using X and Y
 programs". We highly encourage you to try them out.
 
