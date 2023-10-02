@@ -12,7 +12,8 @@ The video above is part of the original MIT Missing Semester recordings. <br>
 While the UoB version of this session will cover the same base material, please expect some differences during the live session.
 <br>
 
-<b> Update 02/10/23: </br> The contents below have been adjusted to reflect the Missing Semester content covered at UoB. Check our <a href=https://github.com/afnom/missing-semester/commits/master>git history</a> for a full list of changes.
+<b> Update 02/10/23: </b> The contents below have been adjusted to reflect the Missing Semester content covered at UoB. Check our <a href=https://github.com/afnom/missing-semester/commits/master>git history</a> for a full list of changes.
+
 </div>
 
 
