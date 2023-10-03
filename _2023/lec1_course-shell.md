@@ -62,6 +62,11 @@ hesitate to reach out to us and ask for pointers!
 
 # Topic 1: The Shell
 
+<div class="note">
+Do you want to follow along but don't have a computer with a Unix shell at hand? You can move over to <a href="https://bellard.org/jslinux/">jslinux</a> to run a Linux shell from your browser!
+
+</div>
+
 ## What is the shell?
 
 Computers these days have a variety of interfaces for giving them
