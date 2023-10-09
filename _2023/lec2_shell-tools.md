@@ -3,6 +3,7 @@ layout: lecture
 title: "#2 Intermediate Shell + Git Basics"
 date: 2023-10-10
 ready: false
+phony: true
 video:
   aspect: 56.25
   id: kgII-YWo3Zw
