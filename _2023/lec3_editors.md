@@ -2,12 +2,21 @@
 layout: lecture
 title: "#3: Editors (Vim)"
 date: 2023-10-17
-ready: false
+ready: true
 video:
   aspect: 56.25
   id: a6Q8Na575qc
 ---
 
+
+<div class="note">
+The video above is part of the original MIT Missing Semester recordings.  <br><br>
+While the UoB version of this session will cover the same base material, please expect some differences during the live session.
+<br>
+</div>
+
+
+# Writing with a computer
 Writing English words and writing code are very different activities. When
 programming, you spend more time switching files, reading, navigating, and
 editing code compared to writing a long stream. It makes sense that there are
@@ -35,9 +44,10 @@ and powerful tools, so the learning never stops: you'll get even faster as you
 learn more.
 
 # Which editor to learn?
+Programmers have [strong opinions](https://en.wikipedia.org/wiki/Editor_war) about their text editors. 
 
-Programmers have [strong opinions](https://en.wikipedia.org/wiki/Editor_war)
-about their text editors.
+Also, not all text editors are equal:
+![editor learning curves](/2023/files/editor_curves.png "learning curves of different editors")
 
 Which editors are popular today? See this [Stack Overflow
 survey](https://insights.stackoverflow.com/survey/2019/#development-environments-and-tools)
@@ -46,22 +56,25 @@ of programmers as a whole). [Visual Studio
 Code](https://code.visualstudio.com/) is the most popular editor.
 [Vim](https://www.vim.org/) is the most popular command-line-based editor.
 
-## Vim
+## Why Command line editors?  Why Vim?
+Vim has a rich history; its based on the vi editor written by Bill Joy in 1976(!) which was
+written to run on ancient UNIX computers without any sort of Graphical User Interface.  Because
+a terminal is in effect "low resolution" lots of the power of vi/vim is hidden from the
+interface letting you focus on text at hand.  vim (or 'VI iMproved') is an extension to vi
+written by Bram Moolenaar (who recently passed away) first released in 1991.
 
-All the instructors of this class use Vim as their editor. Vim has a rich
-history; it originated from the Vi editor (1976), and it's still being
-developed today. Vim has some really neat ideas behind it, and for this reason,
-lots of tools support a Vim emulation mode (for example, 1.4 million people
-have installed [Vim emulation for VS code](https://github.com/VSCodeVim/Vim)).
-Vim is probably worth learning even if you finally end up switching to some
-other text editor.
+Vim has some really neat ideas behind it, and for this reason, lots of tools support a Vim
+emulation mode (for example, 1.4 million people have installed
+[Vim emulation for VS code](https://github.com/VSCodeVim/Vim)).  Vim is probably worth learning
+even if you finally end up switching to some other text editor.
 
-It's not possible to teach all of Vim's functionality in 50 minutes, so we're
-going to focus on explaining the philosophy of Vim, teaching you the basics,
-showing you some of the more advanced functionality, and giving you the
-resources to master the tool.
+It's not possible to teach all of Vim's functionality in 50 minutes, so we're going to focus on
+explaining the philosophy of Vim, teaching you the basics, showing you some of the more advanced
+functionality, and giving you the resources to master the tool.
 
 # Philosophy of Vim
+
+![real programmers](https://imgs.xkcd.com/comics/real_programmers.png)
 
 When programming, you spend most of your time reading/editing, not writing. For
 this reason, Vim is a _modal_ editor: it has different modes for inserting text
@@ -79,11 +92,17 @@ Vim's design is based on the idea that a lot of programmer time is spent
 reading, navigating, and making small edits, as opposed to writing long streams
 of text. For this reason, Vim has multiple operating modes.
 
-- **Normal**: for moving around a file and making edits
+Main modes:
+- **Normal**: for moving around a file and making edits 
+	- also sometimes called **Command** mode
 - **Insert**: for inserting text
-- **Replace**: for replacing text
 - **Visual** (plain, line, or block): for selecting blocks of text
-- **Command-line**: for running a command
+
+![visualization of different vim modes](/2023/files/vim_modes.png "vim modes")
+
+Vim has some other less extensive modes as well that we'll talk about:
+- **Replace**: for replacing text
+- **Command-line**: for running a command (not to be confused with **Command** mode)
 
 Keystrokes have different meanings in different operating modes. For example,
 the letter `x` in Insert mode will just insert a literal character 'x', but in
@@ -100,12 +119,11 @@ with `R`, Visual mode with `v`, Visual Line mode with `V`, Visual Block mode
 with `<C-v>` (Ctrl-V, sometimes also written `^V`), and Command-line mode with
 `:`.
 
-You use the `<ESC>` key a lot when using Vim: consider remapping Caps Lock to
-Escape ([macOS
-instructions](https://vim.fandom.com/wiki/Map_caps_lock_to_escape_in_macOS)).
+
+# Basic vimrc
+If you want to follow along exactly, we're going to use a very minimal vim config file called a vimrc that sets some sane defaults and fixes some quirky behavior that is there for legacy reasons.  To download this file, run the following in your shell: `wget missingsemester.afnom.net/2023/files/vimrc -O ~/.vimrc`) You read through this well-commented file (using Vim!), and observe how Vim looks and behaves slightly differently with the new config.
 
 # Basics
-
 ## Inserting text
 
 From Normal mode, press `i` to enter Insert mode. Now, Vim behaves like any
@@ -141,6 +159,9 @@ has many functionalities, including opening, saving, and closing files, and
 - `:help {topic}` open help
     - `:help :w` opens help for the `:w` command
     - `:help w` opens help for the `w` movement
+
+
+![Quitting Vim](/2023/files/quitting_vim.png "Qutting Vim")
 
 # Vim's interface is a programming language
 
@@ -299,6 +320,12 @@ inspiration, for example, your instructors' Vim configs
 lots of good blog posts on this topic too. Try not to copy-and-paste people's
 full configuration, but read it, understand it, and take what you need.
 
+---
+That concludes the material we'll probably have time for.  However a few other things of note / interest:
+
+# Vim Culture
+* If you are curious, some of these [vim koans](https://blog.sanctum.geek.nz/vim-koans/) are great.
+
 # Extending Vim
 
 There are tons of plugins for extending Vim. Contrary to outdated advice that
@@ -315,7 +342,7 @@ Here are some of our favorite plugins:
 - [vim-easymotion](https://github.com/easymotion/vim-easymotion): magic motions
 
 We're trying to avoid giving an overwhelmingly long list of plugins here. You
-can check out the instructors' dotfiles
+can check out the (MIT) instructors' dotfiles
 ([Anish](https://github.com/anishathalye/dotfiles),
 [Jon](https://github.com/jonhoo/configs),
 [Jose](https://github.com/JJGO/dotfiles)) to see what other plugins we use.
@@ -360,6 +387,7 @@ for Google Chrome and [Tridactyl](https://github.com/tridactyl/tridactyl) for
 Firefox. You can even get Vim bindings in [Jupyter
 notebooks](https://github.com/lambdalisue/jupyter-vim-binding).
 Here is a [long list](https://reversed.top/2016-08-13/big-list-of-vim-like-software) of software with vim-like keybindings.
+
 
 # Advanced Vim
 
@@ -417,7 +445,6 @@ better way of doing this", there probably is: look it up online.
         - Manually remove last `,` and add `[` and `]` delimiters
 
 # Resources
-
 - `vimtutor` is a tutorial that comes installed with Vim - if Vim is installed, you should be able to run `vimtutor` from your shell
 - [Vim Adventures](https://vim-adventures.com/) is a game to learn Vim
 - [Vim Tips Wiki](http://vim.wikia.com/wiki/Vim_Tips_Wiki)
