@@ -2,12 +2,6 @@ I use these notes as a reference when teaching lecture 3.
 
 If you're a student who ended up here, you probably want to look at editors.md instead.
 
----
-BEFORE
-* create a new user on skyvault
-* ssh to skyvault
----
-
 writing with a computer (essays) vs programming
 - We saw nano last week
     - there are much more powerful editors for the CLI environment that are really worth learning.
