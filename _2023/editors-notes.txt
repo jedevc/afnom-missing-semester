@@ -2,18 +2,28 @@ I use these notes as a reference when teaching lecture 3.
 
 If you're a student who ended up here, you probably want to look at editors.md instead.
 
+
+first
+    background briefly
+    informal evening
+    holding down arrow / delete keys --> better way
+
 writing with a computer (essays) vs programming
 - We saw nano last week
     - there are much more powerful editors for the CLI environment that are really worth learning.
 - programming: more time spent reading, navigating, editing, than writing in a long stream
 - different programs for different purposes
+- emails, latex
+
+
 
 worth mastering an editor
 - Learning a more complex piece of software is a tradeoff.
 - it will save you hundreds of hours
-- worth investing time in this, unlike many other things
+- worth investing time in this
 - Challenge you to give one of these a shot for a month or two!
 - how to learn:
+    - this talk
     - start with tutorial
     - stick with the editor for all code (and ideally word) editing tasks
     - avoid bad habits
@@ -68,9 +78,6 @@ why vim?
     - vim as program vs. vim as system of text manipulation
 
 Philosophy of vim (and this lecture)
-- Problem these editors solve is how to use the keyboard in many different ways:
-    - emacs: modifier keys
-    - vim: modes
 - philosophy of vim: the neat ideas of this editor
 - basics
 - demos
@@ -79,6 +86,11 @@ Philosophy of vim (and this lecture)
     - this lecture: focus on ideas, not details
 
 modal editing (modal ~ "modes")
+- Problem these editors solve is how to use the keyboard in many different ways:
+    - emacs: modifier keys
+    - vim: modes
+- Note about homerow / mouse
+    - some mouse stuff
 - designed around idea that a lot of time is spent reading/navigating/making small edits
 - simplified picture: normal mode <-> insert mode
     - sometimes call normal mode command mode; different from "command line mode"
@@ -90,7 +102,8 @@ modal editing (modal ~ "modes")
     - `wget missingsemester.afnom.net/2023/files/vimrc -O ~/.vimrc`
 
 basics
-- `CTRL-V, <c-v> and ^v`
+- NOTE: `CTRL-V, <c-v> and ^v`
+- edit vimrc to remove relative line numbers?
 - switching between normal mode and insert mode
 - that's all you need to know to get started. insert mode works as you expect.
 - nano is basically vim in insert mode
@@ -105,6 +118,7 @@ basics
     - Quiting vim is supposedly the most commented on stack overflow question
     - :q, :w, :wq, :e {name of file}, :ls, :help {topic} (:help :w, :help w)
     - splits!  Tabs!
+    - set nu/nonu + wrap/nowrap
 
 vim normal mode is a programming language (most important idea in vim)
 - once you learn the primitives, you can combine them in interesting ways
@@ -120,6 +134,9 @@ vim normal mode is a programming language (most important idea in vim)
     - 3w, 5j, 7dw
 - modifiers
     - i/a
+
+visual mode:
+    visual block! (76p)
 
 demo (broken fizzbuzz)
 - main is never called
@@ -146,12 +163,14 @@ demo (broken fizzbuzz)
   - `ci(` to "int(sys.argv[1])"
 
 A few other things:
-    - `vim -`
+    - `vim -` eg ls -la | vim - or tree or ps...
     - `gf`
     - file browser
     - spellcheck
     - autocomplete
     - marks
+    - ctrl z
+    - find/replace with regex
     - MACROS
     - writing out to shell
     - !cmd
@@ -170,6 +189,8 @@ time for macros?
 Et voila!
 
 Any Questions?
+
+Promote MS4 and MS5
 
 --- end of lecture ---
 
