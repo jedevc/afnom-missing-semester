@@ -600,7 +600,7 @@ fi
 
 Here, we've combined several features of `bash`. First, we list the files in the current directory and use `wc` to count how many there are. We use command substitution to assign this to a variable count. Finally, we use if combined with `bash`'s numerical comparators (in this case `-gt`, short for "greater than") to decide which path to take.
 
-# A Final Note on Scripting
+## A Final Note on Scripting
 Shell scripting is a powerful tool that we've only touched on very briefly here. Shell is a terse but expressive language for manipulating your system, but it's not always the best tool for the job. Remember that the shell you interact with and the language you write in shell scripts are one and the same. Finally, there are excellent resources online for shell scripting - many problems you might want to solve have likely been solved already!
 
 # Exercises
