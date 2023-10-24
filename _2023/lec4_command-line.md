@@ -2,30 +2,223 @@
 layout: lecture
 title: "#4: Shell Advanced"
 date: 2023-10-24
-ready: false
+ready: true
 video:
   aspect: 56.25
   id: e8BO_dYxk5c
 ---
 
-In this lecture we will go through several ways in which you can improve your workflow when using the shell. We have been working with the shell for a while now, but we have mainly focused on executing different commands. We will now see how to run several processes at the same time while keeping track of them, how to stop or pause a specific process and how to make a process run in the background.
+<div class="note">
+The video above is part of the original MIT Missing Semester recordings.  <br><br>
+While the UoB version of this session will cover the same base material, please expect some differences during the live session.
+<br>
+</div>
 
-We will also learn about different ways to improve your shell and other tools, by defining aliases and configuring them using dotfiles. Both of these can help you save time, e.g. by using the same configurations in all your machines without having to type long commands. We will look at how to work with remote machines using SSH.
+# Using the Shell
+## Globbing
+There are often cases when you want to operate over multiple files. You could specify them individually, but `bash` has ways of making this easier, expanding expressions by carrying out filename expansion. These techniques are often referred to as shell globbing.
 
+-   Wildcards - Whenever you want to perform some sort of wildcard matching, you can use `?` and `*` to match one or any amount of characters respectively. For instance, with these files, the command `rm foo?` will delete `foo1` and `foo2` whereas `rm foo*` will delete all but bar.
 
-# Job Control
+```shell
+$ ls
+bar  foo  foo1  foo10  foo2
+$ rm foo?
+$ ls
+bar  foo  foo10 
+```
 
-In some cases you will need to interrupt a job while it is executing, for instance if a command is taking too long to complete (such as a `find` with a very large directory structure to search through).
-Most of the time, you can do `Ctrl-C` and the command will stop.
-But how does this actually work and why does it sometimes fail to stop the process?
+-   Curly braces `{}` - Whenever you have a common substring in a series of commands, you can use curly braces for bash to expand this automatically. This comes in very handy when moving or converting files.
 
-## Killing a process
+```shell
+convert image.{png,jpg}
+# Will expand to
+convert image.png image.jpg
 
-Your shell is using a UNIX communication mechanism called a _signal_ to communicate information to the process. When a process receives a signal it stops its execution, deals with the signal and potentially changes the flow of execution based on the information that the signal delivered. For this reason, signals are _software interrupts_.
+cp project/{foo,bar,baz}.sh new-project
+# Will expand to
+cp project/foo.sh project/bar.sh project/baz.sh new-project
 
-In our case, when typing `Ctrl-C` this prompts the shell to deliver a `SIGINT` signal to the process.
+# Globbing techniques can also be combined
+mv *.{py,sh} new-project
+# Will move all *.py and *.sh files
 
-Here's a minimal example of a Python program that captures `SIGINT` and ignores it, no longer stopping. To kill this program we can now use the `SIGQUIT` signal instead, by typing `Ctrl-\`.
+mkdir foo bar
+# This creates files foo/a, foo/b, ... foo/h, bar/a, bar/b, ... bar/h
+touch {foo,bar}/{a..h}
+touch foo/x bar/y
+```
+
+## History
+So far we have seen how to find files and code, but as you start spending more time in the shell, you may want to find specific commands you typed at some point. The first thing to know is that typing the up arrow will give you back your last command, and if you keep pressing it you will slowly go through your shell history.
+
+The `history` command will let you access your shell history programmatically. It will print your shell history to the standard output. If we want to search there we can pipe that output to `grep` and search for patterns. `history | grep find` will print commands that contain the substring “find”.
+
+In most shells, you can make use of `Ctrl+R` to perform backwards search through your history. After pressing `Ctrl+R`, you can type a substring you want to match for commands in your history. As you keep pressing it, you will cycle through the matches in your history.
+
+You can modify your shell’s history behavior, like preventing commands with a leading space from being included. This comes in handy when you are typing commands with passwords or other bits of sensitive information. To do this, add `HISTCONTROL=ignorespace` to your `.bashrc`. If you make the mistake of not adding the leading space, you can always manually remove the entry by editing your `.bash_history`.
+
+## Aliases
+
+It can become tiresome typing long commands that involve many flags or verbose options. For this reason, most shells support aliasing. A shell alias is a short form for another command that your shell will replace automatically for you. For instance, an alias in bash has the following structure:
+
+    alias alias_name="command_to_alias arg1 arg2"
+
+Note that there is no space around the equal sign =, because alias is a shell command that takes a single argument.
+
+    # Make shorthands for common flags
+    alias ll="ls -lh"
+    
+    # Save a lot of typing for common commands
+    alias gs="git status"
+    alias gc="git commit"
+    alias v="vim"
+    
+    # Save you from mistyping
+    alias sl=ls
+    
+    # Overwrite existing commands for better defaults
+    alias mv="mv -i"           # -i prompts before overwrite
+    alias mkdir="mkdir -p"     # -p make parent dirs as needed
+    alias df="df -h"           # -h prints human readable format
+    
+    # Alias can be composed
+    alias la="ls -A"
+    alias lla="la -l"
+    
+    # To ignore an alias run it prepended with \
+    \ls
+    # Or disable an alias altogether with unalias
+    unalias la
+    
+    # To get an alias definition just call it with alias
+    alias ll
+    # Will print ll='ls -lh'
+
+## Common Shortcuts
+We won't cover all of the available keyboard shortcuts in `bash`; additionally, it is unlikely that you will be able to remember them all! As such, you should consult the `bash` manual page (`man bash`) for a comprehensive list. Despite that, here are some of the most useful ones:
+
+| Shortcut | Action                      |
+|----------|-----------------------------|
+| Tab      | Attempt to auto-complete    |
+| Ctrl-a   | Move to start of line       |
+| Ctrl-e   | Move to end of line         |
+| Alt-f    | Move forward one word       |
+| Alt-b    | Move backward one word      |
+| Ctrl-l   | Clear screen                |
+| Ctrl-r   | Recall from command history |
+| Alt-<    | Move to start of history    |
+| Alt->    | Move to end of history      |
+| Ctrl-k   | Kill (cut) to end of line   |
+
+You might recognise some of these shortcuts as being quite similar to those available in Emacs. Worry not if you prefer Vim keybindings: `bash` supports Vim emulation - add `set -o vi` to your `.bashrc`.
+
+## Return Codes & `stderr`
+As you know, commands will often send output to `stdout`, which is either displayed or plumbed through a pipe to another command. Commands can also send output to `stderr` - often printed to the display, although this can also be redirected somewhere else. More interestingly, commands also have a "return code" or "exit code". The return code or exit status is the way commands have to communicate how execution went. A value of 0 usually means everything went OK; anything different from 0 means an error occurred. It's possible to see the exit code of the last command with `echo $?`:
+
+Exit codes can be used to conditionally execute commands using && (and operator) and || (or operator), both of which are short-circuiting operators. Commands can also be separated within the same line using a semicolon ;. The true program will always have a 0 return code and the false command will always have a 1 return code. Let’s see some examples:
+
+    false || echo "Oops, fail"
+    # Oops, fail
+    
+    true || echo "Will not be printed"
+    #
+    
+    true && echo "Things went well"
+    # Things went well
+    
+    false && echo "Will not be printed"
+    #
+    
+    true ; echo "This will always run"
+    # This will always run
+    
+    false ; echo "This will always run"
+    # This will always run
+    
+    true; echo $?
+    # 0
+    
+    false; echo $?
+    # 1
+
+## Command & Variable Substitution
+Sometimes it's useful to have the output of one command be part of another. This can be done with command substitution. Whenever you place `$( CMD )` it will execute `CMD`, get the output of the command and substitute it in place. A lesser known similar feature is process substitution, `<( CMD )` will execute `CMD` and place the output in a temporary file and substitute the `<()` with that file’s name. This is useful when commands expect values to be passed by file instead of by STDIN.
+
+Additionally, any defined variables - such as environment variables - can also be substituted in with the syntax `$MY_VARIABLE`.
+
+That was a lot of info, so let's give some examples:
+
+```shell
+echo "The date today is $(date)!"
+echo "I'm running $SHELL!"
+
+# find the details of every file newer than a certain date
+ls -la $(find . -newer FILE)
+
+# determine if an executable is native or a shell script
+file $(which command)
+
+# determine the true location of an executable by following symlinks
+realpath $(which command)
+```
+
+Additionally, these substitutions are valid within `""` delimiters but will *not* be expanded within `''` delimiters. As you can see above, they will be expanded outside of these delimiters too.
+
+# Shells & Frameworks
+
+Up till now we have been using the `bash` shell. `bash`, which stands for the 'Bourne Again SHell', is one of many commonly used Unix shells. Linux is a sort of Unix-like OS, and Unix shells provide the command-line interface for Unix-style operating systems. However, from now on we'll just say shells when talking about Unix shells for the sake of brevity.
+
+We've been working with `bash` so far because it is by far the most ubiquitous shell and most systems have it as the default option. Nevertheless, it is not the only option.
+
+For example, the `zsh` shell is a superset of `bash` and provides many convenient features out of the box such as:
+
+- Smarter globbing, `**`
+- Inline globbing/wildcard expansion
+- Spelling correction
+- Better tab completion/selection
+- Path expansion (`cd /u/lo/b` will expand as `/usr/local/bin`)
+
+Some of the above features may also be available in `bash`, but may need you to actively enable them.
+
+**Frameworks** can improve your shell as well. Some popular general frameworks are [prezto](https://github.com/sorin-ionescu/prezto) or [oh-my-zsh](https://ohmyz.sh/), and smaller ones that focus on specific features such as [zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting) or [zsh-history-substring-search](https://github.com/zsh-users/zsh-history-substring-search). Shells like [fish](https://fishshell.com/) include many of these user-friendly features by default. Some of these features include:
+
+- Right prompt
+- Command syntax highlighting
+- History substring search
+- manpage based flag completions
+- Smarter autocompletion
+- Prompt themes
+
+One thing to note when using these frameworks is that they may slow down your shell, especially if the code they run is not properly optimized or it is too much code. You can always profile it and disable the features that you do not use often or value over speed.
+
+# Terminal Emulators
+
+Along with customizing your shell, it is worth spending some time figuring out your choice of **terminal emulator** and its settings. There are many many terminal emulators out there (here is a [comparison](https://anarc.at/blog/2018-04-12-terminal-emulators-1/)).
+
+Terminal emulators are the graphical program that your shell runs in. They mange input (eg. from a keyboard) and output (eg. your display) and communicate with the running shell. The shell takes this input, processes it, and tells the terminal what to output. The name is a legacy term back when 'terminals' were a piece of hardware separate from your computer mainframe. Now technology has come far enough that you can run multiple terminal programs on your computer, which is why they're called terminal *emulators*!
+
+![terminal diagram](/2023/files/terminal_shell.png "Diagram of how terminal emulators work with shells and peripherals") 
+
+Since you might be spending hundreds to thousands of hours in your terminal it pays off to look into its settings. Some of the aspects that you may want to modify in your terminal include:
+
+- Font choice
+- Color Scheme
+- Keyboard shortcuts
+- Tab/Pane support
+- Scrollback configuration
+- Performance (some newer terminals like [Alacritty](https://github.com/jwilm/alacritty) or [kitty](https://sw.kovidgoyal.net/kitty/) offer GPU acceleration).
+
+# Job Control and Multiplexing
+## Job Control
+In some cases you will need to interrupt a job while it is executing, for instance if a command is taking too long to complete (such as a `find` with a very large directory structure to search through). Most of the time, you can do `Ctrl-C` and the command will stop. But how does this actually work, and why does it sometimes fail to stop the process?
+
+### Killing Processes
+Your shell is using a UNIX communication mechanism called a signal to communicate information to the process. When a process receives a signal it stops its execution, deals with the signal and potentially changes the flow of execution based on the information that the signal delivered. For this reason, signals are software interrupts.
+
+In our case, when typing `Ctrl-C` this prompts the shell to deliver a `SIGINT` signal to the process. By default, `SIGINT` will cause a process to exit. However, as with many other signals, processes can handle `SIGINT` in whatever way they please, including ignoring it. `SIGINT` is one of many UNIX signals; for example, by typing `Ctrl-\`, we can instead send the `SIGQUIT` signal.
+
+Here's an example of a small program that captures `SIGINT` and ignores it. To kill this program it is instead necessary to send the `SIGQUIT` signal.
 
 ```python
 #!/usr/bin/env python
@@ -42,9 +235,9 @@ while True:
     i += 1
 ```
 
-Here's what happens if we send `SIGINT` twice to this program, followed by `SIGQUIT`. Note that `^` is how `Ctrl` is displayed when typed in the terminal.
+And here's what it looks like when we try to send `SIGINT` twice followed by `SIGQUIT`:
 
-```
+```shell
 $ python sigint.py
 24^C
 I got a SIGINT, but I am not stopping
@@ -53,166 +246,143 @@ I got a SIGINT, but I am not stopping
 30^\[1]    39913 quit       python sigint.py
 ```
 
-While `SIGINT` and `SIGQUIT` are both usually associated with terminal related requests, a more generic signal for asking a process to exit gracefully is the `SIGTERM` signal.
-To send this signal we can use the [`kill`](https://www.man7.org/linux/man-pages/man1/kill.1.html) command, with the syntax `kill -TERM <PID>`.
+While `SIGINT` and `SIGQUIT` are both usually associated with terminal related requests, a more generic signal for asking a process to exit gracefully is the `SIGTERM` signal. To send this signal we can use the kill command, with the syntax `kill -TERM <PID>`. Should a process refuse to stop, you send the `SIGKILL` signal with `kill -KILL <PID>`. `SIGKILL` cannot be handled or intercepted by a process and instructs the kernel to kill it without giving it a change to respond.
 
-## Pausing and backgrounding processes
+### Pausing and Backgrounding Processes
+Signals can do other things beyond killing a process. For instance, `SIGSTOP` pauses a process. In the terminal, typing `Ctrl-Z` will prompt the shell to send a `SIGTSTP` signal, short for Terminal Stop (i.e. the terminal’s version of `SIGSTOP`).
 
-Signals can do other things beyond killing a process. For instance, `SIGSTOP` pauses a process. In the terminal, typing `Ctrl-Z` will prompt the shell to send a `SIGTSTP` signal, short for Terminal Stop (i.e. the terminal's version of `SIGSTOP`).
+We can then continue the paused job in the foreground or in the background using `fg` or `bg`, respectively.
 
-We can then continue the paused job in the foreground or in the background using [`fg`](https://www.man7.org/linux/man-pages/man1/fg.1p.html) or [`bg`](http://man7.org/linux/man-pages/man1/bg.1p.html), respectively.
+The `jobs` command lists the unfinished jobs associated with the current terminal session. You can refer to those jobs using their PID (you can use `pgrep` or `ps` to find that out). More intuitively, you can also refer to a process using the percent symbol followed by its job number (displayed by `jobs`). To refer to the last backgrounded job you can use the `$!` special parameter.
 
-The [`jobs`](https://www.man7.org/linux/man-pages/man1/jobs.1p.html) command lists the unfinished jobs associated with the current terminal session.
-You can refer to those jobs using their pid (you can use [`pgrep`](https://www.man7.org/linux/man-pages/man1/pgrep.1.html) to find that out).
-More intuitively, you can also refer to a process using the percent symbol followed by its job number (displayed by `jobs`). To refer to the last backgrounded job you can use the `$!` special parameter.
+One more thing to know is that the `&` suffix in a command will run the command in the background, giving you the prompt back, although it will still use the shell’s `STDOUT` which can be annoying (use shell redirections in that case).
 
-One more thing to know is that the `&` suffix in a command will run the command in the background, giving you the prompt back, although it will still use the shell's STDOUT which can be annoying (use shell redirections in that case).
-
-To background an already running program you can do `Ctrl-Z` followed by `bg`.
-Note that backgrounded processes are still children processes of your terminal and will die if you close the terminal (this will send yet another signal, `SIGHUP`).
-To prevent that from happening you can run the program with [`nohup`](https://www.man7.org/linux/man-pages/man1/nohup.1.html) (a wrapper to ignore `SIGHUP`), or use `disown` if the process has already been started.
-Alternatively, you can use a terminal multiplexer as we will see in the next section.
+To background an already running program you can do `Ctrl-Z` followed by `bg`. Note that backgrounded processes are still children processes of your terminal and will die if you close the terminal (this will send yet another signal, `SIGHUP`). To prevent that from happening you can use `disown` if the process has already been started. Alternatively, you can use a terminal multiplexer as we will see in the next section.
 
 Below is a sample session to showcase some of these concepts.
 
-```
-$ sleep 1000
-^Z
-[1]  + 18653 suspended  sleep 1000
+    $ sleep 1000
+    ^Z
+    [1]  + 18653 suspended  sleep 1000
+    
+    $ nohup sleep 2000 &
+    [2] 18745
+    appending output to nohup.out
+    
+    $ jobs
+    [1]  + suspended  sleep 1000
+    [2]  - running    nohup sleep 2000
+    
+    $ bg %1
+    [1]  - 18653 continued  sleep 1000
+    
+    $ jobs
+    [1]  - running    sleep 1000
+    [2]  + running    nohup sleep 2000
+    
+    $ kill -STOP %1
+    [1]  + 18653 suspended (signal)  sleep 1000
+    
+    $ jobs
+    [1]  + suspended (signal)  sleep 1000
+    [2]  - running    nohup sleep 2000
+    
+    $ kill -SIGHUP %1
+    [1]  + 18653 hangup     sleep 1000
+    
+    $ jobs
+    [2]  + running    nohup sleep 2000
+    
+    $ kill -SIGHUP %2
+    
+    $ jobs
+    [2]  + running    nohup sleep 2000
+    
+    $ kill %2
+    [2]  + 18745 terminated  nohup sleep 2000
+    
+    $ jobs
 
-$ nohup sleep 2000 &
-[2] 18745
-appending output to nohup.out
+You can learn more about these and other signals here or typing man signal or kill -l.
 
-$ jobs
-[1]  + suspended  sleep 1000
-[2]  - running    nohup sleep 2000
+## Terminal Multiplexing
 
-$ bg %1
-[1]  - 18653 continued  sleep 1000
+When using the command line interface you will often want to run more than one thing at once. For instance, you might want to run your editor and your program side by side. Although this can be achieved by opening new terminal windows, using a terminal multiplexer is a more versatile solution.
 
-$ jobs
-[1]  - running    sleep 1000
-[2]  + running    nohup sleep 2000
+Terminal multiplexers like `tmux` allow you to multiplex terminal windows using panes and tabs so you can interact with multiple shell sessions. Moreover, terminal multiplexers let you detach a current terminal session and reattach at some point later in time. 
 
-$ kill -STOP %1
-[1]  + 18653 suspended (signal)  sleep 1000
-
-$ jobs
-[1]  + suspended (signal)  sleep 1000
-[2]  - running    nohup sleep 2000
-
-$ kill -SIGHUP %1
-[1]  + 18653 hangup     sleep 1000
-
-$ jobs
-[2]  + running    nohup sleep 2000
-
-$ kill -SIGHUP %2
-
-$ jobs
-[2]  + running    nohup sleep 2000
-
-$ kill %2
-[2]  + 18745 terminated  nohup sleep 2000
-
-$ jobs
-
-```
-
-A special signal is `SIGKILL` since it cannot be captured by the process and it will always terminate it immediately. However, it can have bad side effects such as leaving orphaned children processes.
-
-You can learn more about these and other signals [here](https://en.wikipedia.org/wiki/Signal_(IPC)) or typing [`man signal`](https://www.man7.org/linux/man-pages/man7/signal.7.html) or `kill -l`.
-
-
-# Terminal Multiplexers
-
-When using the command line interface you will often want to run more than one thing at once.
-For instance, you might want to run your editor and your program side by side.
-Although this can be achieved by opening new terminal windows, using a terminal multiplexer is a more versatile solution.
-
-Terminal multiplexers like [`tmux`](https://www.man7.org/linux/man-pages/man1/tmux.1.html) allow you to multiplex terminal windows using panes and tabs so you can interact with multiple shell sessions.
-Moreover, terminal multiplexers let you detach a current terminal session and reattach at some point later in time.
-This can make your workflow much better when working with remote machines since it avoids the need to use `nohup` and similar tricks.
-
-The most popular terminal multiplexer these days is [`tmux`](https://www.man7.org/linux/man-pages/man1/tmux.1.html). `tmux` is highly configurable and by using the associated keybindings you can create multiple tabs and panes and quickly navigate through them.
+The most popular terminal multiplexer these days is `tmux`. `tmux` is highly configurable and by using the associated keybindings you can create multiple tabs and panes and quickly navigate through them.
 
 `tmux` expects you to know its keybindings, and they all have the form `<C-b> x` where that means (1) press `Ctrl+b`, (2) release `Ctrl+b`, and then (3) press `x`. `tmux` has the following hierarchy of objects:
-- **Sessions** - a session is an independent workspace with one or more windows
-    + `tmux` starts a new session.
-    + `tmux new -s NAME` starts it with that name.
-    + `tmux ls` lists the current sessions
-    + Within `tmux` typing `<C-b> d`  detaches the current session
-    + `tmux a` attaches the last session. You can use `-t` flag to specify which
 
-- **Windows** - Equivalent to tabs in editors or browsers, they are visually separate parts of the same session
-    + `<C-b> c` Creates a new window. To close it you can just terminate the shells doing `<C-d>`
-    + `<C-b> N` Go to the _N_ th window. Note they are numbered
-    + `<C-b> p` Goes to the previous window
-    + `<C-b> n` Goes to the next window
-    + `<C-b> ,` Rename the current window
-    + `<C-b> w` List current windows
+-   Sessions - a session is an independent workspace with one or more windows
+    -   `tmux` starts a new session.
+    -   `tmux new -s NAME` starts it with that name.
+    -   `tmux ls` lists the current sessions
+    -   Within `tmux` typing `<C-b> d` detaches the current session
+    -   `tmux a` attaches the last session. You can use `-t` flag to specify which
+-   Windows - Equivalent to tabs in editors or browsers, they are visually separate parts of the same session
+    -   `<C-b> c` Creates a new window. To close it you can just terminate the shells doing `<C-d>`
+    -   `<C-b> N` Go to the N th window. Note they are numbered
+    -   `<C-b> p` Goes to the previous window
+    -   `<C-b> n` Goes to the next window
+    -   `<C-b> ,` Rename the current window
+    -   `<C-b> w` List current windows
+-   Panes - Like vim splits, panes let you have multiple shells in the same visual display.
+    -   `<C-b> "` Split the current pane horizontally
+    -   `<C-b> %` Split the current pane vertically
+    -   `<C-b> <direction>` Move to the pane in the specified direction. Direction here means arrow keys.
+    -   `<C-b> z` Toggle zoom for the current pane
+    -   `<C-b> [` Start scrollback. You can then press `<space>` to start a selection and `<enter>` to copy that selection.
+    -   `<C-b> <space>` Cycle through pane arrangements.
 
-- **Panes** - Like vim splits, panes let you have multiple shells in the same visual display.
-    + `<C-b> "` Split the current pane horizontally
-    + `<C-b> %` Split the current pane vertically
-    + `<C-b> <direction>` Move to the pane in the specified _direction_. Direction here means arrow keys.
-    + `<C-b> z` Toggle zoom for the current pane
-    + `<C-b> [` Start scrollback. You can then press `<space>` to start a selection and `<enter>` to copy that selection.
-    + `<C-b> <space>` Cycle through pane arrangements.
+Terminal multiplexers can also be particularly useful when doing remote work, as you can then have both your local and your remote work session viewable in the same tmux session. Some terminals (such as iTerm2) will have some terminal multiplexing functionality built-in, so it is up to you to decide if you would rather use that.
 
-For further reading,
-[here](https://www.hamvocke.com/blog/a-quick-and-easy-guide-to-tmux/) is a quick tutorial on `tmux` and [this](http://linuxcommand.org/lc3_adv_termmux.php) has a more detailed explanation that covers the original `screen` command. You might also want to familiarize yourself with [`screen`](https://www.man7.org/linux/man-pages/man1/screen.1.html), since it comes installed in most UNIX systems.
+# SSH
+## Executing commands
+An often overlooked feature of `ssh` is the ability to run commands directly.
+`ssh foobar@server ls` will execute `ls` in the home folder of foobar.
+It works with pipes, so `ssh foobar@server ls | grep PATTERN` will grep locally the remote output of `ls` and `ls | ssh foobar@server grep PATTERN` will grep remotely the local output of `ls`.
 
-# Aliases
+## SSH Config
+If you connect to a remote host often, it might be frustrating to keep telling `ssh` the connection details. For this reason `ssh` supports being configured via the `~/.ssh/config` file. Each entry in this file represents a known host. For example, for some server `foo` you might have an entry such as:
 
-It can become tiresome typing long commands that involve many flags or verbose options.
-For this reason, most shells support _aliasing_.
-A shell alias is a short form for another command that your shell will replace automatically for you.
-For instance, an alias in bash has the following structure:
-
-```bash
-alias alias_name="command_to_alias arg1 arg2"
+```
+HOST foo
+    User my_username
+    HostName foo.example.com
+    Port 2222
 ```
 
-Note that there is no space around the equal sign `=`, because [`alias`](https://www.man7.org/linux/man-pages/man1/alias.1p.html) is a shell command that takes a single argument.
+This would allow you to connect to this host by typing `ssh foo` rather than `ssh my_username@foo.example.com -p 2222`. As well as giving common hosts short and convenient names, it is also possible to specify additional options - such as forcing a specific command to be executed on connection by default, such as your favourite shell. These names can also be used with other tools that use SSH, such as `scp` - more on that later.
 
-Aliases have many convenient features:
+## Key Management
+Key-based authentication exploits public-key cryptography to prove to the server that the client owns the secret private key without revealing the key. This way you do not need to reenter your password every time. Nevertheless, the private key (often `~/.ssh/id_rsa` and more recently `~/.ssh/id_ed25519`) is effectively your password, so treat it like so.
+
+### Key generation
+To generate a pair you can run [`ssh-keygen`](https://www.man7.org/linux/man-pages/man1/ssh-keygen.1.html).
 
 ```bash
-# Make shorthands for common flags
-alias ll="ls -lh"
-
-# Save a lot of typing for common commands
-alias gs="git status"
-alias gc="git commit"
-alias v="vim"
-
-# Save you from mistyping
-alias sl=ls
-
-# Overwrite existing commands for better defaults
-alias mv="mv -i"           # -i prompts before overwrite
-alias mkdir="mkdir -p"     # -p make parent dirs as needed
-alias df="df -h"           # -h prints human readable format
-
-# Alias can be composed
-alias la="ls -A"
-alias lla="la -l"
-
-# To ignore an alias run it prepended with \
-\ls
-# Or disable an alias altogether with unalias
-unalias la
-
-# To get an alias definition just call it with alias
-alias ll
-# Will print ll='ls -lh'
+ssh-keygen -o -a 100 -t ed25519 -f ~/.ssh/id_ed25519
 ```
 
-Note that aliases do not persist shell sessions by default.
-To make an alias persistent you need to include it in shell startup files, like `.bashrc` or `.zshrc`, which we are going to introduce in the next section.
+You should choose a passphrase, to avoid someone who gets hold of your private key to access authorized servers. Use [`ssh-agent`](https://www.man7.org/linux/man-pages/man1/ssh-agent.1.html) or [`gpg-agent`](https://linux.die.net/man/1/gpg-agent) so you do not have to type your passphrase every time.
 
+### Key based authentication
+`ssh` will look into `.ssh/authorized_keys` to determine which clients it should let in. To copy a public key over you can use:
+
+```bash
+cat .ssh/id_ed25519.pub | ssh foobar@remote 'cat >> ~/.ssh/authorized_keys'
+```
+
+A simpler solution can be achieved with `ssh-copy-id` where available:
+
+```bash
+ssh-copy-id -i .ssh/id_ed25519 foobar@remote
+```
+
+## Copying files over SSH
+There are many ways to copy files over ssh, of which the most straightforward is  [`scp`](https://www.man7.org/linux/man-pages/man1/scp.1.html). The syntax is `scp path/to/local_file remote_host:path/to/remote_file`. For are more powerful tool - for example if you are copying a large amount of data - consider  [`rsync`](https://www.man7.org/linux/man-pages/man1/rsync.1.html). It has the ability to stop and resume copies and has fine-grained control when handling permissions and symlinks.
 
 # Dotfiles
 
@@ -235,6 +405,8 @@ Some other examples of tools that can be configured through dotfiles are:
 - `vim` - `~/.vimrc` and the `~/.vim` folder
 - `ssh` - `~/.ssh/config`
 - `tmux` - `~/.tmux.conf`
+
+You also often encounter `.profile` files, which contain shell-independent shell configuration options such as environment variables. If `.profile` is used, it's good practice to avoid having shell-specific commands in `.profile` to avoid compatibility issues further down the line.
 
 How should you organize your dotfiles? They should be in their own folder,
 under version control, and **symlinked** into place using a script. This has
@@ -306,169 +478,132 @@ if [ -f ~/.aliases ]; then
     source ~/.aliases
 fi
 ```
+# Regex
+## Introduction
+Regular expressions are common and useful enough that it’s worthwhile to take some time to understand how they work. They are a tool for matching text - for example, you might want to match certain lines in a file or specify a pattern to replace in a file. By using regular expressions - or "regexps" - we can describe sophisticated patterns for matching text.
 
-# Remote Machines
+Most characters just carry their normal meaning - for example, the regex "example" matches the literal string "example", but some characters have “special” matching behavior. Exactly which characters do what vary somewhat between different implementations of regular expressions, which is a source of great frustration. Very common patterns are:
 
-![The image is from page 248 of The internet guide for new users. 1993 by Daniel P. Dern.](../files/astral_ssh.jpg "Remote Login is a lot like Astral Projection")
+-   `.` means “any single character” except newline
+-   `*` zero or more of the preceding match
+-   `+` one or more of the preceding match
+-   `[abc]` any one character of `a`, `b`, and `c`
+-   `(RX1|RX2)` either something that matches `RX1` or `RX2`
+-   `^` the start of the line
+-   `$` the end of the line
+-    `\w \d \s` match words, digits, or whitespace 
 
-It has become more and more common for programmers to use remote servers in their everyday work. If you need to use remote servers in order to deploy backend software or you need a server with higher computational capabilities, you will end up using a Secure Shell (SSH). As with most tools covered, SSH is highly configurable so it is worth learning about it.
+For example, the regexp `[b-d]\s*` would match any character in the range of `b` to `d` (so b, c, and d), followed by zero or more whitespace characters. Below is an excerpt from Alice in Wonderland where all the matching patterns have been surrounded with square brackets:
 
-To `ssh` into a server you execute a command as follows
+> Ali[c]e was [b]eginning to get very tire[d ]of sitting [b]y her sister on the [b]ank, an[d ]of having nothing to [d]o: on[c]e or twi[c]e she ha[d ]peepe[d] into the [b]ook her sister was rea[d]ing, [b]ut it ha[d] no pi[c]tures or [c]onversations in it, “an[d ]what is the use of a [b]ook,” thought Ali[c]e “without pi[c]tures or [c]onversations?” 
 
-```bash
-ssh foo@bar.mit.edu
+With these patterns it becomes possible to specify sophisticated patterns for matching strings. Some patterns that you may find useful would be:
+
+-   `\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}` matches IPv4 Addresses
+-   `.+\@.+\..+` is a simple email address regexp pattern
+-   `[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}` is a pattern matching dates in the format dd/mm/yyyy (note that this would match invalid dates like 60/24/7800 as well!)
+
+## Tools
+Regular expressions are powerful, but it can often be difficult to construct them or understand why one isn't matching text that you expect it should. For that reason it might be valuable to use tools that can help you build and debug regular expressions, such as [this one](https://regex101.com/).
+
+## `grep`
+`grep` is a tool for matching text using regular expressions. You've seen `grep` briefly before for filtering out lines of text, but now that we understand regular expressions we can use `grep` to perform powerful filtering:
+
+-   `history | grep -P "cat .*\.txt"'` will search through your shell history for lines where you have `cat`-ed any file ending in `.txt`
+-   `ip a | grep -P "\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}"` takes the output of the command `ip a` and return the lines that have an IPv4 address in them 
+
+Using `grep` to search through your filesystem and the contents of files can be incredibly powerful! 
+## `sed`
+`sed`, the "stream editor", is a tool for *modifying* text. It accepts some stream of text - such as a file on disk or some input that you have piped into it - and applies some modification to it. `sed` can do many things, but it is commonly used for text substitution with the `s` command. The `s` command is written in the form: `s/REGEX/SUBSTITUTION/`, where `REGEX` is the regular expression you want to search for, and `SUBSTITUTION` is the text you want to substitute matching text with. Say - for example - that you have this file and realize that you would like to replace every occurrence of "Alice" with "Bob". You could use `sed`, passing the `-i` flag (replace in-place), like this:
+
+    sed -i 's/Alice/Bob/g' s-example.txt
+
+Here the final `g` means "global", which is `sed`-speak for "replace every occurrence, not just the first on each line". Of course this is a simple example, and `sed` can match with the full power of regular expressions. `sed` regular expressions are somewhat weird, and will require you to put a `\` before most of these to give them their special meaning. Or you can pass the `-E` flag.
+
+# A Spot of Scripting
+So far we have been using the shell in an interactive way, where we write one command and see the results returned to us. You may have also noticed two things about the shell: its syntax can be quite unusual, and that it is possible to express powerful behaviour in very few commands. With this in mind we can look at shell scripting, which allows us to write shell commands into a file to be run later. As well as running a series of commands in order, just as you might, it is possible to use various control flow expressions you might be familiar with - such as loops or conditional expressions - to decide which commands to run.
+
+## A Basic Example
+The most basic use case for a shell script is that you have one or more commands that you often run that you would like to remember. Such a script might look like this:
+
+```shell
+#!/usr/bin/env bash
+my_first_command
+my_second_command
 ```
 
-Here we are trying to ssh as user `foo` in server `bar.mit.edu`.
-The server can be specified with a URL (like `bar.mit.edu`) or an IP (something like `foobar@192.168.1.42`). Later we will see that if we modify ssh config file you can access just using something like `ssh bar`.
+Note that it starts with the line `#!/usr/bin/env bash`. When this script is run, this line tells Linux to use `bash` to execute this script.
 
-## Executing commands
+## Variables
+As you are now familiar, `bash` has some idea of variables - specifically environment variables. You also know how to use these variables with the variable substitution syntax covered earlier - that is to access the value of the variable `SHELL` you would write `$SHELL`.
 
-An often overlooked feature of `ssh` is the ability to run commands directly.
-`ssh foobar@server ls` will execute `ls` in the home folder of foobar.
-It works with pipes, so `ssh foobar@server ls | grep PATTERN` will grep locally the remote output of `ls` and `ls | ssh foobar@server grep PATTERN` will grep remotely the local output of `ls`.
+It is possible as well in a script to define variables that exist only while that script is executing. Let's try that:
 
+```shell
+#!/usr/bin/env bash
+target="foo"
 
-## SSH Keys
-
-Key-based authentication exploits public-key cryptography to prove to the server that the client owns the secret private key without revealing the key. This way you do not need to reenter your password every time. Nevertheless, the private key (often `~/.ssh/id_rsa` and more recently `~/.ssh/id_ed25519`) is effectively your password, so treat it like so.
-
-### Key generation
-
-To generate a pair you can run [`ssh-keygen`](https://www.man7.org/linux/man-pages/man1/ssh-keygen.1.html).
-```bash
-ssh-keygen -o -a 100 -t ed25519 -f ~/.ssh/id_ed25519
-```
-You should choose a passphrase, to avoid someone who gets hold of your private key to access authorized servers. Use [`ssh-agent`](https://www.man7.org/linux/man-pages/man1/ssh-agent.1.html) or [`gpg-agent`](https://linux.die.net/man/1/gpg-agent) so you do not have to type your passphrase every time.
-
-If you have ever configured pushing to GitHub using SSH keys, then you have probably done the steps outlined [here](https://help.github.com/articles/connecting-to-github-with-ssh/) and have a valid key pair already. To check if you have a passphrase and validate it you can run `ssh-keygen -y -f /path/to/key`.
-
-### Key based authentication
-
-`ssh` will look into `.ssh/authorized_keys` to determine which clients it should let in. To copy a public key over you can use:
-
-```bash
-cat .ssh/id_ed25519.pub | ssh foobar@remote 'cat >> ~/.ssh/authorized_keys'
+my_first_command "$target"
+my_second_command "$target"
 ```
 
-A simpler solution can be achieved with `ssh-copy-id` where available:
+Note the lack of spaces around the `=` in the declaration. Now we can define a value in one place and use it multiple times elsewhere!
 
-```bash
-ssh-copy-id -i .ssh/id_ed25519 foobar@remote
+## Functions
+
+Bash also allows you to define functions. We can use this to write some sequence of commands once and then execute them with different "arguments". Let's try that: 
+
+```shell
+#!/usr/bin/env bash
+mcd () {
+    mkdir -p "$1"
+    cd "$1"
+}
+
+mcd "foo"
+mcd "bar"
 ```
 
-## Copying files over SSH
+Here we define a function `mcd` that makes a directory and then moves to it. Notice that we can use it like any other command available to us after we have defined it. Notice also the use of the variable `1`. In `bash`, this refers to the first argument passed to a function. In the first case, it would expand to "foo", but in the second it would expand to "bar". This allows us to define our own custom commands within a script that are made up of the commands we already have!
 
-There are many ways to copy files over ssh:
+## Loops
 
-- `ssh+tee`, the simplest is to use `ssh` command execution and STDIN input by doing `cat localfile | ssh remote_server tee serverfile`. Recall that [`tee`](https://www.man7.org/linux/man-pages/man1/tee.1.html) writes the output from STDIN into a file.
-- [`scp`](https://www.man7.org/linux/man-pages/man1/scp.1.html) when copying large amounts of files/directories, the secure copy `scp` command is more convenient since it can easily recurse over paths. The syntax is `scp path/to/local_file remote_host:path/to/remote_file`
-- [`rsync`](https://www.man7.org/linux/man-pages/man1/rsync.1.html) improves upon `scp` by detecting identical files in local and remote, and preventing copying them again. It also provides more fine grained control over symlinks, permissions and has extra features like the `--partial` flag that can resume from a previously interrupted copy. `rsync` has a similar syntax to `scp`.
+There are cases where you may want to run a command or set of commands multiple times. Let's see an example of that:
 
-## Port Forwarding
+```shell
+#!/usr/bin/env bash
 
-In many scenarios you will run into software that listens to specific ports in the machine. When this happens in your local machine you can type `localhost:PORT` or `127.0.0.1:PORT`, but what do you do with a remote server that does not have its ports directly available through the network/internet?.
+for image in "*.png"; do
+    convert "$image" "${image%.*}.jpg"
+done
 
-This is called _port forwarding_ and it
-comes in two flavors: Local Port Forwarding and Remote Port Forwarding (see the pictures for more details, credit of the pictures from [this StackOverflow post](https://unix.stackexchange.com/questions/115897/whats-ssh-port-forwarding-and-whats-the-difference-between-ssh-local-and-remot)).
-
-**Local Port Forwarding**
-![Local Port Forwarding](https://i.stack.imgur.com/a28N8.png  "Local Port Forwarding")
-
-**Remote Port Forwarding**
-![Remote Port Forwarding](https://i.stack.imgur.com/4iK3b.png  "Remote Port Forwarding")
-
-The most common scenario is local port forwarding, where a service in the remote machine listens in a port and you want to link a port in your local machine to forward to the remote port. For example, if we execute  `jupyter notebook` in the remote server that listens to the port `8888`. Thus, to forward that to the local port `9999`, we would do `ssh -L 9999:localhost:8888 foobar@remote_server` and then navigate to `locahost:9999` in our local machine.
-
-
-## SSH Configuration
-
-We have covered many many arguments that we can pass. A tempting alternative is to create shell aliases that look like
-```bash
-alias my_server="ssh -i ~/.id_ed25519 --port 2222 -L 9999:localhost:8888 foobar@remote_server
 ```
 
-However, there is a better alternative using `~/.ssh/config`.
+Here we convert every PNG in the current directory to a JPEG. The `"${image%.*}.jpg"` syntax tells `bash` to take the variable "image" and trim off the file extension. Neat!
 
-```bash
-Host vm
-    User foobar
-    HostName 172.16.174.141
-    Port 2222
-    IdentityFile ~/.ssh/id_ed25519
-    LocalForward 9999 localhost:8888
+## Conditional Statements
 
-# Configs can also take wildcards
-Host *.mit.edu
-    User foobaz
+Finally, it is possible to conditionally run commands. Let's give that a try:
+
+```shell
+#!/usr/bin/env bash
+
+count="$(ls | wc -l)"
+
+if [[ "$count" -gt 5 ]]; then
+    echo "That's way too many files!!!!"
+else 
+    echo "As you were!"
+fi
 ```
 
-An additional advantage of using the `~/.ssh/config` file over aliases  is that other programs like `scp`, `rsync`, `mosh`, &c are able to read it as well and convert the settings into the corresponding flags.
 
+Here, we've combined several features of `bash`. First, we list the files in the current directory and use `wc` to count how many there are. We use command substitution to assign this to a variable count. Finally, we use if combined with `bash`'s numerical comparators (in this case `-gt`, short for "greater than") to decide which path to take.
 
-Note that the `~/.ssh/config` file can be considered a dotfile, and in general it is fine for it to be included with the rest of your dotfiles. However, if you make it public, think about the information that you are potentially providing strangers on the internet: addresses of your servers, users, open ports, &c. This may facilitate some types of attacks so be thoughtful about sharing your SSH configuration.
-
-Server side configuration is usually specified in `/etc/ssh/sshd_config`. Here you can make changes like disabling password authentication, changing ssh ports, enabling X11 forwarding, &c. You can specify config settings on a per user basis.
-
-## Miscellaneous
-
-A common pain when connecting to a remote server are disconnections due to your computer shutting down, going to sleep, or changing networks. Moreover if one has a connection with significant lag using ssh can become quite frustrating. [Mosh](https://mosh.org/), the mobile shell, improves upon ssh, allowing roaming connections, intermittent connectivity and providing intelligent local echo.
-
-Sometimes it is convenient to mount a remote folder. [sshfs](https://github.com/libfuse/sshfs) can mount a folder on a remote server
-locally, and then you can use a local editor.
-
-
-# Shells & Frameworks
-
-During shell tool and scripting we covered the `bash` shell because it is by far the most ubiquitous shell and most systems have it as the default option. Nevertheless, it is not the only option.
-
-For example, the `zsh` shell is a superset of `bash` and provides many convenient features out of the box such as:
-
-- Smarter globbing, `**`
-- Inline globbing/wildcard expansion
-- Spelling correction
-- Better tab completion/selection
-- Path expansion (`cd /u/lo/b` will expand as `/usr/local/bin`)
-
-**Frameworks** can improve your shell as well. Some popular general frameworks are [prezto](https://github.com/sorin-ionescu/prezto) or [oh-my-zsh](https://ohmyz.sh/), and smaller ones that focus on specific features such as [zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting) or [zsh-history-substring-search](https://github.com/zsh-users/zsh-history-substring-search). Shells like [fish](https://fishshell.com/) include many of these user-friendly features by default. Some of these features include:
-
-- Right prompt
-- Command syntax highlighting
-- History substring search
-- manpage based flag completions
-- Smarter autocompletion
-- Prompt themes
-
-One thing to note when using these frameworks is that they may slow down your shell, especially if the code they run is not properly optimized or it is too much code. You can always profile it and disable the features that you do not use often or value over speed.
-
-# Terminal Emulators
-
-Along with customizing your shell, it is worth spending some time figuring out your choice of **terminal emulator** and its settings. There are many many terminal emulators out there (here is a [comparison](https://anarc.at/blog/2018-04-12-terminal-emulators-1/)).
-
-Since you might be spending hundreds to thousands of hours in your terminal it pays off to look into its settings. Some of the aspects that you may want to modify in your terminal include:
-
-- Font choice
-- Color Scheme
-- Keyboard shortcuts
-- Tab/Pane support
-- Scrollback configuration
-- Performance (some newer terminals like [Alacritty](https://github.com/jwilm/alacritty) or [kitty](https://sw.kovidgoyal.net/kitty/) offer GPU acceleration).
+# A Final Note on Scripting
+Shell scripting is a powerful tool that we've only touched on very briefly here. Shell is a terse but expressive language for manipulating your system, but it's not always the best tool for the job. Remember that the shell you interact with and the language you write in shell scripts are one and the same. Finally, there are excellent resources online for shell scripting - many problems you might want to solve have likely been solved already!
 
 # Exercises
-
-## Job control
-
-1. From what we have seen, we can use some `ps aux | grep` commands to get our jobs' pids and then kill them, but there are better ways to do it. Start a `sleep 10000` job in a terminal, background it with `Ctrl-Z` and continue its execution with `bg`. Now use [`pgrep`](https://www.man7.org/linux/man-pages/man1/pgrep.1.html) to find its pid and [`pkill`](http://man7.org/linux/man-pages/man1/pgrep.1.html) to kill it without ever typing the pid itself. (Hint: use the `-af` flags).
-
-1. Say you don't want to start a process until another completes. How would you go about it? In this exercise, our limiting process will always be `sleep 60 &`.
-One way to achieve this is to use the [`wait`](https://www.man7.org/linux/man-pages/man1/wait.1p.html) command. Try launching the sleep command and having an `ls` wait until the background process finishes.
-
-    However, this strategy will fail if we start in a different bash session, since `wait` only works for child processes. One feature we did not discuss in the notes is that the `kill` command's exit status will be zero on success and nonzero otherwise. `kill -0` does not send a signal but will give a nonzero exit status if the process does not exist.
-    Write a bash function called `pidwait` that takes a pid and waits until the given process completes. You should use `sleep` to avoid wasting CPU unnecessarily.
-
-## Terminal multiplexer
-
-1. Follow this `tmux` [tutorial](https://www.hamvocke.com/blog/a-quick-and-easy-guide-to-tmux/) and then learn how to do some basic customizations following [these steps](https://www.hamvocke.com/blog/a-guide-to-customizing-your-tmux-conf/).
 
 ## Aliases
 
@@ -509,3 +644,18 @@ Install a Linux virtual machine (or use an already existing one) for this exerci
 1. Edit your SSH server config by doing  `sudo vim /etc/ssh/sshd_config` and disable password authentication by editing the value of `PasswordAuthentication`. Disable root login by editing the value of `PermitRootLogin`. Restart the `ssh` service with `sudo service sshd restart`. Try sshing in again.
 1. (Challenge) Install [`mosh`](https://mosh.org/) in the VM and establish a connection. Then disconnect the network adapter of the server/VM. Can mosh properly recover from it?
 1. (Challenge) Look into what the `-N` and `-f` flags do in `ssh` and figure out a command to achieve background port forwarding.
+
+## Job control
+
+1. From what we have seen, we can use some `ps aux | grep` commands to get our jobs' pids and then kill them, but there are better ways to do it. Start a `sleep 10000` job in a terminal, background it with `Ctrl-Z` and continue its execution with `bg`. Now use [`pgrep`](https://www.man7.org/linux/man-pages/man1/pgrep.1.html) to find its pid and [`pkill`](http://man7.org/linux/man-pages/man1/pgrep.1.html) to kill it without ever typing the pid itself. (Hint: use the `-af` flags).
+
+1. Say you don't want to start a process until another completes. How would you go about it? In this exercise, our limiting process will always be `sleep 60 &`.
+One way to achieve this is to use the [`wait`](https://www.man7.org/linux/man-pages/man1/wait.1p.html) command. Try launching the sleep command and having an `ls` wait until the background process finishes.
+
+    However, this strategy will fail if we start in a different bash session, since `wait` only works for child processes. One feature we did not discuss in the notes is that the `kill` command's exit status will be zero on success and nonzero otherwise. `kill -0` does not send a signal but will give a nonzero exit status if the process does not exist.
+    Write a bash function called `pidwait` that takes a pid and waits until the given process completes. You should use `sleep` to avoid wasting CPU unnecessarily.
+
+## Terminal multiplexer
+
+1. Follow this `tmux` [tutorial](https://www.hamvocke.com/blog/a-quick-and-easy-guide-to-tmux/) and then learn how to do some basic customizations following [these steps](https://www.hamvocke.com/blog/a-guide-to-customizing-your-tmux-conf/).
+
