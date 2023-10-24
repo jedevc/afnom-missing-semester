@@ -116,7 +116,7 @@ You might recognise some of these shortcuts as being quite similar to those avai
 ## Return Codes & `stderr`
 As you know, commands will often send output to `stdout`, which is either displayed or plumbed through a pipe to another command. Commands can also send output to `stderr` - often printed to the display, although this can also be redirected somewhere else. More interestingly, commands also have a "return code" or "exit code". The return code or exit status is the way commands have to communicate how execution went. A value of 0 usually means everything went OK; anything different from 0 means an error occurred. It's possible to see the exit code of the last command with `echo $?`:
 
-Exit codes can be used to conditionally execute commands using && (and operator) and || (or operator), both of which are short-circuiting operators. Commands can also be separated within the same line using a semicolon ;. The true program will always have a 0 return code and the false command will always have a 1 return code. Let’s see some examples:
+Exit codes can be used to conditionally execute commands using `&&` (and operator) and `||` (or operator), both of which are short-circuiting operators. Commands can also be separated within the same line using a semicolon `;`. The true program will always have a 0 return code and the false command will always have a 1 return code. Let’s see some examples:
 
     false || echo "Oops, fail"
     # Oops, fail
