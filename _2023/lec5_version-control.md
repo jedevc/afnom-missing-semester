@@ -2,566 +2,298 @@
 layout: lecture
 title: "#5: Version Control (Git)"
 date: 2023-11-07
-ready: false
+ready: true
 video:
   aspect: 56.25
   id: 2sjqTHE0zok
 ---
 
-Version control systems (VCSs) are tools used to track changes to source code
-(or other collections of files and folders). As the name implies, these tools
-help maintain a history of changes; furthermore, they facilitate collaboration.
-VCSs track changes to a folder and its contents in a series of snapshots, where
-each snapshot encapsulates the entire state of files/folders within a top-level
-directory. VCSs also maintain metadata like who created each snapshot, messages
-associated with each snapshot, and so on.
+**Note beforehand:** this document assumes that you have already installed Git! If you don't have Git, you can get it at https://git-scm.com/downloads (which I recommend) or via your system package manager (which might be a little out of date but should still work - if something doesn't try updating first!).
 
-Why is version control useful? Even when you're working by yourself, it can let
-you look at old snapshots of a project, keep a log of why certain changes were
-made, work on parallel branches of development, and much more. When working
-with others, it's an invaluable tool for seeing what other people have changed,
-as well as resolving conflicts in concurrent development.
+**Another note:** this document also assumes you're decently fluent on the command line - if you're not, go checkout some of the previous talks in the series!
 
-Modern VCSs also let you easily (and often automatically) answer questions
-like:
+# What's version control?
 
-- Who wrote this module?
-- When was this particular line of this particular file edited? By whom? Why
-  was it edited?
-- Over the last 1000 revisions, when/why did a particular unit test stop
-working?
+Version control is a way to understand and track how your code changes over time. It lets you see what things got changed and when, the reasons behind changes and even revert changes that have been made and restore your codebase to how it was at some arbitrary point in the past.
 
-While other VCSs exist, **Git** is the de facto standard for version control.
-This [XKCD comic](https://xkcd.com/1597/) captures Git's reputation:
+It also has features that make it easy to work collaboratively with other people on your code, by letting multiple people have different versions of the codebase that they're working on and by providing tools to merge those changes back together when they're done.
 
-![xkcd 1597](https://imgs.xkcd.com/comics/git.png)
+Put simply, version control is a type of really fancy edit history for your code. There are various different version control systems (often shortened to VCS), and virtually every single software project uses one of them, however the most popular is called Git, which is what we're going to talk about here.
 
-Because Git's interface is a leaky abstraction, learning Git top-down (starting
-with its interface / command-line interface) can lead to a lot of confusion.
-It's possible to memorize a handful of commands and think of them as magic
-incantations, and follow the approach in the comic above whenever anything goes
-wrong.
-
-While Git admittedly has an ugly interface, its underlying design and ideas are
-beautiful. While an ugly interface has to be _memorized_, a beautiful design
-can be _understood_. For this reason, we give a bottom-up explanation of Git,
-starting with its data model and later covering the command-line interface.
-Once the data model is understood, the commands can be better understood in
-terms of how they manipulate the underlying data model.
-
-# Git's data model
-
-There are many ad-hoc approaches you could take to version control. Git has a
-well-thought-out model that enables all the nice features of version control,
-like maintaining history, supporting branches, and enabling collaboration.
-
-## Snapshots
-
-Git models the history of a collection of files and folders within some
-top-level directory as a series of snapshots. In Git terminology, a file is
-called a "blob", and it's just a bunch of bytes. A directory is called a
-"tree", and it maps names to blobs or trees (so directories can contain other
-directories). A snapshot is the top-level tree that is being tracked. For
-example, we might have a tree as follows:
-
-```
-<root> (tree)
-|
-+- foo (tree)
-|  |
-|  + bar.txt (blob, contents = "hello world")
-|
-+- baz.txt (blob, contents = "git is wonderful")
-```
-
-The top-level tree contains two elements, a tree "foo" (that itself contains
-one element, a blob "bar.txt"), and a blob "baz.txt".
-
-## Modeling history: relating snapshots
-
-How should a version control system relate snapshots? One simple model would be
-to have a linear history. A history would be a list of snapshots in time-order.
-For many reasons, Git doesn't use a simple model like this.
-
-In Git, a history is a directed acyclic graph (DAG) of snapshots. That may
-sound like a fancy math word, but don't be intimidated. All this means is that
-each snapshot in Git refers to a set of "parents", the snapshots that preceded
-it. It's a set of parents rather than a single parent (as would be the case in
-a linear history) because a snapshot might descend from multiple parents, for
-example, due to combining (merging) two parallel branches of development.
-
-Git calls these snapshots "commit"s. Visualizing a commit history might look
-something like this:
-
-```
-o <-- o <-- o <-- o
-            ^
-             \
-              --- o <-- o
-```
-
-In the ASCII art above, the `o`s correspond to individual commits (snapshots).
-The arrows point to the parent of each commit (it's a "comes before" relation,
-not "comes after"). After the third commit, the history branches into two
-separate branches. This might correspond to, for example, two separate features
-being developed in parallel, independently from each other. In the future,
-these branches may be merged to create a new snapshot that incorporates both of
-the features, producing a new history that looks like this, with the newly
-created merge commit shown in bold:
-
-<pre class="highlight">
-<code>
-o <-- o <-- o <-- o <---- <strong>o</strong>
-            ^            /
-             \          v
-              --- o <-- o
-</code>
-</pre>
-
-Commits in Git are immutable. This doesn't mean that mistakes can't be
-corrected, however; it's just that "edits" to the commit history are actually
-creating entirely new commits, and references (see below) are updated to point
-to the new ones.
-
-## Data model, as pseudocode
-
-It may be instructive to see Git's data model written down in pseudocode:
-
-```
-// a file is a bunch of bytes
-type blob = array<byte>
-
-// a directory contains named files and directories
-type tree = map<string, tree | blob>
-
-// a commit has parents, metadata, and the top-level tree
-type commit = struct {
-    parents: array<commit>
-    author: string
-    message: string
-    snapshot: tree
-}
-```
-
-It's a clean, simple model of history.
-
-## Objects and content-addressing
-
-An "object" is a blob, tree, or commit:
-
-```
-type object = blob | tree | commit
-```
-
-In Git data store, all objects are content-addressed by their [SHA-1
-hash](https://en.wikipedia.org/wiki/SHA-1).
-
-```
-objects = map<string, object>
-
-def store(object):
-    id = sha1(object)
-    objects[id] = object
-
-def load(id):
-    return objects[id]
-```
-
-Blobs, trees, and commits are unified in this way: they are all objects. When
-they reference other objects, they don't actually _contain_ them in their
-on-disk representation, but have a reference to them by their hash.
-
-For example, the tree for the example directory structure [above](#snapshots)
-(visualized using `git cat-file -p 698281bc680d1995c5f4caaf3359721a5a58d48d`),
-looks like this:
-
-```
-100644 blob 4448adbf7ecd394f42ae135bbeed9676e894af85    baz.txt
-040000 tree c68d233a33c5c06e0340e4c224f0afca87c8ce87    foo
-```
-
-The tree itself contains pointers to its contents, `baz.txt` (a blob) and `foo`
-(a tree). If we look at the contents addressed by the hash corresponding to
-baz.txt with `git cat-file -p 4448adbf7ecd394f42ae135bbeed9676e894af85`, we get
-the following:
-
-```
-git is wonderful
-```
-
-## References
-
-Now, all snapshots can be identified by their SHA-1 hashes. That's inconvenient,
-because humans aren't good at remembering strings of 40 hexadecimal characters.
-
-Git's solution to this problem is human-readable names for SHA-1 hashes, called
-"references". References are pointers to commits. Unlike objects, which are
-immutable, references are mutable (can be updated to point to a new commit).
-For example, the `master` reference usually points to the latest commit in the
-main branch of development.
-
-```
-references = map<string, string>
-
-def update_reference(name, id):
-    references[name] = id
-
-def read_reference(name):
-    return references[name]
-
-def load_reference(name_or_id):
-    if name_or_id in references:
-        return load(references[name_or_id])
-    else:
-        return load(name_or_id)
-```
-
-With this, Git can use human-readable names like "master" to refer to a
-particular snapshot in the history, instead of a long hexadecimal string.
-
-One detail is that we often want a notion of "where we currently are" in the
-history, so that when we take a new snapshot, we know what it is relative to
-(how we set the `parents` field of the commit). In Git, that "where we
-currently are" is a special reference called "HEAD".
+# The basics of Git
 
 ## Repositories
 
-Finally, we can define what (roughly) is a Git _repository_: it is the data
-`objects` and `references`.
+Git has a relatively straight forwards model that it adheres to, the foundation of which is called a **repository** (often shortened to "repo"). For every project you do, you have a corresponding repository that all the project's source code, assets and files are stored within.
 
-On disk, all Git stores are objects and references: that's all there is to Git's
-data model. All `git` commands map to some manipulation of the commit DAG by
-adding objects and adding/updating references.
+In order to create a repository, drop into your shell and change into the directory that you want to store your project in. From there, run:
 
-Whenever you're typing in any command, think about what manipulation the
-command is making to the underlying graph data structure. Conversely, if you're
-trying to make a particular kind of change to the commit DAG, e.g. "discard
-uncommitted changes and make the 'master' ref point to commit `5d83f9e`", there's
-probably a command to do it (e.g. in this case, `git checkout master; git reset
---hard 5d83f9e`).
+```
+git init <folder name>
 
-# Staging area
+git init myProject // will create a directory called `myProject` and initialise a git repository in it
+```
 
-This is another concept that's orthogonal to the data model, but it's a part of
-the interface to create commits.
+Once you have done this, you can change into that directory and run `git status` to make sure that it worked - you should see something like this.
 
-One way you might imagine implementing snapshotting as described above is to have
-a "create snapshot" command that creates a new snapshot based on the _current
-state_ of the working directory. Some version control tools work like this, but
-not Git. We want clean snapshots, and it might not always be ideal to make a
-snapshot from the current state. For example, imagine a scenario where you've
-implemented two separate features, and you want to create two separate commits,
-where the first introduces the first feature, and the next introduces the
-second feature. Or imagine a scenario where you have debugging print statements
-added all over your code, along with a bugfix; you want to commit the bugfix
-while discarding all the print statements.
-
-Git accommodates such scenarios by allowing you to specify which modifications
-should be included in the next snapshot through a mechanism called the "staging
-area".
-
-# Git command-line interface
-
-To avoid duplicating information, we're not going to explain the commands below
-in detail. See the highly recommended [Pro Git](https://git-scm.com/book/en/v2)
-for more information, or watch the lecture video.
-
-## Basics
-
-{% comment %}
-
-The `git init` command initializes a new Git repository, with repository
-metadata being stored in the `.git` directory:
-
-```console
-$ mkdir myproject
-$ cd myproject
-$ git init
-Initialized empty Git repository in /home/missing-semester/myproject/.git/
-$ git status
-On branch master
+```
+On branch main
 
 No commits yet
 
 nothing to commit (create/copy files and use "git add" to track)
 ```
 
-How do we interpret this output? "No commits yet" basically means our version
-history is empty. Let's fix that.
+## Staging and committing files
 
-```console
-$ echo "hello, git" > hello.txt
+Usually, the first thing we want to add to a new repository is called a README file - this is a simple text file that describes a little bit about the project and sometimes some instructions as to how to work with and use your project.
+
+Often README files are written in a basic markup language called Markdown, which you can read more about [here](https://www.markdownguide.org/) and has the file extension `.md`.
+
+A simple README file written in Markdown might look something like this:
+
+```markdown
+# myProject
+
+A tool to frobulate the fractional matrices of retrograde incineration.
+```
+
+If we save this file as `README.md` in the base directory of our repository, we can then go ahead and start the process of committing it.
+
+A commit can be thought of as a unit of work - each commit should contain one "unit of work". You can think of a unit of work as a task - something like fixing a bug, or adding a feature, or changing the layout of a page. Generally, you should try to keep commits as self contained as possible, and if you have a big feature that you're working on you should split that into it's own branch - but we'll discuss branches later.
+
+Because commits can contain changes to multiple files, we need to tell Git what files we want to add to our new commit. To do this, we "stage" the files that we want - this is done using the `git add` command. For example, to stage our new README file, we would run:
+
+```
+git add README.md
+```
+
+You would need to do this the same for any change you make to a file, no matter if it's creating it like we're doing here, or editing or deleting it.
+
+**Tip:** If you're ever unsure as to what you have and haven't staged, you can run `git status` to see what the state of your repository is.
+
+Once we've staged everything we want to commit, we can then go ahead and actually make the commit. A commit contains three things - a message explaining what's in the commit, a set of diffs and a reference to a parent commit. A diff is functionally a list of changes that have been made to a file, and Git uses these in order to construct a history of your code by combining a set of diffs one-by-one using the references to parent commits to reconstruct a copy of a given file at any point in time.
+
+<div drawio-diagram="550"><img src="https://wiki.akpain.net/uploads/images/drawio/2023-11/dDAHSHqXaKdG73RL-drawing-1-1698929793.png"></div>
+
+To make a commit, we just use the `git commit` command, which will open an editor of your choice:
+
+```
+git commit
+```
+
+Write your commit message in the editor (it should be something descriptive, like "add README file" or "fix bug that caused users to be deleted accidentally"), save it and then exit your editor, and Git will create a commit for you!
+
+Optionally, you can write multiple lines in a commit message if you want in order to explain why you made the changes you made. For example, take a look at this commit that I made on one of my projects.
+
+[![](https://wiki.akpain.net/uploads/images/gallery/2023-11/scaled-1680-/c07FSH5ifAO8w6IN-image-1698932696402.png)](https://wiki.akpain.net/uploads/images/gallery/2023-11/c07FSH5ifAO8w6IN-image-1698932696402.png)
+
+This is  a good commit. Not all your commits have to be 7 lines long (most of the time, one suffices), but you should try to keep them descriptive and avoid commits like this one:
+
+[![](https://wiki.akpain.net/uploads/images/gallery/2023-11/scaled-1680-/e6BuqczCKVupfFCX-image-1698930541323.png)](https://wiki.akpain.net/uploads/images/gallery/2023-11/e6BuqczCKVupfFCX-image-1698930541323.png)
+
+## Remotes
+
+So far, we've only touched on what you can do on your local machine. However, one of the most useful features of Git (and VCSes in general) is its ability to work with remote copies of your code. 
+
+This is super helpful as it allows you to easily backup your code and share code between multiple computers and servers that you own and use, but also because it makes it really easy for other people to work on your codebase as well as you.
+
+As the name suggests, a remote is a remote copy of your repository. These are usually hosted on dedicated websites like GitHub or GitLab (but there are many others - the School of Computer Science has their own at https://git.cs.bham.ac.uk) - in this example, we're going to be using GitHub.
+
+It's important to remember that Git and GitHub are different things! Git is the piece of software we're learning about - GitHub is separate website that provides a place for you sync your repositories and provides some additional fancy features on top of that to that make collaboration easier - those extra features are totally separate to Git itself.
+
+### Working with a remote
+
+If you're following along, you're going to want to make an account on GitHub and [follow their instructions to create a repository on their website](https://docs.github.com/en/get-started/quickstart/hello-world#creating-a-repository). Once you've done that, you should be able to copy the repository URL that GitHub gives you, which we're going to need if we want to setup a remote.
+
+With our URL in hand, we need to tell Git about it. We do this with the `git remote` command.
+
+```
+git remote add origin https://github.com/codemicro/sample.git
+```
+
+Here, we're telling Git to add a remote to our repository called `origin` that points to the URL we just gave it. Each repository we add needs a name because Git gives you the option of having multiple remotes, but in this case we want to just use one, so we give it the de-facto name of `origin`.
+
+However, just because we've added a remote to our repository doesn't mean that our remote repository and our local repository are magically in-sync - we still need to send our changes over to the remote. This is done with the `git push` command.
+
+The first time you run `git push`, you'll have to tell it where to send your changes. You do that like this:
+
+```
+git push -u origin main
+```
+
+and you should see an output that looks something like this:
+
+```
+Enumerating objects: 3, done.
+Counting objects: 100% (3/3), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (3/3), 283 bytes | 283.00 KiB/s, done.
+Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
+To github.com:codemicro/sample.git
+ * [new branch]      main -> main
+branch 'main' set up to track 'origin/main'.
+```
+
+Now, we can go back to GitHub and see our code there!
+
+Bear in mind that you might be asked for credentials at this point - if you are, you can enter your GitHub username and password, and it should just work.
+
+Every time you make a local change, you need to make sure you `git push` it back to your the remote repository to ensure that it's all up to date. If you don't `git push`, your changes won't be anywhere but on your local machine and nobody else can see them.
+
+You might also need to use `git pull` - if you're working on your project with somebody else and they modify the remote repository, you need a way to get their changes on your computer. Running `git pull` will go and fetch the latest commits from the remote and apply them to your repository so your local repository is up-to-date and in sync with the remote.
+
+### Getting repositories that already exist
+
+Let's say that somebody has a repository full of code that you want to get on your local machine to have a play with.
+
+Lucky for you - this is super simple thanks to the `git clone` command. It works a little bit like `git init`, but instead of providing a directory to put your new repository in, you provide a repository URL and it will put the repository in a folder of the same name as the repository - but you can change this. For example:
+
+```
+git clone https://github.com/codemicro/sample.git # clones into a directory called `sample`
+
+git clone https://github.com/codemicro/sample.git hello # clones into a directory called `hello`
+```
+
+Once you've done this, you can change into the directory with your new repo in and use it as normal!
+
+## Branches
+
+Branches are a really neat, albeit slightly confusing, feature of Git.
+
+You can think of a branch as a way of having two different, potentially conflicting, sets of edits in a repository at once that you can switch back and forwards between at will and that can eventually be merged into one.
+
+An example of when you might want to use a branch is when you want to add a big feature to your repository that will take, say, a week to write, but you don't want to keep the leave the repository in a slightly broken state while you're working on it. Here, you would create a  new branch, implement your changes there, and then "merge" your changes back into the main branch.
+
+To make this crystal clear, here's a diagram:
+
+<div drawio-diagram="553"><img src="https://wiki.akpain.net/uploads/images/drawio/2023-11/KOstAQkUfrGFnVX8-drawing-1-1699013054.png"></div>
+
+In this, both branches start at commit A, have changes made to them independently (commit B and commits D, E and F) and then the feature branch is merged back into the main branch as commit C. None of the changes that you make on the feature branch show up on the main branch (and vice versa) until they're merged back together.
+
+When you create a new Git repository, Git automatically creates a new branch for you called `main` (that's what the `git push -u origin main` thing that we did earlier was referencing!). When you create new commits, you're adding them to this main branch. You can see this for yourself by running the `git branch` command and see a list of all the branches in the repository, with the one you're currently on highlighted.
+
+```
+$ git branch
+* main
+```
+
+If you want to make a new branch based off of the current state of the main branch, you use the `git branch` command followed by the name you want the branch to have. To create a branch called `my-awesome-feature`, you would run
+
+```
+git branch my-awesome-feature
+```
+
+and you should be able to see it in the master list of Git branches!
+
+```
+$ git branch
+* main
+  my-awesome-feature
+```
+
+... but it shows that we're still on the `main` branch! What gives??
+
+To change between branches, you use the `git switch` command along with the branch name you want to move to.
+
+```
+$ git switch my-awesome-feature
+Switched to branch 'my-awesome-feature'
+$ git branch
+  main
+* my-awesome-feature
+```
+
+And just like that we can start making some commits. Let's create a new file and commit it.
+
+```
+$ cat > hello.txt << EOF
+> Hi there! It's nice to meet you.
+> EOF
 $ git add hello.txt
-$ git status
-On branch master
-
-No commits yet
-
-Changes to be committed:
-  (use "git rm --cached <file>..." to unstage)
-
-        new file:   hello.txt
-
-$ git commit -m 'Initial commit'
-[master (root-commit) 4515d17] Initial commit
+$ git commit -m "Add hello.txt"
+[my-awesome-feature d39cab9] Add hello.txt
  1 file changed, 1 insertion(+)
  create mode 100644 hello.txt
 ```
 
-With this, we've `git add`ed a file to the staging area, and then `git
-commit`ed that change, adding a simple commit message "Initial commit". If we
-didn't specify a `-m` option, Git would open our text editor to allow us type a
-commit message.
+Just like as before, we can also push our changes to our remote so other people can see them. Since this is the first time we're pushing from our new branch, we'll have to use the `-u` flag again.
 
-Now that we have a non-empty version history, we can visualize the history.
-Visualizing the history as a DAG can be especially helpful in understanding the
-current status of the repo and connecting it with your understanding of the Git
-data model.
-
-The `git log` command visualizes history. By default, it shows a flattened
-version, which hides the graph structure. If you use a command like `git log
---all --graph --decorate`, it will show you the full version history of the
-repository, visualized in graph form.
-
-```console
-$ git log --all --graph --decorate
-* commit 4515d17a167bdef0a91ee7d50d75b12c9c2652aa (HEAD -> master)
-  Author: Missing Semester <missing-semester@mit.edu>
-  Date:   Tue Jan 21 22:18:36 2020 -0500
-
-      Initial commit
+```
+git push -u origin my-awesome-feature
 ```
 
-This doesn't look all that graph-like, because it only contains a single node.
-Let's make some more changes, author a new commit, and visualize the history
-once more.
+If we then `git switch` back to main and run `ls`, we can see that `hello.txt` has vanished! In order to make it show up, we'll have to merge `my-awesome-feature` back into `main`. First, make sure you're on the branch that you want to merge your changes into (so in this case that's `main`), and then run `git merge`:
 
-```console
-$ echo "another line" >> hello.txt
-$ git status
-On branch master
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git checkout -- <file>..." to discard changes in working directory)
-
-        modified:   hello.txt
-
-no changes added to commit (use "git add" and/or "git commit -a")
-$ git add hello.txt
-$ git status
-On branch master
-Changes to be committed:
-  (use "git reset HEAD <file>..." to unstage)
-
-        modified:   hello.txt
-
-$ git commit -m 'Add a line'
-[master 35f60a8] Add a line
+```
+$ git merge my-awesome-feature
+Updating 92c026e..d39cab9
+Fast-forward
+ hello.txt | 1 +
  1 file changed, 1 insertion(+)
+ create mode 100644 hello.txt
 ```
 
-Now, if we visualize the history again, we'll see some of the graph structure:
+and now you should be able to run `ls` and see `hello.txt`!
+
+Since we're done with our new branch, we can delete it to reduce clutter. This is done with a flag that gets passed along with the `git branch` command, like so:
 
 ```
-* commit 35f60a825be0106036dd2fbc7657598eb7b04c67 (HEAD -> master)
-| Author: Missing Semester <missing-semester@mit.edu>
-| Date:   Tue Jan 21 22:26:20 2020 -0500
-|
-|     Add a line
-|
-* commit 4515d17a167bdef0a91ee7d50d75b12c9c2652aa
-  Author: Anish Athalye <me@anishathalye.com>
-  Date:   Tue Jan 21 22:18:36 2020 -0500
-
-      Initial commit
+$ git branch --delete my-awesome-feature
+Deleted branch my-awesome-feature (was d39cab9).
 ```
 
-Also, note that it shows the current HEAD, along with the current branch
-(master).
+# Ways to make Git less confusing
 
-We can look at old versions using the `git checkout` command.
+Git is big, complicated and hard. It gets easier once you've got the basics down, the learning curve is still pretty steep (but it is worth it!).
 
-```console
-$ git checkout 4515d17  # previous commit hash; yours will be different
-Note: checking out '4515d17'.
+Lots of people like using graphical interfaces to work with Git instead of the command line. There are [lots of these available](https://git-scm.com/downloads/guis), but some notable mentions are:
 
-You are in 'detached HEAD' state. You can look around, make experimental
-changes and commit them, and you can discard any commits you make in this
-state without impacting any branches by performing another checkout.
+* GitHub Desktop - [https://desktop.github.com/](https://desktop.github.com/)
+  * Made by GitHub
+* GitKraken - [https://www.gitkraken.com/](https://www.gitkraken.com/)
+  * Really slick and easy to use
+  * Free with the GitHub Education Student Developer pack - [https://education.github.com/pack/offers](https://education.github.com/pack/offers)
+* GitExtensions - [https://gitextensions.github.io/](https://gitextensions.github.io/)
+  * Windows-only
+  * What I used to use!
+ 
+# Git tips and tricks
 
-If you want to create a new branch to retain commits you create, you may
-do so (now or later) by using -b with the checkout command again. Example:
+Here's a couple of extra little tricks that you might find especially useful when you're using Git
 
-  git checkout -b <new-branch-name>
+## Ignoring files
 
-HEAD is now at 4515d17 Initial commit
-$ cat hello.txt
-hello, git
-$ git checkout master
-Previous HEAD position was 4515d17 Initial commit
-Switched to branch 'master'
-$ cat hello.txt
-hello, git
-another line
+Got files in your repository that you never want to commit? Think configuration files with secrets in them, intermediary representations of your programs or databases?
+
+If you drop a file called `.gitignore` in the base directory of your repository and commit it, Git will never show you options to stage/commit those files!
+
+For example, a `.gitignore` file that ignores any file called `config.yml`, any file that has the `.o` file extension and the `run` directory in the base of your repository would look like this:
+
+```
+config,yml
+*.o
+/run/
 ```
 
-Git can show you how files have evolved (differences, or diffs) using the `git
-diff` command:
+Learn more about `.gitignore` files here: [https://git-scm.com/docs/gitignore](https://git-scm.com/docs/gitignore)
 
-```console
-$ git diff 4515d17 hello.txt
-diff --git c/hello.txt w/hello.txt
-index 94bab17..f0013b2 100644
---- c/hello.txt
-+++ w/hello.txt
-@@ -1 +1,2 @@
- hello, git
- +another line
+## Custom Git commands
+
+If you want to make a custom command, put an executable file on your PATH with a name that starts with `git-`!
+
+For example, putting [this Python script](https://gist.github.com/codemicro/bde7fc6082197b5fd67c5e9630a4be1b) somewhere on your PATH and calling it `git-autoacommit` will mean you can run `git autocommit` to have Git write your commit messages for you!
+
+```
+# nano hello.txt
+# git add hello.txt
+# git autocommit
+[main 0c9140d] Update `hello.txt`
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 ```
 
-{% endcomment %}
+# Other useful links
 
-- `git help <command>`: get help for a git command
-- `git init`: creates a new git repo, with data stored in the `.git` directory
-- `git status`: tells you what's going on
-- `git add <filename>`: adds files to staging area
-- `git commit`: creates a new commit
-    - Write [good commit messages](https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)!
-    - Even more reasons to write [good commit messages](https://chris.beams.io/posts/git-commit/)!
-- `git log`: shows a flattened log of history
-- `git log --all --graph --decorate`: visualizes history as a DAG
-- `git diff <filename>`: show changes you made relative to the staging area
-- `git diff <revision> <filename>`: shows differences in a file between snapshots
-- `git checkout <revision>`: updates HEAD and current branch
-
-## Branching and merging
-
-{% comment %}
-
-Branching allows you to "fork" version history. It can be helpful for working
-on independent features or bug fixes in parallel. The `git branch` command can
-be used to create new branches; `git checkout -b <branch name>` creates and
-branch and checks it out.
-
-Merging is the opposite of branching: it allows you to combine forked version
-histories, e.g. merging a feature branch back into master. The `git merge`
-command is used for merging.
-
-{% endcomment %}
-
-- `git branch`: shows branches
-- `git branch <name>`: creates a branch
-- `git checkout -b <name>`: creates a branch and switches to it
-    - same as `git branch <name>; git checkout <name>`
-- `git merge <revision>`: merges into current branch
-- `git mergetool`: use a fancy tool to help resolve merge conflicts
-- `git rebase`: rebase set of patches onto a new base
-
-## Remotes
-
-- `git remote`: list remotes
-- `git remote add <name> <url>`: add a remote
-- `git push <remote> <local branch>:<remote branch>`: send objects to remote, and update remote reference
-- `git branch --set-upstream-to=<remote>/<remote branch>`: set up correspondence between local and remote branch
-- `git fetch`: retrieve objects/references from a remote
-- `git pull`: same as `git fetch; git merge`
-- `git clone`: download repository from remote
-
-## Undo
-
-- `git commit --amend`: edit a commit's contents/message
-- `git reset HEAD <file>`: unstage a file
-- `git checkout -- <file>`: discard changes
-
-# Advanced Git
-
-- `git config`: Git is [highly customizable](https://git-scm.com/docs/git-config)
-- `git clone --depth=1`: shallow clone, without entire version history
-- `git add -p`: interactive staging
-- `git rebase -i`: interactive rebasing
-- `git blame`: show who last edited which line
-- `git stash`: temporarily remove modifications to working directory
-- `git bisect`: binary search history (e.g. for regressions)
-- `.gitignore`: [specify](https://git-scm.com/docs/gitignore) intentionally untracked files to ignore
-
-# Miscellaneous
-
-- **GUIs**: there are many [GUI clients](https://git-scm.com/downloads/guis)
-out there for Git. We personally don't use them and use the command-line
-interface instead.
-- **Shell integration**: it's super handy to have a Git status as part of your
-shell prompt ([zsh](https://github.com/olivierverdier/zsh-git-prompt),
-[bash](https://github.com/magicmonty/bash-git-prompt)). Often included in
-frameworks like [Oh My Zsh](https://github.com/ohmyzsh/ohmyzsh).
-- **Editor integration**: similarly to the above, handy integrations with many
-features. [fugitive.vim](https://github.com/tpope/vim-fugitive) is the standard
-one for Vim.
-- **Workflows**: we taught you the data model, plus some basic commands; we
-didn't tell you what practices to follow when working on big projects (and
-there are [many](https://nvie.com/posts/a-successful-git-branching-model/)
-[different](https://www.endoflineblog.com/gitflow-considered-harmful)
-[approaches](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)).
-- **GitHub**: Git is not GitHub. GitHub has a specific way of contributing code
-to other projects, called [pull
-requests](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests).
-- **Other Git providers**: GitHub is not special: there are many Git repository
-hosts, like [GitLab](https://about.gitlab.com/) and
-[BitBucket](https://bitbucket.org/).
-
-# Resources
-
-- [Pro Git](https://git-scm.com/book/en/v2) is **highly recommended reading**.
-Going through Chapters 1--5 should teach you most of what you need to use Git
-proficiently, now that you understand the data model. The later chapters have
-some interesting, advanced material.
-- [Oh Shit, Git!?!](https://ohshitgit.com/) is a short guide on how to recover
-from some common Git mistakes.
-- [Git for Computer
-Scientists](https://eagain.net/articles/git-for-computer-scientists/) is a
-short explanation of Git's data model, with less pseudocode and more fancy
-diagrams than these lecture notes.
-- [Git from the Bottom Up](https://jwiegley.github.io/git-from-the-bottom-up/)
-is a detailed explanation of Git's implementation details beyond just the data
-model, for the curious.
-- [How to explain git in simple
-words](https://smusamashah.github.io/blog/2017/10/14/explain-git-in-simple-words)
-- [Learn Git Branching](https://learngitbranching.js.org/) is a browser-based
-game that teaches you Git.
-
-# Exercises
-
-1. If you don't have any past experience with Git, either try reading the first
-   couple chapters of [Pro Git](https://git-scm.com/book/en/v2) or go through a
-   tutorial like [Learn Git Branching](https://learngitbranching.js.org/). As
-   you're working through it, relate Git commands to the data model.
-1. Clone the [repository for the
-class website](https://github.com/missing-semester/missing-semester).
-    1. Explore the version history by visualizing it as a graph.
-    1. Who was the last person to modify `README.md`? (Hint: use `git log` with
-       an argument).
-    1. What was the commit message associated with the last modification to the
-       `collections:` line of `_config.yml`? (Hint: use `git blame` and `git
-       show`).
-1. One common mistake when learning Git is to commit large files that should
-   not be managed by Git or adding sensitive information. Try adding a file to
-   a repository, making some commits and then deleting that file from history
-   (you may want to look at
-   [this](https://help.github.com/articles/removing-sensitive-data-from-a-repository/)).
-1. Clone some repository from GitHub, and modify one of its existing files.
-   What happens when you do `git stash`? What do you see when running `git log
-   --all --oneline`? Run `git stash pop` to undo what you did with `git stash`.
-   In what scenario might this be useful?
-1. Like many command line tools, Git provides a configuration file (or dotfile)
-   called `~/.gitconfig`. Create an alias in `~/.gitconfig` so that when you
-   run `git graph`, you get the output of `git log --all --graph --decorate
-   --oneline`. Information about git aliases can be found [here](https://git-scm.com/docs/git-config#Documentation/git-config.txt-alias).
-1. You can define global ignore patterns in `~/.gitignore_global` after running
-   `git config --global core.excludesfile ~/.gitignore_global`. Do this, and
-   set up your global gitignore file to ignore OS-specific or editor-specific
-   temporary files, like `.DS_Store`.
-1. Fork the [repository for the class
-   website](https://github.com/missing-semester/missing-semester), find a typo
-   or some other improvement you can make, and submit a pull request on GitHub
-   (you may want to look at [this](https://github.com/firstcontributions/first-contributions)).
-   Please only submit PRs that are useful (don't spam us, please!). If you
-   can't find an improvement to make, you can skip this exercise.
+* Git's own introductory guide: [https://git-scm.com/docs/gitcore-tutorial](https://git-scm.com/docs/gitcore-tutorial)
+* Julia Evans' confusing Git terminology post: [https://jvns.ca/blog/2023/11/01/confusing-git-terminology](https://jvns.ca/blog/2023/11/01/confusing-git-terminology)
