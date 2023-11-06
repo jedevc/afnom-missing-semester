@@ -90,11 +90,11 @@ Write your commit message in the editor (it should be something descriptive, lik
 
 Optionally, you can write multiple lines in a commit message if you want in order to explain why you made the changes you made. For example, take a look at this commit that I made on one of my projects.
 
-[![](/static/media/2023/git/goodcommit.png)
+![](/static/media/2023/git/goodcommit.png)
 
 This is  a good commit. Not all your commits have to be 7 lines long (most of the time, one suffices), but you should try to keep them descriptive and avoid commits like this one:
 
-[![](/static/media/2023/git/badcommit.png)
+![](/static/media/2023/git/badcommit.png)
 
 ## Remotes
 
