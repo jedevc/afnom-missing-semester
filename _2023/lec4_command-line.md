@@ -3,6 +3,7 @@ layout: lecture
 title: "#4: Shell Advanced"
 date: 2023-10-24
 ready: true
+phase: 1
 video:
   aspect: 56.25
   id: e8BO_dYxk5c

@@ -3,6 +3,7 @@ layout: lecture
 title: "LaTeX"
 date: 2024-01-16
 ready: false
+phase: 2
 ---
 
 # A quick introduction to LaTeX

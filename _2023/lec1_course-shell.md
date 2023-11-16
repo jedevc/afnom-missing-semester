@@ -3,6 +3,7 @@ layout: lecture
 title: "#1: Course overview + the shell + 🍕"
 date: 2023-10-03
 ready: true
+phase: 1
 video:
   aspect: 56.25
   id: Z56Jmr9Z34Q

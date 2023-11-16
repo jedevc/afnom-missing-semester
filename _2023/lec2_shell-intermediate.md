@@ -3,6 +3,7 @@ layout: lecture
 title: "#2 Intermediate Shell + Git Basics"
 date: 2023-10-10
 ready: true
+phase: 1
 ---
 <div class="note">
 <b> Update 08/10/23: </b> The contents below have been adjusted to reflect the Missing Semester content covered at UoB. Check our <a href="https://github.com/afnom/missing-semester/commits/master">git history</a> for a full list of changes.
