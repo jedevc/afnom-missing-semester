@@ -44,23 +44,7 @@ Read about the [motivation behind this class](/about/).
 
 <ul>
 {% assign lectures = site['2023'] | sort: 'date' %}
-{% for lecture in lectures %}
-    {% if lecture.phony != true %}
-        <li>
-        {% if lecture.phase == 1 %}
-            <span style="background-color: #B6D7A8; border-radius: 10px; padding: 1px; color: #222;"> Phase 1</span>
-        {% else if lecture.phase == 2 %}
-            <span style="background-color: #76A5AF; border-radius: 10px; padding: 1px; color: #222;"> Phase 2</span>
-        {% endif %}
-        <strong>{{ lecture.date | date: '%d/%m/%y' }}</strong>:
-        {% if lecture.ready %}
-            <a href="{{ lecture.url | relative_url }}">{{ lecture.title }}</a>
-        {% else %}
-            {{ lecture.title }} {% if lecture.noclass %}[no class]{% endif %}
-        {% endif %}
-        </li>
-    {% endif %}
-{% endfor %}
+{% include schedule.html lectures = lectures %}
 </ul>
 
 # Related Resources
