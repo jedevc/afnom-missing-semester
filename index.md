@@ -63,8 +63,6 @@ Read about the [motivation behind this class](/about/).
 {% endfor %}
 </ul>
 
-We may decide to run more sessions based on the sucess of the first 5; watch this space!
-
 # Related Resources
 
 <div class="note">
