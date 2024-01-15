@@ -6,11 +6,27 @@ ready: false
 phase: 2
 ---
 
+<div class="note">
+This lesson is a UoB original and has been completely written from scratch. As such, we will specifically cover content relevant to the modules taught at UoB. We encourage you to use LaTeX for your uni hand-ins and hope this guide will help!
+</div>
+
 # A quick introduction to LaTeX
 
 ## What is LaTeX?
 
+LaTeX, which is pronounced «Lah-tech» or «Lay-tech» (to rhyme with «blech» or «Bertolt Brecht»), is a document preparation system for high-quality typesetting. It is most often used for medium-to-large technical or scientific documents but it can be used for almost any form of publishing.
+
+LaTeX is not a word processor! Instead, LaTeX encourages authors not to worry too much about the appearance of their documents but to concentrate on getting the right content.[[1]](https://www.latex-project.org/about/)
+
 ## When to and not to use LaTeX
+
+LaTeX is the go-to tool if you're
+
+- writing a journal, article, book, presentation, or letter
+- typesetting content with complex mathematical expressions, tables, or graphics
+- writing large documents with chapters, citations, and cross-references
+
+However, LaTeX may not be best suited if you're designing a poster, magazine cover, or similar document that requires precise and free visual control over page elements.
 
 # LaTeX with Overleaf
 
@@ -20,13 +36,79 @@ While not FOSS software, Overleaf is free to access for all University of Birmin
 
 ![overleaf_login](/2023/files/latex/overleaf_login.png "Login page of overleaf.com.")
 
-Let's create a new blank and explore what Overleaf has to offer.
+Let's create a new project and explore what Overleaf has to offer.
 
 ![overleaf_editor](/2023/files/latex/overleaf_editor.png "Overleaf's editor view")
 
+To the left are the project and file outline panels that list the files in a project and sections in the currently open document respectively. LaTeX projects are generally split across multiple `.tex` files, conventionally one for each section/chapter. We will look at this more closely in a later section.
+
+Next to them are the code editor and preview panels. The editor is where we will spend most of our time. Now is also a good time to enable auto compile from the "Recompile" drop-down to see previews as we go along.
+
+![overleaf_auto_compile](/2023/files/latex/overleaf_auto_compile.png "Enabling the auto compile option")
+
+Now that we have a working LaTeX environment, let's get started with typesetting!
+
 # The basics
 
-# Document classes and packages
+## The preamble
+
+Our new document currently consists of the following mark-up:
+
+```latex
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+
+\title{My first project}
+\author{me}
+\date{October 2023}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+\end{document}
+```
+
+The first part, i.e. the content between `\documentclass...` and `...\begin{document}`, is called the preamble of the document. The preamble lets us define configuration options for the document and include any packages we may use.
+
+Everything succeeding the preamble is the actual content of the document.
+
+## Document classes and packages
+
+The `\documentclass` command defines the structure of the document's layout, and takes an optional list of configuration options followed by the name of the document class as arguments. By default, Overleaf uses the `article` document class. Let's switch to a landscape layout by specifying the `landscape` option, i.e., by using `\documentclass[landscape]{article}`.
+
+![overleaf_article_landscape](/2023/files/latex/overleaf_article_landscape.png "Switching to a landscape layout")
+
+`article`, as the name suggests, is used to typeset articles and other basic content. As such, it lacks comprehensive configuration options and may not always be best suited for every document. Thankfully, there is a plethora of document classes for almost every need out there. An exhaustive list can be found [on CTAN here](https://ctan.org/topic/class). While we will use `article` for this lesson, below is an overview of a few popular document classes:
+
+| Document class | Overview |
+|----------------|----------|
+| [`letter`](https://eu.mirrors.cicku.me/ctan/macros/latex/base/letter.pdf) | The standard LaTeX document class for writing letters   |
+| [`beamer`](https://mirror.apps.cam.ac.uk/pub/tex-archive/macros/latex/contrib/beamer/doc/beameruserguide.pdf) | For typesetting presentations and slides  |
+| [`acmart`](https://anorien.csc.warwick.ac.uk/mirrors/CTAN/macros/latex/contrib/acmart/acmart.pdf), [`IEEEtran`](https://mirror.apps.cam.ac.uk/pub/tex-archive/macros/latex/contrib/IEEEtran/IEEEtran_HOWTO.pdf) | For typesetting publications  |
+
+While writing your document, you will probably find that there are some areas where basic LaTeX cannot solve your problem. If you want to include graphics, colored text or source code from a file into your document, you need to enhance the capabilities of LaTeX. Such enhancements are called packages. Some packages come with the LaTeX base distribution. Others are provided separately. Modern TeX distributions come with a large number of packages pre-installed. The command to use a package is pretty simple: `\usepackage`[[2]](https://en.wikibooks.org/wiki/LaTeX/Document_Structure#Packages).
+
+For example, our document already includes the `graphicx` package using `\usepackage{graphicx}`.
+
+A comprehensive list of packages can be found on [CTAN](https://ctan.org/pkg?lang=en). CTAN, the Comprehensive TeX Archive Network, is a set of sites that provide resources for TeX documents, e.g. packages, document classes, documentation, and more.
+
+## Typesetting basic stuff
+
+Let's add some content to the "Introduction" section of our new document.
+
+```latex
+\section{Introduction}
+This is some \textbf{bold} and \textit{italicised} text.
+```
+
+![output_basic_text](/2023/files/latex/output_basic_text.png "Some basic text.")
+
+Typesetting textual content is straightforward; you simply input the text to be displayed and the document class handles the typeface, positioning, and font size for you. Note how the `\textbf` and `\textit` commands are used to format text in bold and italics respectively.
+
+Essentially, LaTeX allows you to focus on the content of your document and leave its appearance to the authors of the document class you're using.
 
 # Typesetting more exciting stuff
 
@@ -148,16 +230,142 @@ A comprehensive list of what `minted` is capable of can be found [here](https://
 
 ### Using `listings`
 
+`listings` is much more powerful and configurable than `minted`, but that comes with a steeper learning curve. Getting started is simple and basic code can be typeset almost identically to with `minted`
+
+```latex
+\begin{lstlisting}[language=Haskell]
+    add :: Int -> Int -> Int
+    add x y = x + y
+\end{lstlisting}
+```
+
+![output_listings_basic](/2023/files/latex/output_listings_basic.png "Some Haskell code typeset using listings.")
+
+The documentation for the package can be found [here](https://mirror.apps.cam.ac.uk/pub/tex-archive/macros/latex/contrib/listings/listings.pdf).
+
 ## Images
 
-## Tables and lists
+Images are embedded using the `graphicx` package which Overleaf already imports for us. To add an image, we first upload the file to Overleaf.
 
-## Graphs
+![overleaf_image_upload](/2023/files/latex/overleaf_image_upload.png "Uploading an image to Overleaf.")
+
+The image will show up in the file outline panel once uploaded successfully.
+
+![overleaf_image_uploaded](/2023/files/latex/overleaf_image_uploaded.png "Uploaded image shown in Overleaf.")
+
+Next, we use the `figure` environment to embed the image in-line with other text.
+
+```latex
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=4cm]{rustacean-orig-noshadow.png}
+    \caption{Rustacean}
+    \label{fig:rustacean}
+\end{figure}
+```
+
+![output_graphicx](/2023/files/latex/output_graphicx.png "Image rendered using graphicx.")
+
+There's a lot happening here! Let's break it down and analyse each bit.
+
+1. We pass the `htp` options to the `figure` environment to place the image here (`h`), i.e. where the command appears in the document, and at the top of the page (`t`). An in-depth explanation of the positioning of floating elements in TeX can be found [here](https://tex.stackexchange.com/questions/39017/how-to-influence-the-position-of-float-environments-like-figure-and-table-in-lat).
+2. The `\centering` command horizontally centres the image along the page.
+3. The `\includegraphics` command requires the image to display and, optionally, the dimensions of the displayed image.
+4. The `\caption` command displays a caption below the image.
+5. The `\label` command attaches a non-visible label to the image that can be used to cite and cross-reference it from elsewhere in the document. We will cover this in more detail in a later section.
+
+## Trees and graphs
+
+While there are several packages that support creating graphs, we will look at `tikz`, a powerful package to typeset all sorts of graphic elements.
+
+We start off with the `tikzpicture` environment and the `\node` command to add a single node to the graph
+
+```latex
+\begin{tikzpicture} 
+    \node[{draw, circle}] (node1) {1}; 
+\end{tikzpicture}
+```
+
+![output_tikz_1_node](/2023/files/latex/output_tikz_1_node.png "A single node rendered using tikz.")
+
+Here, we specify the stroke and shape of the node (`draw`, `circle`), give it a unique ID (`node1`), and typeset the content inside (`1`).
+
+Similarly, it is possible to add multiple such nodes.
+
+```latex
+\begin{tikzpicture}[basic_node/.style = {draw, circle}]
+    \node[basic_node] (node1) {1}; 
+    \node[basic_node] (node2) {10}; 
+    \node[basic_node] (node3) {100}; 
+    \node[basic_node] (node4) {1000}; 
+    \node[{draw}] (node5) {10000}; 
+\end{tikzpicture}
+```
+
+Note how we've aliased the style of some nodes as `basic_node` for readability.
+
+![output_tikz_n_nodes](/2023/files/latex/output_tikz_n_nodes.png "Multiple overlapping nodes rendered using tikz.")
+
+Uh oh! It seems all the nodes are rendered over one another. To fix this, we can specify a relative position for some nodes, as shown:
+
+```latex
+\begin{tikzpicture}[basic_node/.style = {draw, circle}]
+    \node[basic_node] (node1) {1}; 
+    \node[basic_node] (node2) [below left of = node1] {10}; 
+    \node[basic_node] (node3) [below right of = node1] {100}; 
+    \node[basic_node] (node4) [below left of = node2] {1000}; 
+    \node[{draw}] (node5) [below left of = node3] {10000}; 
+\end{tikzpicture}
+```
+
+![output_tikz_positioned_nodes](/2023/files/latex/output_tikz_positioned_nodes.png "Multiple well-positioned nodes rendered using tikz.")
+
+That's much better! We can now specify the edges between the nodes using the `\draw` command:
+
+```latex
+\begin{tikzpicture}[basic_node/.style = {draw, circle}]
+    \node[basic_node] (node1) {1}; 
+    \node[basic_node] (node2) [below left of = node1] {10}; 
+    \node[basic_node] (node3) [below right of = node1] {100}; 
+    \node[basic_node] (node4) [below left of = node2] {1000}; 
+    \node[{draw}] (node5) [below left of = node3] {10000};
+
+    \draw[->] (node1) -- (node2);
+    \draw[->] (node1) -- (node3);
+    \draw[->] (node2) -- (node4);
+    \draw[->] (node3) -- (node5);
+\end{tikzpicture}
+```
+
+![output_tikz_graph](/2023/files/latex/output_tikz_graph.png "A graph rendered using tikz.")
+
+## Proof trees
+
+There are several packages that support typesetting proof trees in the style of sequent calculus, and because this is not an unopinionated guide, we will look at one such package, `ebproof`.
+
+Trees are typeset in `prooftree` environments and are mainly composed of hypotheses and inferences that are stacked up against each other.
+
+Let's typeset the following proof tree
+
+![output_ebproof](/2023/files/latex/output_ebproof.png "A proof tree rendered using ebproof.")
+
+```latex
+\begin{prooftree}
+\infer0[$[Id]$]{A \vdash A}
+\infer1[$[\neg L]$]{\neg A, A \vdash B}
+
+\infer0[$[Id]$]{B, A \vdash B}
+
+\infer2[$[\vee L]$]{\neg A \vee B, A \vdash B}
+\end{prooftree}
+```
+
+The proof tree can be broken down into several other subtrees, each of which is typeset separately and then combined to form the full tree. The `\infer<N>` set of commands define inferences that depend on N other inferences/hypotheses already in the stack. For example, `\infer0` does not pop anything from the stack, but `\infer2` pops two previously defined inferences from the stack.
+
+The documentation for the `ebproof` package can be found [here](https://mirror.apps.cam.ac.uk/pub/tex-archive/macros/latex/contrib/ebproof/ebproof.pdf).
 
 # Integrating your work with Git
 
 # Citing and referencing content
 
 # Using LaTeX offline
-
-# Additional reading
