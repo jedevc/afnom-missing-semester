@@ -18,6 +18,8 @@ LaTeX, which is pronounced «Lah-tech» or «Lay-tech» (to rhyme with «blech»
 
 LaTeX is not a word processor! Instead, LaTeX encourages authors not to worry too much about the appearance of their documents but to concentrate on getting the right content.[[1]](https://www.latex-project.org/about/)
 
+In many ways, LaTeX is similar to HTML where the author only specifies the structure of the document and leaves the styling to CSS.
+
 ## When to and not to use LaTeX
 
 LaTeX is the go-to tool if you're
@@ -25,6 +27,12 @@ LaTeX is the go-to tool if you're
 - writing a journal, article, book, presentation, or letter
 - typesetting content with complex mathematical expressions, tables, or graphics
 - writing large documents with chapters, citations, and cross-references
+
+LaTeX is **lightweight**: it doesn't come with a full-blown editor that lags when your document grows beyond a few hundred pages. Instead, it is built with resource optimisation in mind.
+
+LaTeX is **feature-rich**: it is perfect for typesetting professional documents that involve complex content.
+
+LaTeX is **extensible**: it works well with other tools to provide many of the features found in WYSIWYG editors. For example, version control is as simple as placing your LaTeX source files in a git repository.
 
 However, LaTeX may not be best suited if you're designing a poster, magazine cover, or similar document that requires precise and free visual control over page elements.
 
