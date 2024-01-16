@@ -1,8 +1,8 @@
 ---
 layout: lecture
-title: "LaTeX"
+title: "#6: LaTeX"
 date: 2024-01-16
-ready: false
+ready: true
 phase: 2
 ---
 
@@ -40,7 +40,7 @@ Let's create a new project and explore what Overleaf has to offer.
 
 ![overleaf_editor](/2023/files/latex/overleaf_editor.png "Overleaf's editor view")
 
-To the left are the project and file outline panels that list the files in a project and sections in the currently open document respectively. LaTeX projects are generally split across multiple `.tex` files, conventionally one for each section/chapter. We will look at this more closely in a later section.
+To the left are the project and file outline panels that list the files in a project and sections in the currently open document respectively. LaTeX projects are generally split across multiple `.tex` files, conventionally one for each section/chapter.
 
 Next to them are the code editor and preview panels. The editor is where we will spend most of our time. Now is also a good time to enable auto compile from the "Recompile" drop-down to see previews as we go along.
 
@@ -268,7 +268,7 @@ Next, we use the `figure` environment to embed the image in-line with other text
 
 There's a lot happening here! Let's break it down and analyse each bit.
 
-1. We pass the `htp` options to the `figure` environment to place the image here (`h`), i.e. where the command appears in the document, and at the top of the page (`t`). An in-depth explanation of the positioning of floating elements in TeX can be found [here](https://tex.stackexchange.com/questions/39017/how-to-influence-the-position-of-float-environments-like-figure-and-table-in-lat).
+1. We pass the `ht` options to the `figure` environment to place the image here (`h`), i.e. where the command appears in the document, and at the top of the page (`t`). An in-depth explanation of the positioning of floating elements in TeX can be found [here](https://tex.stackexchange.com/questions/39017/how-to-influence-the-position-of-float-environments-like-figure-and-table-in-lat).
 2. The `\centering` command horizontally centres the image along the page.
 3. The `\includegraphics` command requires the image to display and, optionally, the dimensions of the displayed image.
 4. The `\caption` command displays a caption below the image.
@@ -366,6 +366,114 @@ The documentation for the `ebproof` package can be found [here](https://mirror.a
 
 # Integrating your work with Git
 
+The structure of Overleaf projects is similar to that of a git repository, meaning we can clone, fork, pull from, and push to one just like any git repo. This enables you to work offline and sync your changes with Overleaf at a later time.
+
+The option to sync with git can be found in the menu at the top left of the page.
+
+![overleaf_sync_git](/2023/files/latex/overleaf_sync_git.png "Overleaf's sync menu.")
+
+Clicking on it yields a link to a git repository that we can clone. Make sure to clone using authentication tokens, and generate a token if you don't have one already.
+
+![overleaf_sync_git_link](/2023/files/latex/overleaf_sync_git_link.png "Overleaf's sync menu.")
+
+If git prompts you for a username and password when cloning, enter `git` and your authentication token respectively.
+
+![overleaf_sync_git_auth](/2023/files/latex/overleaf_sync_git_auth.png "Overleaf's sync menu.")
+
+ We now have a git repository that we can work with. For a refresher on git, check out [#5: Version Control](/2023/lec5_version-control) and [#2: Intermediate Shell + Git Basics](/2023/lec2_shell-intermediate). A more in-depth guide can be found [here](https://www.overleaf.com/learn/how-to/Git_integration).
+
 # Citing and referencing content
 
+Another area where LaTeX shines is when attributing and cross-referencing content.
+
+The `\ref` command is used to reference labelled content from elsewhere in the document, i.e. content that was annotated with the `\label command`. Let's go back to our embedded image from [Typesetting more exciting stuff: Images](/2023/lec6_latex#images) that we labelled `fig:rustacean`.
+
+Referencing it in the document is as easy as:
+
+```latex
+Figure~\ref{fig:rustacean} shows a picture of Ferris the crab.
+```
+
+To make the reference clickable, add the `hyperref` package to the preamble:
+
+```latex
+\usepackage[hidelinks]{hyperref}
+```
+
+Similarly, the `\cite` command works in conjunction with a `.bib` file to reference external content. As the name suggests `.bib` files consist of bibliography entries, like so:
+
+```bibtex
+@article{systems_programming_in_rust,
+author = {Jung, Ralf and Jourdan, Jacques-Henri and Krebbers, Robbert and Dreyer, Derek},
+title = {Safe Systems Programming in Rust},
+year = {2021},
+issue_date = {April 2021},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {64},
+number = {4},
+issn = {0001-0782},
+url = {https://doi.org/10.1145/3418295},
+doi = {10.1145/3418295},
+abstract = {The promise and the challenges of the first industry-supported language to master the trade-off between safety and control.},
+journal = {Commun. ACM},
+month = {mar},
+pages = {144–152},
+numpages = {9}
+}
+@inproceedings{comprehending_monads_wadler,
+author = {Wadler, Philip},
+title = {Comprehending Monads},
+year = {1990},
+isbn = {089791368X},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/91556.91592},
+doi = {10.1145/91556.91592},
+abstract = {Category theorists invented monads in the 1960's to concisely express certain aspects of universal algebra. Functional programmers invented list comprehensions in the 1970's to concisely express certain programs involving lists. This paper shows how list comprehensions may be generalised to an arbitrary monad, and how the resulting programming feature can concisely express in a pure functional language some programs that manipulate state, handle exceptions, parse text, or invoke continuations. A new solution to the old problem of destructive array update is also presented. No knowledge of category theory is assumed.},
+booktitle = {Proceedings of the 1990 ACM Conference on LISP and Functional Programming},
+pages = {61–78},
+numpages = {18},
+location = {Nice, France},
+series = {LFP '90}
+}
+```
+
+The `.bib` file above has two entries with additional metadata about the work being referenced. These were automatically generated by "cite" features offered by many journal websites. The two above were generated from their respective URLs at dl.acm.org.
+
+![cite_export](/2023/files/latex/cite_export.png "Exporting a citation from ACM.")
+
+Before we can reference any of this work, we need to import the `biblatex` package in the preamble and add the `.bib` file (named `references.bib`) as a resource.
+
+```latex
+\usepackage{biblatex}
+\addbibresource{references.bib}
+```
+
+We can now reference content like so:
+
+```latex
+Category theorists invented monads in the 1960's to concisely express certain aspects of universal algebra.~\cite{comprehending_monads_wadler}
+```
+
+And print the list of cited references, conventionally at the end of the document, like so:
+
+```latex
+\printbibliography
+```
+
+Note that depending on the document class you're using, some or most of this work may already be taken care of for you.
+
 # Using LaTeX offline
+
+Whether you're working with a cloned local copy of your Overleaf project or are looking for FOSS alternatives, there are plenty of offline TeX engines to choose from.
+
+If you're on Windows, TeX Live and MikTeX are popular and time-tested TeX distributions. Alternatively, you could use the LaTeX Workshop extension on VSCode, which we will cover in a future session.
+
+If you're on MacOS, MacTeX and the homebrew package TeX Live are standard distributions to choose from.
+
+If you're on Linux, ask your package manager for a list of supported TeX engines.
+
+[Tectonic](https://tectonic-typesetting.github.io/) is a modern TeX engine written in Rust that is also worth checking out.
+
+Whether on Overleaf or an offline TeX engine, we hope you continue exploring what LaTeX has to offer and are convinced to switch to it for all your document writing needs!
