@@ -26,11 +26,12 @@ Topics:
         * `.git/config`
         * force pushing
         * `git fetch` vs `git pull`
-    * Merge conflicts
     * Common git troubleshooting steps / error messages
-        * `Detached head state`
+        * Merge conflicts
+        * Detached head state
 2. Collaboration tools
-    * github and gitlab
+    * [github](https://www.github.com) and [gitlab](https://gitlab.com)
+        * Self hosted alternatives like [gogs](https://gogs.io) and [gitea](https://about.gitea.com)
     * Collaboration
     * Pull Requests
         * Live PRs!
