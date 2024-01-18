@@ -1,6 +1,6 @@
 ---
 layout: lecture
-title: "Git for Open Source Development"
+title: "#7: Git for Open Source Development"
 date: 2024-01-23
 ready: true
 phase: 2
