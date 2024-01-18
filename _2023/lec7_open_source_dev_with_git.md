@@ -20,7 +20,7 @@ Topics:
         * more with branches
         * `git cherry-pick`
     * Rewriting history
-        * `git amend`
+        * amending commits
         * `git rebase`
     * Managing remotes
         * `.git/config`
