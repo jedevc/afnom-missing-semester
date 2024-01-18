@@ -12,6 +12,7 @@ Topics:
 
 1. More advanced git commands
     * `git ls-files` / `git stash`
+    * `.gitconfig` and `.gitignore`
     * The lovely `-p` flag for `git add`, `git checkout` and `git reset`
         * `git commit -a` is bad and you should feel bad
         * The point of history
