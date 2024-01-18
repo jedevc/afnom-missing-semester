@@ -16,7 +16,7 @@ Topics:
         * `git commit -a` is bad and you should feel bad
         * The point of history
     * Visualizing histories
-        * `gitk`
+        * `gitk` and `tig`
         * more with branches
         * `git cherry-pick`
     * Rewriting history
