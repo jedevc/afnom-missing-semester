@@ -21,8 +21,9 @@ Topics:
         * more with branches
         * `git cherry-pick`
     * Rewriting history
+        * undoing commits with `git revert`
         * amending commits
-        * `git rebase`
+        * rewriting history with `git rebase`
     * Managing remotes
         * `.git/config`
         * force pushing
@@ -30,6 +31,8 @@ Topics:
     * Common git troubleshooting steps / error messages
         * Merge conflicts
         * Detached head state
+        * What to do if you commit sensitive information to a repository?
+    * Managing binary files with `git-lfs`
 2. Collaboration tools
     * [github](https://www.github.com) and [gitlab](https://gitlab.com)
         * Self hosted alternatives like [gogs](https://gogs.io) and [gitea](https://about.gitea.com)
