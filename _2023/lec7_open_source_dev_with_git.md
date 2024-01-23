@@ -6,10 +6,6 @@ ready: true
 phase: 2
 ---
 
-This lesson is going to be a bit different than the others; we're going to fill this page out together interactively!
-
-Topics:
-
 ## 1. Recap
 
 This talk assumes knowledge of [Abi's git talk](https://missingsemester.afnom.net/2023/lec5_version-control/) from last semester; to familiarize yourself with git basics, please refer to her talk!
