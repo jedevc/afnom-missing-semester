@@ -2,7 +2,7 @@
 layout: lecture
 title: "#8: Containers and Virtualization + 🍕"
 date: 2024-01-30
-ready: false
+ready: true
 phase: 2
 ---
 
