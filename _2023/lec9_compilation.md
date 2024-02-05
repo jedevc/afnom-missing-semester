@@ -147,3 +147,82 @@ Version errors occur when there is a mismatch between versions for the compiler,
 <div drawio-diagram="550"><img src="/static/media/2023/compilation/compiler-other-error.png"></div>
 
 Most compilers will provide an error code along with the error, and googling this will most likely lead you to documentation, or other recommended solutions online.
+
+
+
+## Tutorial Example Projects
+
+
+Before following the tutorials below, install the corresponding build systems with the package manager of your choice (`apt`, `pacman`, `yum`, etc.)
+
+
+### GNU Make
+
+
+**Note:** Watch how GNU Make prints the commands it's executing (specified in Makefile) as you run `make` / `make clean`.
+
+
+`git clone https://github.com/remonbonbon/makefile-example` - Clones the example repository from Github.
+
+`cd makefile-example` - Enters the makefile-example directory.
+
+`cat Makefile` - Prints the Makefile file to read the make instructions (even if you don't understand, helpful to have a look at.)
+
+`make` - Builds the project.
+
+`./app` - Runs the compiled executable.
+
+`make clean` - Deletes the compiled binary.
+
+`make -d` - Builds the project with debug info.
+
+
+
+### Maven
+
+
+`git clone https://github.com/jenkins-docs/simple-java-maven-app` - Clones the example repository from Github.
+
+`cd simple-java-maven-app` - Enters the simple-java-maven-app directory.
+
+`cat pom.xml` - Prints the pom.xml file to read the maven data file.
+
+`mvn test` - Runs a test for the source code files in the project.
+
+`mvn install` - Compiles and builds the source code files in the project.
+
+`java -jar target/my-app-1.0-SNAPSHOT.jar` - Runs the compiled JAR file.
+
+`mvn clean` - Deletes the target directory as well as all contained files and directories, including the compiled JAR file.
+
+`mvn install -X` - Builds the project, logging debug information.
+
+
+### Gradle
+
+
+`git clone https://github.com/gradle/native-samples` - Clones the example repository from Github.
+
+`cd native-samples` - Enters the native-samples directory.
+
+`cd cpp/application` - Enters the application directory for the C++ example project.
+
+
+
+**Note:** Repositories using the Gradle build system often include a `gradlew` executable. This is a built-in wrapper for the gradle build system that automatically downloads the required gradle version and uses it to build the source code files in the project. For some legacy projects, or if the user doesn't have/want to install gradle, `./gradlew` can be used in place of `gradle` for the later commands in this tutorial.
+
+
+
+`cat build.gradle` - Prints the gradle build file to read the build options.
+
+`cat settings.gradle` - Prints the gradle settings file to read the build settings.
+
+`gradle test` - Runs a test for the source code files in the project.
+
+`gradle build` - Compiles and builds the source code files in the project.
+
+`./build/exe/main/debug/app` - Runs the compiled executable.
+
+`gradle clean` - Deletes the build directory as well as all contained files and directories, including the compiled executable.
+
+`gradle build -d` - Builds the project, logging debug information.
