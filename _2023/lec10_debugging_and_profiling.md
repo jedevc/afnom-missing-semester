@@ -2,112 +2,450 @@
 layout: lecture
 title: "Debugging and Profiling with gdb"
 date: 2024-02-13
-ready: false
+ready: true
 phase: 2
 ---
 
-gdb - GNU Debugger
+### Context: Debugging with Print Statements
+
+One of the simplest methods to debug a program is to add print statements.
+Whether they are printing values or simply logging that a certain position has
+been reached in the code, it is an invaluable way to check assumptions when you
+have source code you can modify.
+
+There are a variety of methods you can use in c code to print debug information,
+however one of the better options is `fprintf`. By utilising `stderr`, we can
+seperate our debugging information and our program output.
+
+```c
+#include <stdio.h>
+
+int main(int argc, char *argv[]) {
+    fprintf(stderr, "%d argument(s) passed into the program:\n", argc);
+    for (int i=0; i<argc; ++i) {
+        fprintf(stderr, "\tArg %d: %s\n", i, argv[i]);
+    }
 
 
+    puts("Actual output: ");
+    for (int i = 0; i < 10; i++) {
+        printf("%d ", i);
+    }
+    return 0;
+}
+```
 
-useful in base form but better with extensions
+```bash
+$ ./test a b c
+4 argument(s) passed into the program:
+        Arg 0: ./test
+        Arg 1: a
+        Arg 2: b
+        Arg 3: c
+Actual output: 
+0 1 2 3 4 5 6 7 8 9 
 
-one of these is peda
+$ ./test a b c >/dev/null
+4 argument(s) passed into the program:
+        Arg 0: ./test
+        Arg 1: a
+        Arg 2: b
+        Arg 3: c
+        
+$ ./test a b c 2>/dev/null
+Actual output: 
+0 1 2 3 4 5 6 7 8 9 
+```
 
-can be downloaded from https://github.com/longld/peda
+There are downsides to this method however!
 
-using:
+- We are required to have the source code
+- The print statements may change program optimisations, altering any undefined
+  behaviour/edge cases
 
-git clone https://github.com/longld/peda.git ~/peda
-echo "source ~/peda/peda.py" >> ~/.gdbinit
-echo "DONE! debug your program with gdb and enjoy"
+### Enter gdb - the GNU Debugger
 
-however this saves the peda directory to your home dir, can be edited differently
+`gdb` is a powerful and free debugger that will let you explore and modify
+programs during runtime. 
+
+### Intro and Setup
+
+Debuggers like `gdb` often use symbol tables present in executables to assist
+with the debugging process. Symbol tables track, manage, and catalogue data
+structures and information in executables, for example:
+
+- Functions
+- Variables
+- Scopes of data structures
+
+`gdb` can be installed using your operating systems's package manager, E.g: `apt
+install gdb`.
+
+There are also a number of useful extensions to gdb such as `peda` and `gef`.
+
+Configuration of`gdb` (such as plugins like the ones above) can be stored in the
+`.gdbinit` file in a user's home directory.  For example, `set print
+asm-demangle on` will enabled demanging so that c++ functions are displayed
+properly.  You can enter this interactively in a `gdb` session or put it into
+your `.gdbinit` file.
 
 
+### Debugging your own program
+If you are debugging your *own* programs, it's best to compile with debug
+symbols (`-g`) and with optimization disabled (`-O0`).  For example:
 
-to start run gdb and you should see the prompt: `gdb-peda$`
+`g++ -g -O0 main.cpp -o main`
 
-gdb has clever autocomplete: for example typing `b` or `br` instead of `break` or `i r` instead of `info registers`
+This is because:
+* When you compile your code with debug symbols on, function and variable names
+  are left in the program which makes debugging easier.
+* By disabling optimization, you can ensure that your code isn't being
+  simplified or altered by the compiler so what is being executed is more likely
+to match the code as you have written it.  
+
+### Demo
+
+Below we'll explore debugging some short simple C++ programs, and how gdb can
+make things a lot easier for us!
+
+#### Demo 1 - basic debugging
+
+``` #include <iostream>
+#include <stdlib.h> //srand
+#include <stdio.h>  //printf
+
+using namespace std;
+
+int main () {
+
+    srand (time(NULL));
+
+    int alpha = rand() % 8;
+    cout << "Hello world." << endl;
+    int beta = 2;
+
+    printf("alpha is set to is %s\n", alpha);
+    printf("kiwi is set to is %s\n", beta);
+
+    return 0;
+}
+```
+Here we have a simple program `main.cpp`, which should print "Hello World"
+followed by some print statements referencing some integer variables. 
+
+We can compile this code with `g++ main.cpp -g -O0 -o main`, and try running it.
+Sadly, we get a segmentation fault :( 
+
+In order to start debugging this program with `gdb` we will need to run `gdb
+main`. This will put you into a program with a `(gdb)` prompt (this may be
+different if you're using an extension).
+
+This is where you can enter your gdb commands. To run the program, you can type
+in `run`, which will run the program until it reached the point where it
+segfaults. You will then see some output like the following:
+
+```
+Program received signal SIGSEGV, Segmentation fault.
+__strlen_avx2 () at ../sysdeps/x86_64/multiarch/strlen-avx2.S:74
+../sysdeps/x86_64/multiarch/strlen-avx2.S: No such file or directory.
+```
+
+`gdb` already has given us some useful information! We get the signal code and
+also the meaning of this signal: in this case we have `SIGSEV`, i.e.
+a segmentation fault. Because we've compiled with We also get the exact 
+#### Demo 2 - changing values
+
+`gdb` allows us to manipulate values in memory during runtime. Combined with
+debug symbols and source mapping, you can see the variables in your code and
+manipulate them during runtime. Let's consider the following code:
 
 
-to open an executable `file [FILE NAME]`
+```
+#include <iostream>
+#include <stdlib.h> //srand
+#include <stdio.h>  //printf
+
+using namespace std;
+
+int main () {
+
+    volatile int decider = 1;
+    if (decider == 1){
+        cout << "you lose" << endl;
+    } else {
+        cout << "you win" << endl;
+    }
+
+    return 0;
+}
+```
+
+First, let's break on main:
+
+```
+(gdb) b main
+Breakpoint 1 at 0x1151: file main.cpp, line 9.
+```
+ 
+And run:
+
+```
+
+```
+
+ 
+#### Demo 3 - time travel
+
+`gdb` also supports reverse execution, allowing you to go back in time. Often
+the root cause of an issue occurs before you halt execution - imagine hitting
+a segfault. `gdb` can record execution state and let you travel back in time to
+the root cause. Consider this C++ code:
+
+```
+#include <iostream>
+#include <stdlib.h> //srand
+#include <stdio.h>  //printf
+
+using namespace std;
+
+int main () {
+
+    volatile int decider = 1;
+    if (decider == 1){
+        cout << "you lose" << endl;
+    } else {
+        cout << "you win" << endl;
+    }
+
+    return 0;
+}
+```
+
+Let's debug this code. First, break on main:
+
+```
+(gdb) b main
+```
+
+Then, begin execution:
+
+```
+(gdb) r
+
+...
+
+Breakpoint 1, main () at main.cpp:9
+9           volatile int decider = 1;
+```
+
+Great! Now we can tell GDB to start recording execution:
+
+```
+(gdb) record
+```
+
+From now on, we have access to the `reverse-*` set of commands. For now, lets
+keep executing:
+
+```
+(gdb) n
+10          if (decider == 1){
+(gdb) n
+11              cout << "you lose" << endl;
+(gdb)
+```
+
+Oh no! We're about to lose! The `if` check has already run, and failure is
+inevitable. Let's go back in time and fix that:
+
+```
+(gdb) reverse-step
+10          if (decider == 1){
+(gdb) reverse-step
+10          if (decider == 1){
+(gdb) reverse-step
+10          if (decider == 1){
+(gdb) reverse-step
+
+No more reverse-execution history.
+main () at main.cpp:9
+9           volatile int decider = 1;
+(gdb) s
+10          if (decider == 1){
+```
+
+Great! We've gone backwards in time. Let's fix our mistake:
+
+```
+(gdb) set decider=2
+Because GDB is in replay mode, writing to memory will make the execution log
+unusable from this point onward.  Write memory at address 0x7fffffffe66c?(y or
+n) y
+(gdb) 
+```
+
+`gdb` helpfully warns us that we're changing the timeline, but that's exactly
+what we want. Let's continue in our new future:
+
+```
+(gdb) s
+13              cout << "you win" << endl;
+```
+
+Great! With this you can walk backwards through time to find your root cause and
+use all the power of `gdb` to fix it.
+
+#### Demo 4 - Debugging an Operating System
+
+Jacqui is going to demo how you can use `gdb` to debug a running OS.
+
+---
+
+### Commands Reference
+
+
+To enter the`gdb` debugger, run `gdb` and you should see the prompt: `(gdb)`
+
+gdb has clever autocomplete: for example typing `b` or `br` instead of `break`
+or `i r` instead of `info registers`
+
+#### Viewing and opening files
+
+To open an executable `file [FILE NAME]`
 
 `checksec` - checks security measures on the executable
 
-to list decompiled code lines fromthe point of exection use `list .` and repeat `list` to read further
+To list decompiled code lines fromthe point of exection use `list .` and repeat
+`list` to read further.
 
-`list .` has to be repeated to restart reading code from the current location
+`list .` has to be repeated to restart reading code from the current location,
+and `list -` and `list +` can be used to list lines before and after the current
+location respectively.
 
-`list -` and `list +` can be used to list lines before and after the current location respectively
+`disas main` - Disassemble the main function and print the assembly code.
 
-`disas main` - disassemble the main function and list in assembly code
+`run` - Runs the executable.
 
-to run it use `run`
+#### Stepping through the program
 
+``
 
-if you want to stop a program at a specific place to debug it you'll have to use breakpoints
+#### Breakpoints
 
-these stop the program's execution at specific points and allow the executable to be edited and inspected at certain states
-
-
-`break main` sets a breakpoint at the start of the main function
-
-executing `run` after this will stop the program just before the first instruction of the main function and pull up a context menu
-
-the context menu can be reviewed with `context` and displays registers, assembly code, and the stack, as well the data that pointers are pointing to
-
+To stop a program at a specific place to debug it, breakpoints can be used.
+Breakpoints stop the program's execution at specific points and allow the
+executable to be edited and inspected at certain states.
 
 
-breakpoints can be set to lines to code with `break [LINE NUMBER]`
+`break main` sets a breakpoint at the start of the main function.
 
-to set breakpoints in specific memory locations, you can use `disas main` to list the main function, or `disas [FUNCTION NAME]` for another specific function to find the line at which you'd like to set a breakpoint
+Executing `run` after this will stop the program just before the first
+instruction of the main function.
 
-then run `break *[FUNCTION NAME] + [LINE]`, for example `break *main + 4` to break when the 20th memory value of the main function is reached
 
-the `*` operator dereferences references to areas of memory, somewhat similarly to pointer dereferencing in code, for example *main would point to the area of memory where the main function starts
-
-peda gdb will dereference some functions for you, but it's useful to know
+*Note: If you are using peda, this will also pull up a context menu. this menu
+can be reviewed with `context` and displays registers, assembly code, and the
+stack, as well the data that pointers are pointing to.*
 
 
 
-the contents at a memory address  can also be read with the `x` command with the following syntax:
+Breakpoints can be set to lines to code with `break [LINE NUMBER]`
 
-`x/[LENGTH][FORMAT] [MEMORY ADDRESS]
+To set breakpoints in specific memory locations, you can use `disas main` to
+list the main function, or `disas [FUNCTION NAME]` for another specific function
+to find the line at which you'd like to set a breakpoint.
 
-where [LENGTH] and [FORMAT] are optional and the `/` operator is only used when either of them are provided
+Then, run `break *[FUNCTION NAME] + [LINE]`, for example `break *main + 4` to
+break when the 20th memory value of the main function is reached
+
+The `*` operator dereferences references to areas of memory, somewhat similarly
+to pointer dereferencing in code, for example *main would point to the area of
+memory where the main function starts Gdb will dereference some functions for
+you, but it is useful to know.
 
 
-| Character | x           | i           | s      | a       | d       | u                | c    | f              | t      | o     |
-|-----------|-------------|-------------|--------|---------|---------|------------------|------|----------------|--------|-------|
-| Format    | Hexadecimal | Instruction | String | Address | Decimal | Unsigned Decimal | Char | Floating Point | Binary | Octal |
 
+the contents at a memory address  can also be read with the `x` command with the
+following syntax:
+
+`x/[LENGTH][FORMAT] [MEMORY ADDRESS]`
+
+where `[LENGTH]` and `[FORMAT]` are optional and the `/` operator is only used
+when either of them are provided.
+
+<center>
+
+| Character
+| x           | i           | s      | a       | d       | u                | c    | f              | t      | o     |
+|:---------:|:-----------:|:-----------:|:------:|:-------:|:-------:|:----------------:|:----:|:--------------:|:------:|:-----:|
+| Format    | Hexadecimal | Instruction | String | Address | Decimal | Unsigned
+Decimal | Char | Floating Point | Binary | Octal |
+
+</center>
 
 examples:
 
-`x main` reads the first memory value in the main function
+`x main` - Reads the first memory value in the main function.
 
-`x/x $rip` reads the value of $rip (the next instruction) as hex
+`x/x $rip` - Reads the value of $rip (the next instruction) as hexadecimal.
 
-`x/20 $rsp` reads the first 20 memory values in the stack (pointed to by $rsp)
+`x/20 $rsp` - Reads the first 20 memory values in the stack (pointed to by
+$rsp).
 
-`x/20i printf` `reads the first 20 values in the print function as instructions
-
-
-
-registers can be set with `set $[REGISTER] = [VALUE]`, but this can easily break the program
-
-registers can be read with `info reg`
-
-functions can be read with `info func`
-
-frame data can be read with `info frame`
-
-local variables can be read with `info local`
+`x/20i printf` - Reads the first 20 values in the print function as
+instructions.
 
 
 
+Registers can be set with `set $[REGISTER] = [VALUE]`, but this can easily break
+the program, especially when editing rbp/rip/eip.
 
-`backtrace` can be used to read the call stack order
+The info command allows information to be shown about the program in its current
+state.
 
-`backtrace full` does the same but displays extra information like symbol tables
+Registers can be read with `info reg`.
+
+Functions in the program can be listed with `info func`.
+
+Current frame data can be read with `info frame`.
+
+Local variables can be read with `info local`.
+
+
+### Backtrace
+
+The backtrace in a program is what functions are currently active, and what
+functions are being called inside those functions. This is a valuable tool in
+debugging as it allows the user to work out exactly where bugs are occurring.
+
+`backtrace` can be used to read the call stack order.
+
+`backtrace full` does the same but displays extra information found in symbol
+tables, including local variables.
+
+
+### Plugins
+`gdb` is useful in base form but even better with extensions
+
+`peda` can be installed using the following:
+
+```
+$ git clone https://github.com/longld/peda.git ~/peda
+$ echo "source ~/peda/peda.py" >> ~/.gdbinit
+$ echo "DONE! debug your program with gdb and enjoy"
+```
+
+gef can be installed via:
+```
+$ wget -O ~/.gdbinit-gef.py -q https://gef.blah.cat/py
+$ echo source ~/.gdbinit-gef.py >> ~/.gdbinit
+```
+
+These plugins can be installed all at once using the script found in this git
+repository
+```
+cd ~ && git clone https://github.com/apogiatzis/gdb-peda-pwndbg-gef.git
+cd ~/gdb-peda-pwndbg-gef
+./install.sh
+```
+
