@@ -66,7 +66,9 @@ There are downsides to this method however!
 ### Enter gdb - the GNU Debugger
 
 `gdb` is a powerful and free debugger that will let you explore and modify
-programs during runtime. 
+programs during runtime.   The term 'bug' is said to refer to actual moths found
+by computing pioneer [Grace Hopper](https://en.wikipedia.org/wiki/Grace_Hopper)
+in an early vacuum tube computer in the 1940s!
 
 ### Intro and Setup
 
@@ -87,7 +89,9 @@ Configuration of`gdb` (such as plugins like the ones above) can be stored in the
 `.gdbinit` file in a user's home directory.  For example, `set print
 asm-demangle on` will enabled demanging so that c++ functions are displayed
 properly.  You can enter this interactively in a `gdb` session or put it into
-your `.gdbinit` file.
+your `.gdbinit` file.  Another common and useful setting for your `.gdbinit` is
+`set disassembly-flavor intel` which will show assembly code in a more common
+form.
 
 
 ### Debugging your own program
@@ -100,7 +104,7 @@ This is because:
 * When you compile your code with debug symbols on, function and variable names
   are left in the program which makes debugging easier.  Note that `-g` might be
 the default; `-s` will force symbols to be stripped.  You might actually want
-this for production builds. 
+this for production builds as debugging symbols can make executables larger!
 * By disabling optimization, you can ensure that your code isn't being
   simplified or altered by the compiler so what is being executed is more likely
 to match the code as you have written it.  
@@ -155,7 +159,13 @@ __strlen_avx2 () at ../sysdeps/x86_64/multiarch/strlen-avx2.S:74
 
 `gdb` already has given us some useful information! We get the signal code and
 also the meaning of this signal: in this case we have `SIGSEV`, i.e.
-a segmentation fault. Because we've compiled with We also get the exact 
+a segmentation fault. The line after that tells us the function and the line of
+source code that execution stopped at. This may not be a line you have written
+as gdb reports the lowest function name.
+
+In this case, you should use a command like `backtrace` to show the full
+function backtrace. You will then get something similar to the following:
+
 
 #### Demo 2 - changing values
 
@@ -199,6 +209,7 @@ Breakpoint 1, main () at main.cpp:9
 9           volatile int decider = 1;
 (gdb) 
 ```
+
 We're about to run `volatile int decider = 1;`. Let's do that:
 
 ```
@@ -403,13 +414,38 @@ where `[LENGTH]` and `[FORMAT]` are optional and the `/` operator is only used
 when either of them are provided.
 
 <center>
-
-| Character
-| x           | i           | s      | a       | d       | u                | c    | f              | t      | o     |
-|:---------:|:-----------:|:-----------:|:------:|:-------:|:-------:|:----------------:|:----:|:--------------:|:------:|:-----:|
-| Format    | Hexadecimal | Instruction | String | Address | Decimal | Unsigned
-Decimal | Char | Floating Point | Binary | Octal |
-
+<table class="part" data-startline="344" data-endline="346">
+<thead>
+<tr>
+<th style="text-align:center">Character</th>
+<th style="text-align:center">x</th>
+<th style="text-align:center">i</th>
+<th style="text-align:center">s</th>
+<th style="text-align:center">a</th>
+<th style="text-align:center">d</th>
+<th style="text-align:center">u</th>
+<th style="text-align:center">c</th>
+<th style="text-align:center">f</th>
+<th style="text-align:center">t</th>
+<th style="text-align:center">o</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Format</td>
+<td style="text-align:center">Hexadecimal</td>
+<td style="text-align:center">Instruction</td>
+<td style="text-align:center">String</td>
+<td style="text-align:center">Address</td>
+<td style="text-align:center">Decimal</td>
+<td style="text-align:center">Unsigned Decimal</td>
+<td style="text-align:center">Char</td>
+<td style="text-align:center">Floating Point</td>
+<td style="text-align:center">Binary</td>
+<td style="text-align:center">Octal</td>
+</tr>
+</tbody>
+</table>
 </center>
 
 examples:
@@ -465,7 +501,6 @@ $ echo "DONE! debug your program with gdb and enjoy"
 ```
 
 `gef` can be installed via:
-`
 ```
 $ wget -O ~/.gdbinit-gef.py -q https://gef.blah.cat/py
 $ echo source ~/.gdbinit-gef.py >> ~/.gdbinit
@@ -478,4 +513,5 @@ git clone https://github.com/pwndbg/pwndbg
 cd pwndbg
 ./setup.sh
 ```
+
 
