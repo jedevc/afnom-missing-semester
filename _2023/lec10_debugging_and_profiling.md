@@ -98,19 +98,22 @@ symbols (`-g`) and with optimization disabled (`-O0`).  For example:
 
 This is because:
 * When you compile your code with debug symbols on, function and variable names
-  are left in the program which makes debugging easier.
+  are left in the program which makes debugging easier.  Note that `-g` might be
+the default; `-s` will force symbols to be stripped.  You might actually want
+this for production builds. 
 * By disabling optimization, you can ensure that your code isn't being
   simplified or altered by the compiler so what is being executed is more likely
 to match the code as you have written it.  
 
-### Demo
+### Demos
 
 Below we'll explore debugging some short simple C++ programs, and how gdb can
 make things a lot easier for us!
 
 #### Demo 1 - basic debugging
 
-``` #include <iostream>
+```cpp
+#include <iostream>
 #include <stdlib.h> //srand
 #include <stdio.h>  //printf
 
@@ -153,6 +156,7 @@ __strlen_avx2 () at ../sysdeps/x86_64/multiarch/strlen-avx2.S:74
 `gdb` already has given us some useful information! We get the signal code and
 also the meaning of this signal: in this case we have `SIGSEV`, i.e.
 a segmentation fault. Because we've compiled with We also get the exact 
+
 #### Demo 2 - changing values
 
 `gdb` allows us to manipulate values in memory during runtime. Combined with
@@ -160,7 +164,7 @@ debug symbols and source mapping, you can see the variables in your code and
 manipulate them during runtime. Let's consider the following code:
 
 
-```
+```cpp
 #include <iostream>
 #include <stdlib.h> //srand
 #include <stdio.h>  //printf
@@ -190,10 +194,39 @@ Breakpoint 1 at 0x1151: file main.cpp, line 9.
 And run:
 
 ```
+(gdb) r
+Breakpoint 1, main () at main.cpp:9
+9           volatile int decider = 1;
+(gdb) 
+```
+We're about to run `volatile int decider = 1;`. Let's do that:
 
 ```
+(gdb) s
+10          if (decider == 1){
+(gdb)
+```
+Now we can examine `decider`:
 
- 
+```
+(gdb) print decider
+$1 = 1
+(gdb) 
+```
+
+Ah! Panic! If `decider` is 1, we'll lose! Let's change that:
+
+```
+(gdb) set decider = 2
+(gdb) print decider
+$2= 2
+(gdb) s
+13              cout << "you win" << endl;
+(gdb) 
+```
+Crisis averted! This is great, but what if we only realised that we've lost
+after that if statment executed? We can solve this with time travel.
+
 #### Demo 3 - time travel
 
 `gdb` also supports reverse execution, allowing you to go back in time. Often
@@ -201,7 +234,7 @@ the root cause of an issue occurs before you halt execution - imagine hitting
 a segfault. `gdb` can record execution state and let you travel back in time to
 the root cause. Consider this C++ code:
 
-```
+```cpp
 #include <iostream>
 #include <stdlib.h> //srand
 #include <stdio.h>  //printf
@@ -326,10 +359,6 @@ location respectively.
 
 `run` - Runs the executable.
 
-#### Stepping through the program
-
-``
-
 #### Breakpoints
 
 To stop a program at a specific place to debug it, breakpoints can be used.
@@ -425,7 +454,7 @@ tables, including local variables.
 
 
 ### Plugins
-`gdb` is useful in base form but even better with extensions
+`gdb` is useful in its base form but even better with extensions.
 
 `peda` can be installed using the following:
 
@@ -435,17 +464,18 @@ $ echo "source ~/peda/peda.py" >> ~/.gdbinit
 $ echo "DONE! debug your program with gdb and enjoy"
 ```
 
-gef can be installed via:
+`gef` can be installed via:
+`
 ```
 $ wget -O ~/.gdbinit-gef.py -q https://gef.blah.cat/py
 $ echo source ~/.gdbinit-gef.py >> ~/.gdbinit
 ```
 
-These plugins can be installed all at once using the script found in this git
-repository
+`pwngdb` can be installed with:
+
 ```
-cd ~ && git clone https://github.com/apogiatzis/gdb-peda-pwndbg-gef.git
-cd ~/gdb-peda-pwndbg-gef
-./install.sh
+git clone https://github.com/pwndbg/pwndbg
+cd pwndbg
+./setup.sh
 ```
 
