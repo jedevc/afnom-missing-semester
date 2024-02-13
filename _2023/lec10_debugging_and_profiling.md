@@ -166,7 +166,20 @@ as gdb reports the lowest function name.
 In this case, you should use a command like `backtrace` to show the full
 function backtrace. You will then get something similar to the following:
 
+```
+#0  __strlen_avx2 () at ../sysdeps/x86_64/multiarch/strlen-avx2.S:74
+#1  0x00007f59aee0ed31 in __vfprintf_internal (s=0x7f59aefb3780
+<_IO_2_1_stdout_>, format=0x55ab53463011 "alpha is set to is %s\n",
+    ap=ap@entry=0x7ffe8e60e700, mode_flags=mode_flags@entry=0) at
+./stdio-common/vfprintf-internal.c:1517
+#2  0x00007f59aedf879f in __printf (format=<optimized out>) at
+./stdio-common/printf.c:33
+#3  0x000055ab534622a4 in main () at main.cpp:15
+```
 
+From this, we can see the trace of the function calls from the original
+`main.cpp` file, to the function `printf` in `stdio`, and further down after
+that. 
 #### Demo 2 - changing values
 
 `gdb` allows us to manipulate values in memory during runtime. Combined with
@@ -513,5 +526,3 @@ git clone https://github.com/pwndbg/pwndbg
 cd pwndbg
 ./setup.sh
 ```
-
-
