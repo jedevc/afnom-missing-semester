@@ -2,7 +2,7 @@
 layout: lecture
 title: "Introduction to IDEs"
 date: 2024-02-20
-ready: false
+ready: true
 phase: 2
 ---
 
