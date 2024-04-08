@@ -1,6 +1,6 @@
 ---
 layout: lecture
-title: "Debugging and Profiling with gdb"
+title: "#10: Debugging and Profiling with gdb"
 date: 2024-02-13
 ready: true
 phase: 2

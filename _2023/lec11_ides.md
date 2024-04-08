@@ -1,6 +1,6 @@
 ---
 layout: lecture
-title: "Introduction to IDEs"
+title: "#11: Introduction to IDEs"
 date: 2024-02-20
 ready: true
 phase: 2
