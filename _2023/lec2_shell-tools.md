@@ -1,6 +1,6 @@
 ---
 layout: lecture
-title: "#2 Intermediate Shell + Git Basics"
+title: "#2: Intermediate Shell + Git Basics"
 date: 2023-10-10
 ready: false
 phony: true
