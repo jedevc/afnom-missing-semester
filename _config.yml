@@ -18,8 +18,10 @@ collections:
   '2019':
     output: false
   '2020':
-    output: true
+    output: false
   '2023':
+    output: true
+  '2024':
     output: true
 
 # Excludes

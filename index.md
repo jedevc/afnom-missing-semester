@@ -43,7 +43,7 @@ Read about the [motivation behind this class](/about/).
 # Schedule
 
 <ul>
-{% assign lectures = site['2023'] | sort: 'date' %}
+{% assign lectures = site['2024'] | sort: 'date' %}
 {% include schedule.html lectures = lectures %}
 </ul>
 
