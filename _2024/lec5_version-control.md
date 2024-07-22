@@ -1,8 +1,8 @@
 ---
 layout: lecture
 title: "#5: Version Control (Git)"
-date: 2023-11-07
-ready: true
+date: 2024-11-07
+ready: false
 phase: 1
 video:
   aspect: 56.25
@@ -79,7 +79,7 @@ You would need to do this the same for any change you make to a file, no matter 
 
 Once we've staged everything we want to commit, we can then go ahead and actually make the commit. A commit contains three things - a message explaining what's in the commit, a set of diffs and a reference to a parent commit. A diff is functionally a list of changes that have been made to a file, and Git uses these in order to construct a history of your code by combining a set of diffs one-by-one using the references to parent commits to reconstruct a copy of a given file at any point in time.
 
-<div drawio-diagram="550"><img src="/static/media/2023/git/commits.png"></div>
+<div drawio-diagram="550"><img src="/static/media/2024/git/commits.png"></div>
 
 To make a commit, we just use the `git commit` command, which will open an editor of your choice:
 
@@ -91,11 +91,11 @@ Write your commit message in the editor (it should be something descriptive, lik
 
 Optionally, you can write multiple lines in a commit message if you want in order to explain why you made the changes you made. For example, take a look at this commit that I made on one of my projects.
 
-![](/static/media/2023/git/goodcommit.png)
+![](/static/media/2024/git/goodcommit.png)
 
 This is  a good commit. Not all your commits have to be 7 lines long (most of the time, one suffices), but you should try to keep them descriptive and avoid commits like this one:
 
-![](/static/media/2023/git/badcommit.png)
+![](/static/media/2024/git/badcommit.png)
 
 ## Remotes
 
@@ -173,7 +173,7 @@ An example of when you might want to use a branch is when you want to add a big 
 
 To make this crystal clear, here's a diagram:
 
-<div drawio-diagram="553"><img src="/static/media/2023/git/branches.png"></div>
+<div drawio-diagram="553"><img src="/static/media/2024/git/branches.png"></div>
 
 In this, both branches start at commit A, have changes made to them independently (commit B and commits D, E and F) and then the feature branch is merged back into the main branch as commit C. None of the changes that you make on the feature branch show up on the main branch (and vice versa) until they're merged back together.
 

@@ -1,8 +1,8 @@
 ---
 layout: lecture
 title: "#3: Editors (Vim)"
-date: 2023-10-17
-ready: true
+date: 2024-10-17
+ready: false
 phase: 1
 video:
   aspect: 56.25
@@ -48,7 +48,7 @@ learn more.
 Programmers have [strong opinions](https://en.wikipedia.org/wiki/Editor_war) about their text editors. 
 
 Also, not all text editors are equal:
-![editor learning curves](/2023/files/editor_curves.png "learning curves of different editors")
+![editor learning curves](/2024/files/editor_curves.png "learning curves of different editors")
 
 Which editors are popular today? See this [Stack Overflow
 survey](https://insights.stackoverflow.com/survey/2019/#development-environments-and-tools)
@@ -99,7 +99,7 @@ Main modes:
 - **Insert**: for inserting text
 - **Visual** (plain, line, or block): for selecting blocks of text
 
-![visualization of different vim modes](/2023/files/vim_modes.png "vim modes")
+![visualization of different vim modes](/2024/files/vim_modes.png "vim modes")
 
 Vim has some other less extensive modes as well that we'll talk about:
 - **Replace**: for replacing text
@@ -122,7 +122,7 @@ with `<C-v>` (Ctrl-V, sometimes also written `^V`), and Command-line mode with
 
 
 # Basic vimrc
-If you want to follow along exactly, we're going to use a very minimal vim config file called a vimrc that sets some sane defaults and fixes some quirky behavior that is there for legacy reasons.  To download this file, run the following in your shell: `wget missingsemester.afnom.net/2023/files/vimrc -O ~/.vimrc`) You read through this well-commented file (using Vim!), and observe how Vim looks and behaves slightly differently with the new config.
+If you want to follow along exactly, we're going to use a very minimal vim config file called a vimrc that sets some sane defaults and fixes some quirky behavior that is there for legacy reasons.  To download this file, run the following in your shell: `wget missingsemester.afnom.net/2024/files/vimrc -O ~/.vimrc`) You read through this well-commented file (using Vim!), and observe how Vim looks and behaves slightly differently with the new config.
 
 # Basics
 ## Inserting text
@@ -162,7 +162,7 @@ has many functionalities, including opening, saving, and closing files, and
     - `:help w` opens help for the `w` movement
 
 
-![Quitting Vim](/2023/files/quitting_vim.png "Qutting Vim")
+![Quitting Vim](/2024/files/quitting_vim.png "Qutting Vim")
 
 # Vim's interface is a programming language
 
@@ -309,7 +309,7 @@ you want to turn on.
 
 As said above, we are providing a well-documented basic config that you can use as a starting
 point. We recommend using this because it fixes some of Vim's quirky default
-behavior. **Download our config [here](/2023/files/vimrc) and save it to
+behavior. **Download our config [here](/2024/files/vimrc) and save it to
 `~/.vimrc`.**
 
 Vim is heavily customizable, and it's worth spending time exploring
@@ -424,7 +424,7 @@ better way of doing this", there probably is: look it up online.
     - first clear the macro with `q{character}q`
     - record the macro, with `@{character}` to invoke the macro recursively
     (will be a no-op until recording is complete)
-- Example: convert xml to json ([file](/2023/files/example-data.xml))
+- Example: convert xml to json ([file](/2024/files/example-data.xml))
     - Array of objects with keys "name" / "email"
     - Use a Python program?
     - Use sed / regexes
@@ -459,7 +459,7 @@ better way of doing this", there probably is: look it up online.
 
 # Exercises
 - Complete `vimtutor`. Note: it looks best in a [80x24](https://en.wikipedia.org/wiki/VT100) (80 columns by 24 lines) terminal window.
-- Download our [basic vimrc](/2023/files/vimrc) and save it to `~/.vimrc`. Read through the well-commented file (using Vim!), and observe how Vim looks and behaves slightly differently with the new config.  
+- Download our [basic vimrc](/2024/files/vimrc) and save it to `~/.vimrc`. Read through the well-commented file (using Vim!), and observe how Vim looks and behaves slightly differently with the new config.  
 - Set a colorscheme to customize your setup either from one of the builtin ones or one from [here](https://vimcolorschemes.com/)
 - Install and configure a plugin: [ctrlp.vim](https://github.com/ctrlpvim/ctrlp.vim).
    - Create the plugins directory with `mkdir -p ~/.vim/pack/vendor/start`
@@ -470,4 +470,4 @@ better way of doing this", there probably is: look it up online.
 - Use Vim for _all_ your text editing for the next month. Whenever something seems inefficient, or when you think "there must be a better way", try Googling it, there probably is. If you get stuck, ask about it in the discord!
 - Configure your other tools to use Vim bindings (see instructions above).
 - Further customize your `~/.vimrc` and install more plugins.
-- (Advanced) Convert XML to JSON ([example file](/2023/files/example-data.xml)) using Vim macros. Try to do this on your own, but you can look at the [macros](#macros) section above if you get stuck.
+- (Advanced) Convert XML to JSON ([example file](/2024/files/example-data.xml)) using Vim macros. Try to do this on your own, but you can look at the [macros](#macros) section above if you get stuck.

@@ -1,8 +1,8 @@
 ---
 layout: lecture
 title: "#6: LaTeX"
-date: 2024-01-16
-ready: true
+date: 2025-01-16
+ready: false
 phase: 2
 ---
 
@@ -42,17 +42,17 @@ Overleaf is one of many LaTeX editors available to use. To quote their website, 
 
 While not FOSS software, Overleaf is free to access for all University of Birmingham students. To get started, head to [https://www.overleaf.com/login](https://www.overleaf.com/login) and log in through your institution. We will discuss FOSS alternatives to Overleaf at the end of the lesson.
 
-![overleaf_login](/2023/files/latex/overleaf_login.png "Login page of overleaf.com.")
+![overleaf_login](/2024/files/latex/overleaf_login.png "Login page of overleaf.com.")
 
 Let's create a new project and explore what Overleaf has to offer.
 
-![overleaf_editor](/2023/files/latex/overleaf_editor.png "Overleaf's editor view")
+![overleaf_editor](/2024/files/latex/overleaf_editor.png "Overleaf's editor view")
 
 To the left are the project and file outline panels that list the files in a project and sections in the currently open document respectively. LaTeX projects are generally split across multiple `.tex` files, conventionally one for each section/chapter.
 
 Next to them are the code editor and preview panels. The editor is where we will spend most of our time. Now is also a good time to enable auto compile from the "Recompile" drop-down to see previews as we go along.
 
-![overleaf_auto_compile](/2023/files/latex/overleaf_auto_compile.png "Enabling the auto compile option")
+![overleaf_auto_compile](/2024/files/latex/overleaf_auto_compile.png "Enabling the auto compile option")
 
 Now that we have a working LaTeX environment, let's get started with typesetting!
 
@@ -68,7 +68,7 @@ Our new document currently consists of the following mark-up:
 
 \title{My first project}
 \author{me}
-\date{October 2023}
+\date{October 2024}
 
 \begin{document}
 
@@ -87,7 +87,7 @@ Everything succeeding the preamble is the actual content of the document.
 
 The `\documentclass` command defines the structure of the document's layout, and takes an optional list of configuration options followed by the name of the document class as arguments. By default, Overleaf uses the `article` document class. Let's switch to a landscape layout by specifying the `landscape` option, i.e., by using `\documentclass[landscape]{article}`.
 
-![overleaf_article_landscape](/2023/files/latex/overleaf_article_landscape.png "Switching to a landscape layout")
+![overleaf_article_landscape](/2024/files/latex/overleaf_article_landscape.png "Switching to a landscape layout")
 
 `article`, as the name suggests, is used to typeset articles and other basic content. As such, it lacks comprehensive configuration options and may not always be best suited for every document. Thankfully, there is a plethora of document classes for almost every need out there. An exhaustive list can be found [on CTAN here](https://ctan.org/topic/class). While we will use `article` for this lesson, below is an overview of a few popular document classes:
 
@@ -112,7 +112,7 @@ Let's add some content to the "Introduction" section of our new document.
 This is some \textbf{bold} and \textit{italicised} text.
 ```
 
-![output_basic_text](/2023/files/latex/output_basic_text.png "Some basic text.")
+![output_basic_text](/2024/files/latex/output_basic_text.png "Some basic text.")
 
 Typesetting textual content is straightforward; you simply input the text to be displayed and the document class handles the typeface, positioning, and font size for you. Note how the `\textbf` and `\textit` commands are used to format text in bold and italics respectively.
 
@@ -130,7 +130,7 @@ Below is a simple equation typeset inline with other text. Observe how the expre
 This is an equation of the form $x + y = z$
 ```
 
-![output_amsmath_inline](/2023/files/latex/output_amsmath_inline.png "A simple equation inline with other text.")
+![output_amsmath_inline](/2024/files/latex/output_amsmath_inline.png "A simple equation inline with other text.")
 
 We can also typeset special characters using specific commands. For example,
 
@@ -139,7 +139,7 @@ $\alpha \rightarrow \sin(\Delta x)$
 ```
 
 yields
-![output_amsmath_special](/2023/files/latex/output_amsmath_special.png "An equation with special characters.")
+![output_amsmath_special](/2024/files/latex/output_amsmath_special.png "An equation with special characters.")
 
 Below are a few commonly used maths symbols:
 
@@ -158,7 +158,7 @@ Fractions can be typeset using the `\frac` command which takes two arguments -- 
 $\frac{5x}{10} = \frac{x}{2}$
 ```
 
-![output_amsmath_frac](/2023/files/latex/output_amsmath_frac.png "An equation with fractions.")
+![output_amsmath_frac](/2024/files/latex/output_amsmath_frac.png "An equation with fractions.")
 
 ### Equations
 
@@ -170,7 +170,7 @@ So far, we have only learned how to inline our maths expressions. Some use cases
 \end{equation}
 ```
 
-![output_amsmath_equation](/2023/files/latex/output_amsmath_equation.png "A full-width equation.")
+![output_amsmath_equation](/2024/files/latex/output_amsmath_equation.png "A full-width equation.")
 
 Observe how LaTeX automatically numbers and centre-aligns the equation.
 To typeset and align multiline equations, we use the `align` environment:
@@ -182,7 +182,7 @@ To typeset and align multiline equations, we use the `align` environment:
 \end{align}
 ```
 
-![output_amsmath_align](/2023/files/latex/output_amsmath_align.png "A multi-line equation.")
+![output_amsmath_align](/2024/files/latex/output_amsmath_align.png "A multi-line equation.")
 
 The output can be thought of as a table where columns are demarcated by `&` and rows by `\\`. In other words, `&` denotes the end of a column and `\\` denotes the end of a line. Using this information, `amsmath` typesets the equation such that all `&` are aligned one below the other. Observe how the two lines of differing length are aligned to the `=`symbol.
 
@@ -195,7 +195,7 @@ A handy tip to note is that automatic line numbering can be switched off by suff
 \end{align}
 ```
 
-![output_amsmath_nonumber](/2023/files/latex/output_amsmath_nonumber.png "A multi-line equation where some lines are unnumbered.")
+![output_amsmath_nonumber](/2024/files/latex/output_amsmath_nonumber.png "A multi-line equation where some lines are unnumbered.")
 
 ## Code
 
@@ -213,7 +213,7 @@ class Latex {
 \end{minted}
 ```
 
-![output_minted](/2023/files/latex/output_minted.png "Some Java code typeset using minted.")
+![output_minted](/2024/files/latex/output_minted.png "Some Java code typeset using minted.")
 
 Similar to `linenos`, we can pass other options to the `minted` environment. Below is some python code highlighted using vim's colour scheme and with a black background.
 
@@ -224,7 +224,7 @@ def add(x, y):
 \end{minted}
 ```
 
-![output_minted_vim_scheme](/2023/files/latex/output_minted_vim_scheme.png "Some python code typeset using minted.")
+![output_minted_vim_scheme](/2024/files/latex/output_minted_vim_scheme.png "Some python code typeset using minted.")
 
 `minted` also allows for for embedding a single line of code:
 
@@ -232,7 +232,7 @@ def add(x, y):
 \mint{js}|let someVariable = 5;|
 ```
 
-![output_mint](/2023/files/latex/output_mint.png "A single line of JavaScript typeset using \mint.")
+![output_mint](/2024/files/latex/output_mint.png "A single line of JavaScript typeset using \mint.")
 
 A comprehensive list of what `minted` is capable of can be found [here](https://tug.ctan.org/macros/latex/contrib/minted/minted.pdf).
 
@@ -247,7 +247,7 @@ A comprehensive list of what `minted` is capable of can be found [here](https://
 \end{lstlisting}
 ```
 
-![output_listings_basic](/2023/files/latex/output_listings_basic.png "Some Haskell code typeset using listings.")
+![output_listings_basic](/2024/files/latex/output_listings_basic.png "Some Haskell code typeset using listings.")
 
 The documentation for the package can be found [here](https://mirror.apps.cam.ac.uk/pub/tex-archive/macros/latex/contrib/listings/listings.pdf).
 
@@ -255,11 +255,11 @@ The documentation for the package can be found [here](https://mirror.apps.cam.ac
 
 Images are embedded using the `graphicx` package which Overleaf already imports for us. To add an image, we first upload the file to Overleaf.
 
-![overleaf_image_upload](/2023/files/latex/overleaf_image_upload.png "Uploading an image to Overleaf.")
+![overleaf_image_upload](/2024/files/latex/overleaf_image_upload.png "Uploading an image to Overleaf.")
 
 The image will show up in the file outline panel once uploaded successfully.
 
-![overleaf_image_uploaded](/2023/files/latex/overleaf_image_uploaded.png "Uploaded image shown in Overleaf.")
+![overleaf_image_uploaded](/2024/files/latex/overleaf_image_uploaded.png "Uploaded image shown in Overleaf.")
 
 Next, we use the `figure` environment to embed the image in-line with other text.
 
@@ -272,7 +272,7 @@ Next, we use the `figure` environment to embed the image in-line with other text
 \end{figure}
 ```
 
-![output_graphicx](/2023/files/latex/output_graphicx.png "Image rendered using graphicx.")
+![output_graphicx](/2024/files/latex/output_graphicx.png "Image rendered using graphicx.")
 
 There's a lot happening here! Let's break it down and analyse each bit.
 
@@ -294,7 +294,7 @@ We start off with the `tikzpicture` environment and the `\node` command to add a
 \end{tikzpicture}
 ```
 
-![output_tikz_1_node](/2023/files/latex/output_tikz_1_node.png "A single node rendered using tikz.")
+![output_tikz_1_node](/2024/files/latex/output_tikz_1_node.png "A single node rendered using tikz.")
 
 Here, we specify the stroke and shape of the node (`draw`, `circle`), give it a unique ID (`node1`), and typeset the content inside (`1`).
 
@@ -312,7 +312,7 @@ Similarly, it is possible to add multiple such nodes.
 
 Note how we've aliased the style of some nodes as `basic_node` for readability.
 
-![output_tikz_n_nodes](/2023/files/latex/output_tikz_n_nodes.png "Multiple overlapping nodes rendered using tikz.")
+![output_tikz_n_nodes](/2024/files/latex/output_tikz_n_nodes.png "Multiple overlapping nodes rendered using tikz.")
 
 Uh oh! It seems all the nodes are rendered over one another. To fix this, we can specify a relative position for some nodes, as shown:
 
@@ -326,7 +326,7 @@ Uh oh! It seems all the nodes are rendered over one another. To fix this, we can
 \end{tikzpicture}
 ```
 
-![output_tikz_positioned_nodes](/2023/files/latex/output_tikz_positioned_nodes.png "Multiple well-positioned nodes rendered using tikz.")
+![output_tikz_positioned_nodes](/2024/files/latex/output_tikz_positioned_nodes.png "Multiple well-positioned nodes rendered using tikz.")
 
 That's much better! We can now specify the edges between the nodes using the `\draw` command:
 
@@ -345,7 +345,7 @@ That's much better! We can now specify the edges between the nodes using the `\d
 \end{tikzpicture}
 ```
 
-![output_tikz_graph](/2023/files/latex/output_tikz_graph.png "A graph rendered using tikz.")
+![output_tikz_graph](/2024/files/latex/output_tikz_graph.png "A graph rendered using tikz.")
 
 ## Proof trees
 
@@ -355,7 +355,7 @@ Trees are typeset in `prooftree` environments and are mainly composed of hypothe
 
 Let's typeset the following proof tree
 
-![output_ebproof](/2023/files/latex/output_ebproof.png "A proof tree rendered using ebproof.")
+![output_ebproof](/2024/files/latex/output_ebproof.png "A proof tree rendered using ebproof.")
 
 ```latex
 \begin{prooftree}
@@ -378,23 +378,23 @@ The structure of Overleaf projects is similar to that of a git repository, meani
 
 The option to sync with git can be found in the menu at the top left of the page.
 
-![overleaf_sync_git](/2023/files/latex/overleaf_sync_git.png "Overleaf's sync menu.")
+![overleaf_sync_git](/2024/files/latex/overleaf_sync_git.png "Overleaf's sync menu.")
 
 Clicking on it yields a link to a git repository that we can clone. Make sure to clone using authentication tokens, and generate a token if you don't have one already.
 
-![overleaf_sync_git_link](/2023/files/latex/overleaf_sync_git_link.png "Overleaf's sync menu.")
+![overleaf_sync_git_link](/2024/files/latex/overleaf_sync_git_link.png "Overleaf's sync menu.")
 
 If git prompts you for a username and password when cloning, enter `git` and your authentication token respectively.
 
-![overleaf_sync_git_auth](/2023/files/latex/overleaf_sync_git_auth.png "Overleaf's sync menu.")
+![overleaf_sync_git_auth](/2024/files/latex/overleaf_sync_git_auth.png "Overleaf's sync menu.")
 
- We now have a git repository that we can work with. For a refresher on git, check out [#5: Version Control](/2023/lec5_version-control) and [#2: Intermediate Shell + Git Basics](/2023/lec2_shell-intermediate). A more in-depth guide can be found [here](https://www.overleaf.com/learn/how-to/Git_integration).
+ We now have a git repository that we can work with. For a refresher on git, check out [#5: Version Control](/2024/lec5_version-control) and [#2: Intermediate Shell + Git Basics](/2024/lec2_shell-intermediate). A more in-depth guide can be found [here](https://www.overleaf.com/learn/how-to/Git_integration).
 
 # Citing and referencing content
 
 Another area where LaTeX shines is when attributing and cross-referencing content.
 
-The `\ref` command is used to reference labelled content from elsewhere in the document, i.e. content that was annotated with the `\label command`. Let's go back to our embedded image from [Typesetting more exciting stuff: Images](/2023/lec6_latex#images) that we labelled `fig:rustacean`.
+The `\ref` command is used to reference labelled content from elsewhere in the document, i.e. content that was annotated with the `\label command`. Let's go back to our embedded image from [Typesetting more exciting stuff: Images](/2024/lec6_latex#images) that we labelled `fig:rustacean`.
 
 Referencing it in the document is as easy as:
 
@@ -449,7 +449,7 @@ series = {LFP '90}
 
 The `.bib` file above has two entries with additional metadata about the work being referenced. These were automatically generated by "cite" features offered by many journal websites. The two above were generated from their respective URLs at dl.acm.org.
 
-![cite_export](/2023/files/latex/cite_export.png "Exporting a citation from ACM.")
+![cite_export](/2024/files/latex/cite_export.png "Exporting a citation from ACM.")
 
 Before we can reference any of this work, we need to import the `biblatex` package in the preamble and add the `.bib` file (named `references.bib`) as a resource.
 

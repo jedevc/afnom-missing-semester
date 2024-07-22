@@ -1,8 +1,8 @@
 ---
 layout: lecture
 title: "#9: Getting Stuff you Download to Compile"
-date: 2024-02-06
-ready: true
+date: 2025-02-06
+ready: false
 phase: 2
 ---
 
@@ -122,7 +122,7 @@ The type of executable can often be specified in the build options.
 
 ### Dependency Errors
 
-<div drawio-diagram="550"><img src="/static/media/2023/compilation/compiler-dependency-error.png"></div>
+<div drawio-diagram="550"><img src="/static/media/2024/compilation/compiler-dependency-error.png"></div>
 
 Dependency errors occur when the code being compiled cannot access a method, object, function, or class required to run. These are often resolved with some build systems installing dependencies for you, but if this isn't possible, manually installing the code dependencies with the language package manager of your choice is required.
 
@@ -137,14 +137,14 @@ However, the dependency might have to be installed via software package manager 
 
 ### Version Errors
 
-<div drawio-diagram="550"><img src="/static/media/2023/compilation/compiler-version-error.png"></div>
+<div drawio-diagram="550"><img src="/static/media/2024/compilation/compiler-version-error.png"></div>
 
 Version errors occur when there is a mismatch between versions for the compiler, dependencies, or code itself. This can be resolved by specifying the versions of the affected code/software in the build options, and sometimes installing earlier versions of dependencies if later versions break the code.
 
 
 ### Other Errors
 
-<div drawio-diagram="550"><img src="/static/media/2023/compilation/compiler-other-error.png"></div>
+<div drawio-diagram="550"><img src="/static/media/2024/compilation/compiler-other-error.png"></div>
 
 Most compilers will provide an error code along with the error, and googling this will most likely lead you to documentation, or other recommended solutions online.
 

@@ -1,8 +1,8 @@
 ---
 layout: lecture
 title: "#11: Introduction to IDEs"
-date: 2024-02-20
-ready: true
+date: 2025-02-20
+ready: false
 phase: 2
 ---
 

@@ -1,8 +1,8 @@
 ---
 layout: lecture
 title: "#2: Intermediate Shell + Git Basics"
-date: 2023-10-10
-ready: true
+date: 2024-10-10
+ready: false
 phase: 1
 ---
 <div class="note">

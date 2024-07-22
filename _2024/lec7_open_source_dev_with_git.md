@@ -1,14 +1,14 @@
 ---
 layout: lecture
 title: "#7: Git for Open Source Development"
-date: 2024-01-23
-ready: true
+date: 2025-01-23
+ready: false
 phase: 2
 ---
 
 ## 1. Recap
 
-This talk assumes knowledge of [Abi's git talk](https://missingsemester.afnom.net/2023/lec5_version-control/) from last semester; to familiarize yourself with git basics, please refer to her talk!
+This talk assumes knowledge of [Abi's git talk](https://missingsemester.afnom.net/2024/lec5_version-control/) from last semester; to familiarize yourself with git basics, please refer to her talk!
 
 A note about `.gitconfig`; I've modified mine a bit so if you follow along you may not see the exact same things I'm seeing.  Here are the relevant bits:
 
@@ -74,7 +74,7 @@ A note about `.gitconfig`; I've modified mine a bit so if you follow along you m
 ```
 
 To briefly summarize Abi's talk, lets look at this graphic:
-<img style="width: 600px;" src="/static/media/2023/git/git_flow.png">
+<img style="width: 600px;" src="/static/media/2024/git/git_flow.png">
 
 Remember also that git has many uses:
 * Ultimate Save System

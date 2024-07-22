@@ -1,8 +1,8 @@
 ---
 layout: lecture
 title: "#1: Course overview + the shell + 🍕"
-date: 2023-10-03
-ready: true
+date: 2024-10-03
+ready: false
 phase: 1
 video:
   aspect: 56.25
@@ -46,7 +46,7 @@ The first phase, consisting of 5 lectures introducing you the shell, editors, an
 The second and third phase lectures are currently still under construction but will be based on your feedback, our interests, and suggestions from the School of Computer Science. Stay tuned for updates on the next phases!
 
 The lectures itself are focused on a
-[particular topic]({{'/2023/' | relative_url}}), and most of them are largely independent (with the exception of the different levels of working with the shell). Nonetheless, as the semester goes on we will presume that you are familiar with the content from the earlier lectures. We have lecture notes online, but there will be a lot of content covered in class (e.g. in the form of demos) that may not be in the notes.
+[particular topic]({{'/2024/' | relative_url}}), and most of them are largely independent (with the exception of the different levels of working with the shell). Nonetheless, as the semester goes on we will presume that you are familiar with the content from the earlier lectures. We have lecture notes online, but there will be a lot of content covered in class (e.g. in the form of demos) that may not be in the notes.
 
 The original MIT lectures recorded the lectures and posted the recording onlines; while our version will be different, they can still provide a good overview of covered topics.
 
@@ -110,7 +110,7 @@ most basic command is to execute a program:
 
 ```console
 missing:~$ date
-Sun Aug  6 16:55:00 BST 2023
+Sun Aug  6 16:55:00 BST 2024
 missing:~$ 
 ```
 

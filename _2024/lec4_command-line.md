@@ -1,8 +1,8 @@
 ---
 layout: lecture
 title: "#4: Shell Advanced"
-date: 2023-10-24
-ready: true
+date: 2024-10-24
+ready: false
 phase: 1
 video:
   aspect: 56.25
@@ -199,7 +199,7 @@ Along with customizing your shell, it is worth spending some time figuring out y
 
 Terminal emulators are the graphical program that your shell runs in. They mange input (eg. from a keyboard) and output (eg. your display) and communicate with the running shell. The shell takes this input, processes it, and tells the terminal what to output. The name is a legacy term back when 'terminals' were a piece of hardware separate from your computer mainframe. Now technology has come far enough that you can run multiple terminal programs on your computer, which is why they're called terminal *emulators*!
 
-![terminal diagram](/2023/files/terminal_shell.png "Diagram of how terminal emulators work with shells and peripherals") 
+![terminal diagram](/2024/files/terminal_shell.png "Diagram of how terminal emulators work with shells and peripherals") 
 
 Since you might be spending hundreds to thousands of hours in your terminal it pays off to look into its settings. Some of the aspects that you may want to modify in your terminal include:
 
