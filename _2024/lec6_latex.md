@@ -3,7 +3,6 @@ layout: lecture
 title: "#6: LaTeX"
 date: 2025-01-16
 ready: false
-phase: 2
 ---
 
 <div class="note">

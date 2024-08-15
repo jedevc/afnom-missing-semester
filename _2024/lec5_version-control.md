@@ -3,7 +3,6 @@ layout: lecture
 title: "#5: Version Control (Git)"
 date: 2024-11-07
 ready: false
-phase: 1
 video:
   aspect: 56.25
   id: 2sjqTHE0zok

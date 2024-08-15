@@ -3,7 +3,6 @@ layout: lecture
 title: "#7: Git for Open Source Development"
 date: 2025-01-23
 ready: false
-phase: 2
 ---
 
 ## 1. Recap

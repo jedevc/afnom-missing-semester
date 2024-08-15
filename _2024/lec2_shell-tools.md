@@ -4,7 +4,6 @@ title: "#2: Intermediate Shell + Git Basics"
 date: 2024-10-10
 ready: false
 phony: true
-phase: 1
 video:
   aspect: 56.25
   id: kgII-YWo3Zw

@@ -3,7 +3,6 @@ layout: lecture
 title: "#9: Getting Stuff you Download to Compile"
 date: 2025-02-06
 ready: false
-phase: 2
 ---
 
 ## Interpreted vs Compiled Languages

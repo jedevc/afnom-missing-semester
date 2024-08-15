@@ -3,7 +3,6 @@ layout: lecture
 title: "#8: Containers and Virtualization + 🍕"
 date: 2025-01-30
 ready: false
-phase: 2
 ---
 
 <div class="note">

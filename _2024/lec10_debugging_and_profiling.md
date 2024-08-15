@@ -3,7 +3,6 @@ layout: lecture
 title: "#10: Debugging and Profiling with gdb"
 date: 2025-02-13
 ready: false
-phase: 2
 ---
 
 ### Context: Debugging with Print Statements
