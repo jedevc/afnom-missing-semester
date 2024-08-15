@@ -5,8 +5,6 @@
             <span style="background-color: #B6D7A8; border-radius: 10px; padding: 1px; color: #222;"> Phase 1</span>
         {% elsif lecture.phase == 2 %}
             <span style="background-color: #76A5AF; border-radius: 10px; padding: 1px; color: #222;"> Phase 2</span>
-        {% else %}
-            <span style="background-color: #FF0000; border-radius: 10px; padding: 1px; color: #222;"> Phase ?</span>
         {% endif %}
         <strong>{{ lecture.date | date: '%d/%m/%y' }}</strong>:
         {% if lecture.ready %}
