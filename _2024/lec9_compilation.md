@@ -1,7 +1,7 @@
 ---
 layout: lecture
 title: "#9: Getting Stuff you Download to Compile"
-date: TBD
+date: 2025-02-06
 ready: false
 ---
 

@@ -1,7 +1,7 @@
 ---
 layout: lecture
 title: "#3: Editors (Vim)"
-date: TBD
+date: 2024-10-17
 ready: false
 video:
   aspect: 56.25

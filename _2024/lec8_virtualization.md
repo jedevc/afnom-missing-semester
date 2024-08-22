@@ -1,7 +1,7 @@
 ---
 layout: lecture
 title: "#8: Containers and Virtualization + 🍕"
-date: TBD
+date: 2025-01-30
 ready: false
 ---
 
