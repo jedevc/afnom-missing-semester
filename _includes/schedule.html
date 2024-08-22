@@ -1,7 +1,12 @@
 {% for lecture in lectures %}
     {% if lecture.phony != true %}
         <li>
-        <strong>{{ lecture.date | date: '%d/%m/%y' }}</strong>:
+        {% if include.hideDates %}
+            <strong>Date: TBD</strong>
+        {% else %}
+            <strong>{{ lecture.date | date: '%d/%m/%y' }}</strong>:
+        {% endif %}
+
         {% if lecture.ready %}
             <a href="{{ lecture.url | relative_url }}">{{ lecture.title }}</a>
         {% elsif lecture.noclass %}

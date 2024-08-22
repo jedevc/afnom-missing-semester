@@ -8,7 +8,7 @@ excerpt: '' # work around a bug
 
 <ul class="double-spaced">
 {% assign lectures = site['2024'] | sort: 'date' %}
-{% include schedule.html %}
+{% include schedule.html hideDates=true%}
 </ul>
 
 <div class="note">
