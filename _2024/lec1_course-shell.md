@@ -1,7 +1,7 @@
 ---
 layout: lecture
 title: "#1: Course overview + the shell + 🍕"
-date: 2024-10-03
+date: TBD
 ready: false
 video:
   aspect: 56.25

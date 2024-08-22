@@ -1,7 +1,7 @@
 ---
 layout: lecture
 title: "#5: Version Control (Git)"
-date: 2024-11-07
+date: TBD
 ready: false
 video:
   aspect: 56.25

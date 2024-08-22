@@ -1,7 +1,7 @@
 ---
 layout: lecture
 title: "#2: Intermediate Shell + Git Basics"
-date: 2024-10-10
+date: TBD
 ready: false
 phony: true
 video:
