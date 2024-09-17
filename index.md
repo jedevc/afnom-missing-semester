@@ -44,7 +44,7 @@ Read about the [motivation behind this class](/about/).
 
 <ul>
 {% assign lectures = site['2024'] | sort: 'date' %}
-{% include schedule.html hideDates=true %}
+{% include schedule.html hideDates=false %}
 </ul>
 
 # Related Resources
