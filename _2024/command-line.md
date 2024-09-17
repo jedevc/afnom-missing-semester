@@ -1,7 +1,7 @@
 ---
 layout: lecture
-title: "#4: Shell Advanced"
-date: 2024-10-24
+title: "#6: Shell Advanced"
+date: 2024-11-07
 ready: false
 video:
   aspect: 56.25

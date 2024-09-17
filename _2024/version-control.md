@@ -1,11 +1,13 @@
 ---
 layout: lecture
-title: "#5: Version Control (Git)"
-date: 2024-11-07
+title: "#3: Version Control with Git"
+date: 2024-10-21
 ready: false
 video:
   aspect: 56.25
   id: 2sjqTHE0zok
+todo: 
+  - need to pull baby git stuff from week 2!
 ---
 
 <div class="note">

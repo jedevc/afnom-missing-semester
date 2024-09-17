@@ -1,7 +1,7 @@
 ---
 layout: lecture
-title: "#6: LaTeX"
-date: 2025-01-16
+title: "#7: LaTeX"
+date: 2024-11-18
 ready: false
 ---
 
