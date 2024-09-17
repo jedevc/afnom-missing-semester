@@ -36,7 +36,7 @@ Read about the [motivation behind this class](/about/).
 
 * **Registration**: [Registration form](https://forms.gle/AEEoGFv3dWq12YC59)
 * **Questions / Discussions**: Please join the [Missing Semester Discord](https://discord.gg/gwgyZQRGhV)!
-* **Lecture**: To be announced before each class on the discord :-)
+* **Sessions**: Monday @ 1pm, room TBD (watch this space!)
 * **Facilitators**: MS is run by Members of AFNOM and CSS, with support from Marius Muench and Matthew Leeke.
 
 
