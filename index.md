@@ -36,7 +36,9 @@ Read about the [motivation behind this class](/about/).
 
 * **Registration**: [Registration form](https://forms.gle/AEEoGFv3dWq12YC59)
 * **Questions / Discussions**: Please join the [Missing Semester Discord](https://discord.gg/gwgyZQRGhV)!
-* **Sessions**: Monday @ 1pm, room TBD (watch this space!)
+* **Time/Location**:
+    * **Semester 1**: Mondays 13:00-14:00 in [Y3-G29](https://universityofbirmingham.service-now.com/eqpublic/rooms.do?room=6cfd35974d8d6c008163baecd9deaa62)
+    * **Semester 2**: Mondays 14:00-15:00 in [SportEx LT1](https://universityofbirmingham.service-now.com/eqpublic/rooms.do?room=5ffd39974d8d6c008163baecd9deaa67)
 * **Facilitators**: MS is run by Members of AFNOM and CSS, with support from Marius Muench and Matthew Leeke.
 
 
