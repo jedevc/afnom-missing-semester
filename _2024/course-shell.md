@@ -2,7 +2,7 @@
 layout: lecture
 title: "#1: Course overview + the shell + 🍕"
 date: 2024-10-07
-ready: false
+ready: true
 video:
   aspect: 56.25
   id: Z56Jmr9Z34Q
@@ -27,26 +27,38 @@ We want to teach you how to make the most of the tools you know, show you new to
 
 # Class structure
 
-The class consists of multiple 1-hour lectures/hack'n'tell sessions split in 3 phases.
-The first phase, consisting of 5 lectures introducing you the shell, editors, and version control - all you need to get started as computer scientist frequently working on the command line!
+The class consists of multiple 1-hour lectures/hack'n'tell sessions running during the first and beginning of second term this year.
+For now, we have 14 exciting sessions lined up, introducing you the shell, editors, version control and more.
+In essence, we try to cover everything you need to get started as computer scientist frequently working on the command line!
 
-The second and third phase lectures are currently still under construction but will be based on your feedback, our interests, and suggestions from the School of Computer Science. Stay tuned for updates on the next phases!
 
 The lectures itself are focused on a
 [particular topic]({{'/2024/' | relative_url}}), and most of them are largely independent (with the exception of the different levels of working with the shell). Nonetheless, as the semester goes on we will presume that you are familiar with the content from the earlier lectures. We have lecture notes online, but there will be a lot of content covered in class (e.g. in the form of demos) that may not be in the notes.
 
-The original MIT lectures recorded the lectures and posted the recording onlines; while our version will be different, they can still provide a good overview of covered topics.
+
+The original MIT lectures recorded the lectures and posted the recording online; while our version will be different, they can still provide a good overview of covered topics.
+
+<div class="note">
+This year, following popular requests from attendees, we plan to try experimenting with recording our sessions. <br>
+While we cannot promise that all sessions are recorded, you may find information on selected recorded lectures on our discord server.
+<br>
+
+</div>
 
 We are trying to cover a lot of ground over the course, so the lectures may be fairly dense. To allow you some time to
 get familiar with the content at your own pace, lectures may include a
 set of exercises that guide you through the lecture's key points.
-If you have questions after the lecture, feel free to reach out to us on our [Missing Semester Discord Server](https://discord.gg/gwgyZQRGhV), or email us at [ms@afnom.net](mailto:ms@afnom.net).
+If you have questions after the lecture, feel free to reach out to us on our [Missing Semester Discord Server](https://discord.gg/gwgyZQRGhV), or email us at [missingsemesterbrum@gmail.com](mailto:missingsemesterbrum@gmail.com).
 
 Due to the limited time we have, we won't be able to cover all the tools
 in the same level of detail a full-scale class might. Where possible, we
 will try to point you towards resources for digging further into a tool
 or topic, but if something particularly strikes your fancy, don't
 hesitate to reach out to us and ask for pointers!
+
+Last, we are always trying to extend and optimize our sessions based on your feedback, our interests, and suggestions from the School of Computer Science.
+If you would like to see anything covered we don't already plan to cover, or want to provide us our suggestions for improvement, please make sure to fill our [feedback form](https://forms.gle/b25QBSdaZEYd6Cq18).
+
 
 # Topic 1: The Shell
 
@@ -213,8 +225,8 @@ An experienced shell user's first instinct might be to do something like:
 
 ```console
 $ sudo find -L /sys/class/backlight -maxdepth 2 -name '*brightness*'
-/sys/class/backlight/thinkpad_screen/brightness
-$ cd /sys/class/backlight/thinkpad_screen
+/sys/class/backlight/intel_backlight/brightness
+$ cd /sys/class/backlight/intel_backlight/
 $ sudo echo 3 > brightness
 An error occurred while redirecting file 'brightness'
 open: Permission denied
@@ -258,3 +270,31 @@ We have not written solutions for the exercises. If you are stuck on anything in
  1. Use `chmod` to make it possible to run the command `./semester` rather than having to type `sh semester`. How does your shell know that the file is supposed to be interpreted using `sh`? See this page on the [shebang](https://en.wikipedia.org/wiki/Shebang_(Unix)) line for more information.
  1. Use `|` and `>` to write the "last modified" date output by `semester` into a file called `last-modified.txt` in your home directory.
  1. Write a command that reads out your laptop battery's power level or your desktop machine's CPU temperature from `/sys`. Note: if you're a macOS user, your OS doesn't have sysfs, so you can skip this exercise.
+
+# Feedback
+
+As described before, feel free to fill our feedback [feedback form](https://forms.gle/b25QBSdaZEYd6Cq18).
+As bonus, we can also now generate a qr-code using the qrencode command line utility. While this utility is not installed by default (check our later sessions to learn how to install packets), you can give it a try and see if your distribution supports it:
+
+```
+$ echo "https://forms.gle/b25QBSdaZEYd6Cq18" | qrencode -t ansiutf8
+█████████████████████████████████████
+█████████████████████████████████████
+████ ▄▄▄▄▄ █▀█ █▄ ▀ █▀ █ █ ▄▄▄▄▄ ████
+████ █   █ █▀▀▀█ ▄▀███▄█▀█ █   █ ████
+████ █▄▄▄█ █▀ █▀▀██ █▀▀█ █ █▄▄▄█ ████
+████▄▄▄▄▄▄▄█▄▀ ▀▄█ ▀▄█▄█ █▄▄▄▄▄▄▄████
+████ ▄ ▄▄▀▄  ▄▀▄▀▀▀█▄▄▀▀▄▄▀ ▀▄█▄▀████
+████▄▄█▀▄▀▄▀▄█▄█▀ ▄ ▄█▀▀█▄▀ ▄▀█▀█████
+████▄   █▄▄▀ ▄▄█▄█▄▄▄▄▀▀▄ ▀▀▀▄▄█▀████
+█████▀ ▀▄ ▄▀  ▀ ▄█▀ ▄█▄▀█▀ █▀▄▄▀█████
+████▀  ▀█▄▄▀▀  ▄▀▀▀▄ ▀█▀▀▀▀ ▀▄ █▀████
+████ █▀█▄▄▄▀█▄██▀ ▄▄▄▄ ▀ █▀ ██▄▀█████
+████▄█▄▄██▄▄ ▄ █▄█▄ ▀█▀▄ ▄▄▄ ▀   ████
+████ ▄▄▄▄▄ █▄ ▄ ▄█▀▄▀██▄ █▄█ ▄▄▀█████
+████ █   █ █ ▄ ▄▀▀▀▄▄▀█▀▄▄▄▄▄▀ ▀▀████
+████ █▄▄▄█ █ █▀█▀ ▄ ▀█▄▄▀▄ ▄▄ ▄ █████
+████▄▄▄▄▄▄▄█▄▄▄█▄█▄▄█▄█▄█▄█▄▄█▄██████
+█████████████████████████████████████
+█████████████████████████████████████
+```
