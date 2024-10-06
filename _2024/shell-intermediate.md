@@ -3,8 +3,6 @@ layout: lecture
 title: "#2: Intermediate Shell"
 date: 2024-10-14
 ready: false
-todo:
-  - Need to get rid of git stuff -- that goes in week 3 now!
 ---
 <div class="note">
 <b> Update 08/10/23: </b> The contents below have been adjusted to reflect the Missing Semester content covered at UoB. Check our <a href="https://github.com/afnom/missing-semester/commits/master">git history</a> for a full list of changes.
@@ -12,7 +10,7 @@ todo:
 </div>
 
 
-In this lecture, we will present some more intermediate concepts around using the shell, including using pipes and redirection, pagers, permissions and groups, basic bash scripts, environment variables, monitoring your system and logging into other systems remotely. We will also mention the basics of Git, though a much more in depth explanation will be offered in session #5.
+In this lecture, we will present some more intermediate concepts around using the shell, including using pipes and redirection, pagers, permissions and groups, basic bash scripts, environment variables, and monitoring your system.
 
 We will also present some of the basics of using bash as a scripting language along with a number of shell tools that cover several of the most common tasks that you will be constantly performing in the command line.
 
@@ -30,7 +28,7 @@ To write data to a file directly from the shell, we use _redirection_. Redirecti
 echo 'Hello World!'
 # Hello World!
 ```
-and we wish to instead write this to the file `hello.txt`. To achieve this we can use the redirection operator `>`, which has syntax `[stdout] > [filename]`.
+and we wish to instead write this to the file `hello.txt`. To achieve this we can use the redirection operator `>`, which has syntax `[command] > [filename]`.
 
 `echo` writes to the standard output (stdout) so:
 ```bash
@@ -57,6 +55,17 @@ echo 'Hello from Line 2, but actually this time!' >> hello.txt
 cat hello.txt
 # Hello from Line 2
 # Hello from Line 2, but actually this time!
+```
+
+As well as this, we can use the `<` operator to redirect the content of a file into a program. Here's an example demonstrating how data can be sent to and from files using redirection operators:
+
+```bash
+echo 'hello!' > hello.txt
+cat < hello.txt
+# hello!
+cat < hello.txt > hello2.txt
+cat hello2.txt
+# hello!
 ```
 
 Let's now use input event debugging as an example for why we might want to do this. Libinput handles all user input events like keypresses and mouse movements, and if there is a problem with input devices we may wish to review the the Libinput debug logs. We can see these with `sudo libinput debug-events`. However, when moving the mouse or using the touchpad, a huge number of a events are generated and we could not possibly review them all in real time. So instead, we can redirect the output of this command to a file, and then review it afterwards to see if we can spot whatever issue we are pursuing. We will cover reviewing large files in the pagers section below.
@@ -164,6 +173,80 @@ The access of a file can be changed with `chmod`. Again, this can only be done b
 
 Both of the above can also be applied recursively to change the permissions of an entire directory structure. Do this with caution! For details on how to use these commands, take a look at their manual pages.
 
+# Package managers
+
+The primary method of installing applications on Linux systems is by using a package manager. Each Linux distribution has its own package manager, but most use one of the following: `apt` (Debian-based), `pacman` (Arch-based), `dnf` (RedHat-based), or `zypper` (SUSE-based). For simplicity's sake, we'll be demonstrating how to use `apt`, as it is the most popular package manager, and the principles should carry on to the other package managers through different command names.
+
+Since package managers edit package files system-wide, root privileges are needed to install, delete, and update package repositories, so most commands will be prefixed by `sudo`.
+
+**Note: Take the same care with using `sudo` now as you always should.**
+
+As as example, let's install `cowsay`:
+
+First, try running `cowsay "Hello!"`. Usually, the `cowsay` command isn't installed, so `bash` should return a `comand not found` error.
+Let's start by updating our package repositories with `sudo apt update`.
+
+
+```
+[sudo] password for user:
+Hit:1 http://ee.archive.ubuntu.com/ubuntu focal InRelease
+Hit:2 http://ee.archive.ubuntu.com/ubuntu focal-updates InRelease
+Hit:3 http://ee.archive.ubuntu.com/ubuntu focal-backports InRelease
+---[snip]---
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+```
+
+Run `sudo apt install cowsay` to install the package.
+
+```
+Installing:
+  cowsay
+---[snip]---
+No user sessions are running outdated binaries.
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+```
+
+Following this, run `cowsay 'Hello!'`.
+
+```
+ ________
+< Hello! >
+ --------
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+```
+
+To remove `cowsay`, run `sudo apt remove cowsay`.
+
+```
+REMOVING:
+  cowsay
+---[snip]---
+Continue? [Y/n] y
+---[snip]---
+Removing cowsay (3.03+dfsg2-8) ...
+Processing triggers for man-db (2.12.1-1) ...
+```
+
+The following cheat sheet should give you all the commands needed to manage your system packages with `apt`:
+
+| Command             | Function                      | Root privileges required? |
+|---------------------|-------------------------------|---------------------------|
+| `install [PACKAGE]` | Installs a package            | ✓                         |
+| `remove [PACKAGE]`  | Removes a package             | ✓                         |
+| `update`            | Updates package repositories  | ✓                         |
+| `upgrade`           | Updates installed packages    | ✓                         |
+| `autoremove`        | Removes unneeded dependencies | ✓                         |
+| `list`              | Lists installed packages      | ✗                         |
+| `search [KEYWORD]`  | Searches available packages   | ✗                         |
+
+
 # Writing a basic bash script
 
 Throughout Missing Semester so far we have been working with the bash shell to execute various commands. However, bash is more than a shell: it is an entire scripting language. Bash is as powerful as other programming languages, but its syntax is relatively arcane and difficult to use. Coming from other languages such as Python or Java it will be very unfamiliar. It is for this reason we are going to leave the fundamental structures in bash such as if-statements, iteration and function definition / calls to later on.
@@ -261,11 +344,39 @@ missing-semester
 
 With this setup, every executable placed inside the executables folder will be available to us in this shell.
 
-Importantly, do note that this change isn't permanent and only applies to the particular shell you have changed the environment variable in. If you wished to apply this change to every shell, you could modify the `.bashrc` file, as this file is executed as part of the start-up process for all shells.
+New environment variables can be set using `[NAME]=[VALUE]`, where the variable can be accessed with `$[NAME]`.
+
+Importantly, do note that this change isn't permanent and only applies to the particular shell you have changed the environment variable in. If you wished to apply this change to every shell, you could modify the `~/.bashrc` file, as this file is executed as part of the start-up process for all shells.
 
 In the computer labs at UoB, you may find that you are asked to use the `module` command to make some program available. This works exactly like our PATH change above. The software you're loading with `module` is actually present on the computer all the time, but it's not found by your shell as it's not in the PATH. Once you run the `module load` command, it gets inserted into your PATH so your shell can find it.
 
 Broadly, there is always a reason for the behaviour you see from a Linux computer, and tools like `env` grant you the power to look under the hood and see how it all fits together. Try running `env` the next time you're on a lab machine!
+
+
+## SSH Intermediate
+
+Typing out a long password every time you wish to login can become cumbersome (especially so if you are using tools that connect on your behalf). To resolve this, we can use an SSH key. An SSH key consists of two parts: a private key and public key. In short, the public key is used by others to encrypt data to be sent to you, and the private is used by you to decrypt data sent to you. Since the private key serves as your identity, the key must be kept secret, ideally with a password used to encrypt it. Most servers are configured with password based login disabled and only allow key login. This is due to the low security of the average password, possibility of brute forcing them, and the possibility of an attacker stealing the password with a malicious server. For these security reasons key authenticated is widely preferred.
+
+To generate a key, we use `ssh-keygen`. Current security practices recommend using the ed25519 key algorithm, so the full command to generate a new key is `ssh-keygen -t ed25519`. The key generation program is interactive and asks you for a name for the key and what password you would like to protect the key with. Keys and other SSH information are stored within the `.ssh` folder. The prefixed dot means the folder is hidden by default, so it will not appear in an `ls`. We can use the `-a` flag to list all files, which includes hidden ones. Once the key is generated, you will notice two new files inside your `.ssh` folder: `keyname` and `keyname.pub`. The .pub file is the public key, and the file without an extension is the private key. In order for the server you're connecting to to know about the key, you have to copy the public key to the server. To do this, you must edit the `.ssh/authorized_keys` file (note the American spelling), and paste in the contents of your .pub file into an empty line. Once you save the file, login with your key is now possible. Important note: never copy the private key. If you do so by accident, make sure you de-authorise the key from all servers it allows access to. To login with a key, we can use the `-i` option in ssh, with the i standing for identity file. So for example, we may do `ssh -i .ssh/keyname abc123@server.net`. You will not be asked for your password as the key authenticates you and proves your identity, but if you specified a passphrase while generating a key, it must be used when logging in through ssh. SSH key passphrases can be changed or added with the command `ssh-keygen -p -f [PATH_TO_KEY]`.
+
+
+## SSHFS
+
+Another feature of SSH is the ability to mount a directory on the remote server on your local filesystem, allowing easy access to read and write to your files. To do this, we first create a mountpoint, and then use the `sshfs` command to mount the filesystem over SSH. Once we're done, we can then unmount the remote filesystem with `fusermount3 -u`. An example may look like the following:
+```bash
+mkdir mountpoint
+sshfs abc123@server.net:/home/abc123/project mountpoint
+ls mountpoint
+# <all the files in the server's project directory here>
+
+# some time later
+fusermount3 -u mountpoint
+# make sure the unmount succeeded before removing the mountpoint!
+rm -d mountpoint # tidy up afterwards. the d flag allows removing empty directories
+```
+
+As we can see, the `sshfs` command has three key components: the user and host we're connecting to, the directory on the host we want to mount, and the location on our filesystem and we are mounting it to.
+
 
 # Monitoring your system
 
@@ -273,7 +384,7 @@ One key part of maintaining a system is being aware of what programs are running
 
 For example, your system might be bogged down by an application thrashing the disk or an application using a lot of memory, and you might want to know what program is causing the slowdown. To do this you can use the the `top` program. top gives you a list of all of the processes running, and by default sorts them by CPU usage. It provides information about the processes, such as their priority, total CPU time and memory usage. It also provides an overview of the total load of the system, what CPU utilisation is like and how much memory is used/available in total. Additionally, you can take actions on processes inside of top such as terminating them or changing their priority. Pressing the h key while inside top will display a brief help message showing what functionality is available.
 
-While top is an interactive tool, sometimes we also wish to simply list processes. We can do this with the `ps` tool. ps supports many flags to control what fields are output, and a typical invocation to list all processes with full information is `ps -aux`. As a typical system has a lot of processes, this outputs many lines. If we are looking for a specific process, we may wish to pipe the output of ps into a grep to filter it. Suppose we're looking running instances of the program konsole (the terminal being used to demonstrate this):
+While top is an interactive tool, sometimes we also wish to simply list processes. We can do this with the `ps` tool. ps supports many flags to control what fields are output, and a typical invocation to list all processes with full information is `ps faux`. `ps fauxw` can be used instead to do the same, but print the full command string of processes as well. As a typical system has a lot of processes, this outputs many lines. Subprocesses are shown branching off their parent processes. If we are looking for a specific process, we can pipe the output of ps into `grep` to filter it. Suppose we're looking running instances of the program konsole (the terminal being used to demonstrate this):
 
 ```bash
 # for reference, the normal ps header
@@ -286,65 +397,6 @@ ps -aux | grep konsole
 ```
 
 and we can immediately see the three terminals open as this guide is written.
-
-# SSH
-
-Secure shell (SSH) is a protocol used to log in to another Linux computer over a network. The `ssh` tool is one of the most important utilities, as being able to use other computers without having to sit in front them is a key feature and something worth mastering. Here at UoB, all lab computers can be logged into remotely. This is useful if you wish to view or manage files stored in your CS account or run some computing task (such as machine learning) that is not suitable to be run on your local machine. Being logged into the CS network from home also allows you access services that are only available on the University intranet from anywhere. An example of one of these hosts only accessible from the University intranet is the servers used to host team projects for the 2nd year UG Team Project module.
-
-To log in to a remote machine with SSH, the command follows the format `ssh <username>@<host>`. At UoB, the username you use is your CS account name (e.g abc123) and the publicly accessible host is called tinky-winky, available at tinky-winky.cs.bham.ac.uk. So an example login might look like
-
-```bash
-ssh abc123@tinky-winky.cs.bham.ac.uk
-# abc123@tinky-winky.cs.bham.ac.uk's password:
-# [abc123@tinky-winky ~]$
-```
-where you get prompted for your CS password and then get dropped to a shell on tinky-winky. Tinky-winky acts as a "bastion" server, meaning that all hosts are accessible from it, but it is not to be used as a server for any work. If we want to start doing any work, we should then connect to a lab machine, which we can do with the command `ssh-lab`. We then get asked for our password again to log on to the machine. Once logged in, we have the same shell as if we sat down at the lab machine physically.
-
-Typing out a long password every time you wish to login can become cumbersome (especially so if you are using tools that connect on your behalf). To resolve this, we can use an SSH key. An SSH key consists of two parts: a private key and public key. In short, the public key is used by others to encrypt data to be sent to you, and the private is used by you to decrypt data sent to you. Since the private key serves as your identity, the key must be kept secret, ideally with a password used to encrypt it.
-
-For the university systems, password based login is always available so a key is not strictly required. Most servers however are configured with password based login disabled and only allow key login. This is due to the low security of the average password, possibility of brute forcing them, and the possibility of an attacker stealing the password with a malicious server. For these security reasons key authenticated is widely preferred.
-
-To generate a key, we use `ssh-keygen`. Current security practices recommend using the ed25519 key algorithm, so the full command to generate a new key is `ssh-keygen -t ed25519`. The key generation program is interactive and asks you for a name for the key and what password you would like to protect the key with.
-Keys and other SSH information are stored within the `.ssh` folder. The prefixed dot means the folder is hidden by default, so it will not appear in an `ls`. We can use the `-a` flag to list all files, which includes hidden ones. Once the key is generated, you will notice two new files inside your `.ssh` folder: `keyname` and `keyname.pub`. The .pub file is the public key, and the file without an extension is the private key.
-
-In order for the server you're connecting to to know about the key, you have to copy the public key to the server. To do this, you must edit the `.ssh/authorized_keys` file (note the American spelling), and paste in the contents of your .pub file into an empty line. Once you save the file, login with your key is now possible.
-
-Important note: never copy the private key. If you do so by accident, make sure you de-authorise the key from all servers it allows access to. 
-
-To login with a key, we can use the `-i` option in ssh, with the i standing for identity file. So for example, we may do `ssh -i .ssh/keyname abc123@tinky-winky.cs.bham.ac.uk`. You will not be asked for your CS account password as the key authenticates you and proves your identity.
-
-## SSHFS
-
-Another feature of SSH is the ability to mount a directory on the remote server on your local filesystem, allowing easy access to read and write to your files. To do this, we first create a mountpoint, and then use the `sshfs` command to mount the filesystem over SSH. Once we're done, we can then unmount the remote filesystem with `fusermount3 -u`. An example may look like the following:
-```bash
-mkdir mountpoint
-sshfs abc123@tinky-winky.cs.bham.ac.uk:/home/students/abc123 mountpoint
-ls mountpoint
-# <all the files in your CS account here>
-
-# some time later
-fusermount3 -u mountpoint
-# make sure the unmount succeeded before removing the mountpoint!
-rm -d mountpoint # tidy up afterwards. the d flag allows removing empty directories
-```
-As we can see, the `sshfs` command has three key components: the user and host we're connecting to, the directory on the host we want to mount, and the location on our filesystem and we are mounting it to.
-
-
-# Git
-
-Finally, let's check out the basics of Git. Git is a version control system that records the history of files as the change. This is very useful for tracking changes to a project over time, and almost necessary for collaborative work on a project. If you've ever had some project file/folder named something like "Project v4.3 FINAL final SUBMISSION" then Git is what you've been looking for this whole time.
-
-In this lecture we're going over just the basics of Git. Git is capable of a lot, but there are four key operations that you need to get started.
-
-`git clone <url>` makes a copy of a remote repository on your machine. In Git, a repository is where all of the files tracked by Git are stored (i.e your project code, assets etc) along with the metadata that Git uses to provide history. The remote is usually a Git hosting service such as GitLab or GitHub.
-
-Once you've got a copy of a repository, you can start editing files. If you create any new files and want to start tracking them in the repository, add them with `git add <file>`. When you would like to commit the changes you've made to your local repository, run `git commit -a -m <commit message>`. This creates a new snapshot of the state of the files in the repository. Use the commit message to record what changes you've made.
-
-Then, you'll probably want to send your changes back to the remote. This is done with `git push`. After this, your commit will appear on the remote server where everyone with access to the repository can see it.
-
-Finally, there's one more command that's worth knowing. When other people have made changes to the repository by introducing new commits, and then have pushed them to the remote, you may want to pull these changes down into your local copy of the repository. You guessed it, that's exactly what `git pull` does.
-
-There are many more Git commands, but we'll cover them in lecture #5 with a deep dive on exactly what Git is, what problem it solves, how it works and how to use it. So stay tuned for more!
 
 
 # Shell Scripting
@@ -384,127 +436,8 @@ mcd () {
 }
 ```
 
-Here `$1` is the first argument to the script/function.
-Unlike other scripting languages, bash uses a variety of special variables to refer to arguments, error codes, and other relevant variables. Below is a list of some of them. A more comprehensive list can be found [here](https://tldp.org/LDP/abs/html/special-chars.html).
-- `$0` - Name of the script
-- `$1` to `$9` - Arguments to the script. `$1` is the first argument and so on.
-- `$@` - All the arguments
-- `$#` - Number of arguments
-- `$?` - Return code of the previous command
-- `$$` - Process identification number (PID) for the current script
-- `!!` - Entire last command, including arguments. A common pattern is to execute a command only for it to fail due to missing permissions; you can quickly re-execute the command with sudo by doing `sudo !!`
-- `$_` - Last argument from the last command. If you are in an interactive shell, you can also quickly get this value by typing `Esc` followed by `.` or `Alt+.`
+Here `$1` is the first argument to the script/function. The syntax `$n` can be used to refer to arguments to a bash script/function, where n is the argument number, and `$0` refers to the name of the script being run.
 
-Commands will often return output using `STDOUT`, errors through `STDERR`, and a Return Code to report errors in a more script-friendly manner.
-The return code or exit status is the way scripts/commands have to communicate how execution went.
-A value of 0 usually means everything went OK; anything different from 0 means an error occurred.
-
-Exit codes can be used to conditionally execute commands using `&&` (and operator) and `||` (or operator), both of which are [short-circuiting](https://en.wikipedia.org/wiki/Short-circuit_evaluation) operators. Commands can also be separated within the same line using a semicolon `;`.
-The `true` program will always have a 0 return code and the `false` command will always have a 1 return code.
-Let's see some examples
-
-```bash
-false || echo "Oops, fail"
-# Oops, fail
-
-true || echo "Will not be printed"
-#
-
-true && echo "Things went well"
-# Things went well
-
-false && echo "Will not be printed"
-#
-
-true ; echo "This will always run"
-# This will always run
-
-false ; echo "This will always run"
-# This will always run
-```
-
-Another common pattern is wanting to get the output of a command as a variable. This can be done with _command substitution_.
-Whenever you place `$( CMD )` it will execute `CMD`, get the output of the command and substitute it in place.
-For example, if you do `for file in $(ls)`, the shell will first call `ls` and then iterate over those values.
-A lesser known similar feature is _process substitution_, `<( CMD )` will execute `CMD` and place the output in a temporary file and substitute the `<()` with that file's name. This is useful when commands expect values to be passed by file instead of by STDIN. For example, `diff <(ls foo) <(ls bar)` will show differences between files in dirs  `foo` and `bar`.
-
-
-Since that was a huge information dump, let's see an example that showcases some of these features. It will iterate through the arguments we provide, `grep` for the string `foobar`, and append it to the file as a comment if it's not found.
-
-```bash
-#!/bin/bash
-
-echo "Starting program at $(date)" # Date will be substituted
-
-echo "Running program $0 with $# arguments with pid $$"
-
-for file in "$@"; do
-    grep foobar "$file" > /dev/null 2> /dev/null
-    # When pattern is not found, grep has exit status 1
-    # We redirect STDOUT and STDERR to a null register since we do not care about them
-    if [[ $? -ne 0 ]]; then
-        echo "File $file does not have any foobar, adding one"
-        echo "# foobar" >> "$file"
-    fi
-done
-```
-
-In the comparison we tested whether `$?` was not equal to 0.
-Bash implements many comparisons of this sort - you can find a detailed list in the manpage for [`test`](https://www.man7.org/linux/man-pages/man1/test.1.html).
-When performing comparisons in bash, try to use double brackets `[[ ]]` in favor of simple brackets `[ ]`. Chances of making mistakes are lower although it won't be portable to `sh`. A more detailed explanation can be found [here](http://mywiki.wooledge.org/BashFAQ/031).
-
-When launching scripts, you will often want to provide arguments that are similar. Bash has ways of making this easier, expanding expressions by carrying out filename expansion. These techniques are often referred to as shell _globbing_.
-- Wildcards - Whenever you want to perform some sort of wildcard matching, you can use `?` and `*` to match one or any amount of characters respectively. For instance, given files `foo`, `foo1`, `foo2`, `foo10` and `bar`, the command `rm foo?` will delete `foo1` and `foo2` whereas `rm foo*` will delete all but `bar`.
-- Curly braces `{}` - Whenever you have a common substring in a series of commands, you can use curly braces for bash to expand this automatically. This comes in very handy when moving or converting files.
-
-```bash
-convert image.{png,jpg}
-# Will expand to
-convert image.png image.jpg
-
-cp /path/to/project/{foo,bar,baz}.sh /newpath
-# Will expand to
-cp /path/to/project/foo.sh /path/to/project/bar.sh /path/to/project/baz.sh /newpath
-
-# Globbing techniques can also be combined
-mv *{.py,.sh} folder
-# Will move all *.py and *.sh files
-
-
-mkdir foo bar
-# This creates files foo/a, foo/b, ... foo/h, bar/a, bar/b, ... bar/h
-touch {foo,bar}/{a..h}
-touch foo/x bar/y
-# Show differences between files in foo and bar
-diff <(ls foo) <(ls bar)
-# Outputs
-# < x
-# ---
-# > y
-```
-
-<!-- Lastly, pipes `|` are a core feature of scripting. Pipes connect one program's output to the next program's input. We will cover them more in detail in the data wrangling lecture. -->
-
-Writing `bash` scripts can be tricky and unintuitive. There are tools like [shellcheck](https://github.com/koalaman/shellcheck) that will help you find errors in your sh/bash scripts.
-
-Note that scripts need not necessarily be written in bash to be called from the terminal. For instance, here's a simple Python script that outputs its arguments in reversed order:
-
-```python
-#!/usr/local/bin/python
-import sys
-for arg in reversed(sys.argv[1:]):
-    print(arg)
-```
-
-The kernel knows to execute this script with a python interpreter instead of a shell command because we included a [shebang](https://en.wikipedia.org/wiki/Shebang_(Unix)) line at the top of the script.
-It is good practice to write shebang lines using the [`env`](https://www.man7.org/linux/man-pages/man1/env.1.html) command that will resolve to wherever the command lives in the system, increasing the portability of your scripts. To resolve the location, `env` will make use of the `PATH` environment variable we introduced in the first lecture.
-For this example the shebang line would look like `#!/usr/bin/env python`.
-
-Some differences between shell functions and scripts that you should keep in mind are:
-- Functions have to be in the same language as the shell, while scripts can be written in any language. This is why including a shebang for scripts is important.
-- Functions are loaded once when their definition is read. Scripts are loaded every time they are executed. This makes functions slightly faster to load, but whenever you change them you will have to reload their definition.
-- Functions are executed in the current shell environment whereas scripts execute in their own process. Thus, functions can modify environment variables, e.g. change your current directory, whereas scripts can't. Scripts will be passed by value environment variables that have been exported using [`export`](https://www.man7.org/linux/man-pages/man1/export.1p.html)
-- As with any programming language, functions are a powerful construct to achieve modularity, code reuse, and clarity of shell code. Often shell scripts will include their own function definitions.
 
 # Shell Tools
 
@@ -524,6 +457,7 @@ For interactive tools such as the ones based on ncurses, help for the commands c
 Sometimes manpages can provide overly detailed descriptions of the commands, making it hard to decipher what flags/syntax to use for common use cases.
 [TLDR pages](https://tldr.sh/) are a nifty complementary solution that focuses on giving example use cases of a command so you can quickly figure out which options to use.
 For instance, I find myself referring back to the tldr pages for [`tar`](https://tldr.inbrowser.app/pages/common/tar) and [`ffmpeg`](https://tldr.inbrowser.app/pages/common/ffmpeg) way more often than the manpages.
+`tldr` can also be installed using your default package manager and run in the terminal, for example with: `tldr ls`, which is very useful for quick reminders on command syntax and usage.
 
 
 ## Finding files
@@ -541,14 +475,18 @@ find . -mtime -1
 # Find all zip files with size in range 500k to 10M
 find . -size +500k -size -10M -name '*.tar.gz'
 ```
+
 Beyond listing files, find can also perform actions over files that match your query.
 This property can be incredibly helpful to simplify what could be fairly monotonous tasks.
+
 ```bash
 # Delete all files with .tmp extension
 find . -name '*.tmp' -exec rm {} \;
 # Find all PNG files and convert them to JPG
 find . -name '*.png' -exec convert {} {}.jpg \;
 ```
+
+**Note:** `{}` here represents the name of the file found for each `-exec` command, so if a file `file.txt` is found, `-exec rm {} \;` would run `rm file.txt`.
 
 Despite `find`'s ubiquitousness, its syntax can sometimes be tricky to remember.
 For instance, to simply find files that match some pattern `PATTERN` you have to execute `find -name '*PATTERN*'` (or `-iname` if you want the pattern matching to be case insensitive).
@@ -574,7 +512,7 @@ To achieve this, most UNIX-like systems provide [`grep`](https://www.man7.org/li
 `grep` is an incredibly valuable shell tool that we will cover in greater detail during the data wrangling lecture.
 
 For now, know that `grep` has many flags that make it a very versatile tool.
-Some I frequently use are `-C` for getting **C**ontext around the matching line and `-v` for in**v**erting the match, i.e. print all lines that do **not** match the pattern. For example, `grep -C 5` will print 5 lines before and after the match.
+Some commonly used flags include `grep -i` for case **i**nsensitive matching, `-C` for getting **C**ontext around the matching line and `-v` for in**v**erting the match, i.e. print all lines that do **not** match the pattern. For example, `grep -C 5` will print 5 lines before and after the match.
 When it comes to quickly searching through many files, you want to use `-R` since it will **R**ecursively go into directories and look for files for the matching string.
 
 But `grep -R` can be improved in many ways, such as ignoring `.git` folders, using multi CPU support, &c.
@@ -680,7 +618,7 @@ Bonus points if you can also report how many runs it took for the script to fail
 
     if [[ n -eq 42 ]]; then
        echo "Something went wrong"
-       >&2 echo "The error was using magic numbers"
+       echo "The error was using magic numbers"
        exit 1
     fi
 
