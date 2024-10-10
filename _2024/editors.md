@@ -136,8 +136,7 @@ modifier and a dash. For example:
 -   `M-b` means that you should hold the META key (remember, you may know this as the ALT key) while pressing `b`.
 
 Most shortcuts you will use will be preceded by `C-x` or `C-c`, or consist of `M-<key>`. This is one of the
-general rules that is followed by convention. Many shortcuts in Emacs in
-mnemonic; this might help you to remember them.
+general rules that is followed by convention. Many shortcuts in Emacs are mnemonic; this might help you to remember them.
 
 ## Don\'t Panic!
 
