@@ -34,7 +34,7 @@ The fundamental strength of Emacs comes in two parts:
 - Buffer oriented interaction. This may seem unusual to anyone with experience in a graphical tabbed editor, but Emacs' focus on buffers as the fundamental unit of organisation in the interface allows you to manage exceptional amounts of information with ease.
 - Flexibility and extensibility. Above all, this is Emacs "killer feature", if you look for such a thing. Emacs is designed in all aspects to be moulded to fit - you, the user; the task you are performing; the constraints you are performing it under. With enough experience you can bend Emacs into the needed or desired shape.
 
-There is a reason that there are people that started using Emacs in the order of decades ago and still use it today. Of course, this presentation was prepared /entirely/ within Emacs itself.
+There is a reason that there are people that started using Emacs in the order of decades ago and still use it today. Its long history means that has become an exceptionally powerful tool to read, write, and manipulate text - any text - especially code. It has many features that I will not touch on here, but be assured that almost any task that demands you manipulate textual data can be done efficiently in Emacs. Of course, this presentation was prepared /entirely/ within Emacs itself.
 
 * A note on Emacs' Odd-ness
 
@@ -57,6 +57,8 @@ Emacs relies heavily on the use of modifier keys to input commands. Mostly, this
 - =C-x b= means that you should hold the CTRL key while pressing =x=, and then release it before pressing =b=.
 - =C-x C-b= means that you should hold the CTRL key while pressing =x= and then press =b= before releasing it.
 - =M-b= means that you should hold the META key (remember, you may know this as the ALT key) while pressing =b=.
+
+Some keys are represented by short sequences of letters: =SPC= is the space bar, =RET= is the return key, and =ESC= is the escape key.
 
 Most shortcuts you will use will be preceded by =C-x= or =C-c=, or consist of =M-<key>=. This is one of the general rules that is followed by convention. Many shortcuts in Emacs in mnemonic; this might help you to remember them.
 
@@ -90,11 +92,7 @@ Emacs has an extensive set of movement commands, but many of the ones you are fa
 - =M->= will move to the bottom.
 - =C-l= will recenter the window, adjusting what part of the document you can see. Try pressing it multiple times in sequence.
 
-** Point, Mark, and Region
-
-You are likely familiar with the "cursor" - this is where text will be inserted. In Emacs-speak, this is the "point". There exists another marker in every buffer, the "mark". The mark is not visible but many commands will place it. The part of the buffer that is between the point and mark is known as the "region". When you manually place the mark with =C-SPC=, Emacs will interactively highlight the region, which is now "active"; this is similar to highlighting text in other editors. Many commands will operate on the active region as you might expect. We will touch on commands later, but the command =downcase-region= - for example - will make all uppercase characters in the current region lowercase.
-
-Try this out: set the mark with =C-SPC=, then "deactivate" it with =C-g=. The mark is still set, but no longer active. Move elsewhere in the document and then press =C-u C-SPC=. The point will jump immediately to the mark you placed. Many of the movement commands above also set the mark. Try hitting =M-<= and then jump back to where you were with =C-u C-SPC=.
+Many of these will also work in your shell by default, along with any program that uses readline, such as many programming language REPLs. Try it out!
 
 ** Buffers, Windows, and Frames
 
@@ -123,6 +121,12 @@ Emacs has a set of less intuitive bindings for managing windows:
 - =C-x o= will cycle the currently active window. In Emacs-speak, it selects the "other" window.
 
 Remember: windows are only views into buffers. If you want to kill a buffer, you do that with =C-x k=.
+
+** Point, Mark, and Region
+
+You are likely familiar with the "cursor" - this is where text will be inserted. In Emacs-speak, this is the "point". There exists another marker in every buffer, the "mark". The mark is not visible but many commands will place it. The part of the buffer that is between the point and mark is known as the "region". When you manually place the mark with =C-SPC=, Emacs will interactively highlight the region, which is now "active"; this is similar to highlighting text in other editors. Many commands will operate on the active region as you might expect. We will touch on commands later, but the command =downcase-region= - for example - will make all uppercase characters in the current region lowercase.
+
+Try this out: set the mark with =C-SPC=, then "deactivate" it with =C-g=. The mark is still set, but no longer active. Move elsewhere in the document and then press =C-u C-SPC=. The point will jump immediately to the mark you placed. Many of the movement commands above also set the mark. Try hitting =M-<= and then jump back to where you were with =C-u C-SPC=.
 
 ** The Minibuffer and Echo Area
 
