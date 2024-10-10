@@ -41,9 +41,7 @@ editors.
 
 Also, not all text editors are equal:
 
-![A selection of \"editor learning curves\", that presumably graph
-complexity over time. Emacs\' line spirals
-nonsensically.](./files/editor_curves.png)
+![A selection of \"editor learning curves\", that presumably graph complexity over time. Emacs\' line spirals nonsensically.](../files/editor_curves.png)
 
 Today I\'ll be talking about Emacs - characterised in this diagram as
 being a little esoteric, perhaps not entirely unfairly - a powerful
@@ -64,7 +62,7 @@ you to figure out what works for you.
 ![A comic showing people arguing over text editors. One describes
 flipping bits manually through an absurd process, before another remarks
 that Emacs has that functionality built
-in.](./files/real_programmers.png)
+in.](../files/real_programmers.png)
 
 You\'re probably wondering why I\'m talking about Emacs here; certainly
 it is less popular than the venerable (and also excellent!) Vim, whose
@@ -414,7 +412,7 @@ One thing that Emacs, like Vim, excels at is remote editing.
 
 ![A figure from a book, captioned \"Remote login is a lot like astral
 projection\". It depicts a person at a computer magically projected to
-be sitting in front of another.](./files/astral_ssh.jpg)
+be sitting in front of another.](../files/astral_ssh.jpg)
 
 ### With the textual interface
 
