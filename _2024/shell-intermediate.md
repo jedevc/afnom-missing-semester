@@ -2,7 +2,7 @@
 layout: lecture
 title: "#2: Intermediate Shell"
 date: 2024-10-14
-ready: false
+ready: true
 ---
 <div class="note">
 <b> Update 08/10/23: </b> The contents below have been adjusted to reflect the Missing Semester content covered at UoB. Check our <a href="https://github.com/afnom/missing-semester/commits/master">git history</a> for a full list of changes.
@@ -353,11 +353,17 @@ In the computer labs at UoB, you may find that you are asked to use the `module`
 Broadly, there is always a reason for the behaviour you see from a Linux computer, and tools like `env` grant you the power to look under the hood and see how it all fits together. Try running `env` the next time you're on a lab machine!
 
 
-## SSH Intermediate
+# SSH Intermediate
 
 Typing out a long password every time you wish to login can become cumbersome (especially so if you are using tools that connect on your behalf). To resolve this, we can use an SSH key. An SSH key consists of two parts: a private key and public key. In short, the public key is used by others to encrypt data to be sent to you, and the private is used by you to decrypt data sent to you. Since the private key serves as your identity, the key must be kept secret, ideally with a password used to encrypt it. Most servers are configured with password based login disabled and only allow key login. This is due to the low security of the average password, possibility of brute forcing them, and the possibility of an attacker stealing the password with a malicious server. For these security reasons key authenticated is widely preferred.
 
 To generate a key, we use `ssh-keygen`. Current security practices recommend using the ed25519 key algorithm, so the full command to generate a new key is `ssh-keygen -t ed25519`. The key generation program is interactive and asks you for a name for the key and what password you would like to protect the key with. Keys and other SSH information are stored within the `.ssh` folder. The prefixed dot means the folder is hidden by default, so it will not appear in an `ls`. We can use the `-a` flag to list all files, which includes hidden ones. Once the key is generated, you will notice two new files inside your `.ssh` folder: `keyname` and `keyname.pub`. The .pub file is the public key, and the file without an extension is the private key. In order for the server you're connecting to to know about the key, you have to copy the public key to the server. To do this, you must edit the `.ssh/authorized_keys` file (note the American spelling), and paste in the contents of your .pub file into an empty line. Once you save the file, login with your key is now possible. Important note: never copy the private key. If you do so by accident, make sure you de-authorise the key from all servers it allows access to. To login with a key, we can use the `-i` option in ssh, with the i standing for identity file. So for example, we may do `ssh -i .ssh/keyname abc123@server.net`. You will not be asked for your password as the key authenticates you and proves your identity, but if you specified a passphrase while generating a key, it must be used when logging in through ssh. SSH key passphrases can be changed or added with the command `ssh-keygen -p -f [PATH_TO_KEY]`.
+
+## SCP
+
+You'll often want to transfer files and directories to and from servers, this can also be done through the ssh protocol. Using the command `scp` with the syntax `scp [USERNAME@HOST]:/source/path [USERNAME@HOST]:/destination/path` to transfer a file through ssh, where `[USERNAME@HOST]:` is omitted when referring to the host filesystem. For example, `scp /file/to/copy abc123@server.net:/destination/path` copies a file from the host filesystem to a remote machine through ssh. Files can also be transferred from remote machine to another remote machine by specifying a username and host for both the source path and the destination path.
+
+**Note:** The `-r` flag is required to recursively copy directories, like with the `cp` command.
 
 
 ## SSHFS
