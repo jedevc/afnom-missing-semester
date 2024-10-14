@@ -332,12 +332,12 @@ These can be used for operations such as converting all jpg images to pngs in pa
 
 To test your learning this session, try the following exercises:
 
-1. Create a bash script that runs the first argument given as a background process that will persist past the terminal's exit, printing the process' name and ID in the terminal with the format `[COMMAND] [PID]`
+1. Create a bash script that runs the first argument given as a background process with no output that will persist past the terminal's exit, printing the process' name and ID in the terminal.
 {% comment %}
 ```
 #!/bin/bash
-$1 &
-echo $!
+$1 &>/dev/null &
+echo "$1 $!"
 disown
 ```
 {% endcomment %}
