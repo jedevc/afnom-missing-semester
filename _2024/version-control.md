@@ -405,10 +405,6 @@ Lots of people like using graphical interfaces to work with Git instead of the c
     -   Windows-only
     -   What I used to use!
 
-# Exercises
-
-..todo..?
-
 # Git tips and tricks
 
 Here's a couple of extra little tricks that you might find especially useful when you're using Git
