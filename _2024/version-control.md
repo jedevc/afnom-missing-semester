@@ -2,7 +2,7 @@
 layout: lecture
 title: "#3: Version Control with Git"
 date: 2024-10-21
-ready: false
+ready: true
 video:
     aspect: 56.25
     id: 2sjqTHE0zok
@@ -13,7 +13,7 @@ speaker-notes:
 ---
 
 <div class="note">
-This document has been completely rewritten from scratch compared the original. The above video is still informative, but isn't the same as what you're about to read. We think ours is better 😉
+This document has been completely rewritten from scratch compared the original. The above video is still informative, but isn't the same as what you're about to read. We think ours is better :)
 </div>
 
 **Note beforehand:** this document assumes that you have already installed Git! If you don't have Git, you can get it at <https://git-scm.com/downloads> (which I recommend) or via your system package manager (which might be a little out of date but should still work - if something doesn't try updating first!).
