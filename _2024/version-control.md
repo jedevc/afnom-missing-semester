@@ -8,6 +8,8 @@ video:
     id: 2sjqTHE0zok
 todo:
     - need to pull baby git stuff from week 2!
+speaker-notes:
+    - make a point that rewriting history is generally bad but give examples of when it's appropriate (esp. with relation to rebasing)
 ---
 
 <div class="note">
