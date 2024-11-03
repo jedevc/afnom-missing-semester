@@ -1,7 +1,7 @@
 ---
 layout: lecture
-title: "#5: Containers and Virtualization"
-date: 2024-11-4
+title: "#6: Containers and Virtualization"
+date: 2024-11-11
 ready: false
 ---
 

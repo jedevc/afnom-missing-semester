@@ -1,8 +1,8 @@
 ---
 layout: lecture
-title: "#6: Shell Advanced"
-date: 2024-11-11
-ready: false
+title: "#5: Shell Advanced"
+date: 2024-11-4
+ready: true
 ---
 
 <div class="note">
@@ -130,7 +130,7 @@ To background a currently running process, we can suspend and background it. As 
 
 To foreground a job, run `fg [JOB ID]`, feel free to try the above example again using `fg` instead of `bg`. This also works with processes currently backgrounded.
 
-If you want to kill a job, use `kill [JOB ID]` to terminate it.
+If you want to kill a job, use `kill %[JOB ID]` or `kill [PROCESS ID]` to terminate it.
 
 However, even if a job is backgrounded, closing the terminal will close any processes running from the shell, including jobs running applications started from the shell. To fix this, you can use `disown` to remove processes from the shell's job control list. To test this, let's run `nautilus &`, the default file manager for Ubuntu in the background (if this is unavailable, than any other application with a gui can be used to demonstrate). Close the shell window and notice that `nautilus` (or your chosen application) closes as well. Next, open your shell window again, run `nautilus &`, then type `disown` to clear the shell's job control list. Close the shell window again and see that `nautilus` stays open.
 
@@ -291,7 +291,7 @@ Writing `bash` scripts can be tricky and unintuitive. There are tools like [shel
 Note that scripts need not necessarily be written in bash to be called from the terminal. For instance, here's a simple Python script that outputs its arguments in reversed order:
 
 ```python
-#!/usr/local/bin/python
+#!/bin/env python3
 import sys
 for arg in reversed(sys.argv[1:]):
     print(arg)
@@ -299,7 +299,6 @@ for arg in reversed(sys.argv[1:]):
 
 The kernel knows to execute this script with a python interpreter instead of a shell command because we included a [shebang](https://en.wikipedia.org/wiki/Shebang_(Unix)) line at the top of the script.
 It is good practice to write shebang lines using the [`env`](https://www.man7.org/linux/man-pages/man1/env.1.html) command that will resolve to wherever the command lives in the system, increasing the portability of your scripts. To resolve the location, `env` will make use of the `PATH` environment variable we introduced in the first lecture.
-For this example the shebang line would look like `#!/usr/bin/env python`.
 
 Some differences between shell functions and scripts that you should keep in mind are:
 - Functions have to be in the same language as the shell, while scripts can be written in any language. This is why including a shebang for scripts is important.
