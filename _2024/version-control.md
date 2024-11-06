@@ -16,6 +16,10 @@ speaker-notes:
 This document has been completely rewritten from scratch compared the original. The above video is still informative, but isn't the same as what you're about to read. We think ours is better :)
 </div>
 
+<div class="note">
+You can see a recording of this lecture here: <a href="https://drive.google.com/file/d/1qMY_WhCbm5OH4CQYmzL28B0LWfnOyR0C/view?usp=sharing">https://drive.google.com/file/d/1qMY_WhCbm5OH4CQYmzL28B0LWfnOyR0C/view?usp=sharing</a>
+</div>
+
 **Note beforehand:** this document assumes that you have already installed Git! If you don't have Git, you can get it at <https://git-scm.com/downloads> (which I recommend) or via your system package manager (which might be a little out of date but should still work - if something doesn't try updating first!).
 
 **Another note:** this document also assumes you're decently fluent on the command line - if you're not, go checkout some of the previous talks in the series!
