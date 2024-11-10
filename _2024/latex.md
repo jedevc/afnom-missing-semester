@@ -2,7 +2,7 @@
 layout: lecture
 title: "#6: Introduction to LaTeX"
 date: 2024-11-11
-ready: false
+ready: true
 ---
 # Introduction to LaTeX
 
