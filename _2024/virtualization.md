@@ -1,6 +1,6 @@
 ---
 layout: lecture
-title: "#7: Containers and Virtualization"
+title: "#7: Containers and Virtualization + 🍕"
 date: 2024-11-25
 ready: false
 ---
